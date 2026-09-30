@@ -1,0 +1,209 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Opal Terminal · opal</title>
+  <meta name="description" content="Opal Terminal is opal's own terminal app: tabs and split panes, inline images, quick select, a palette over the shared history, and on Windows its own bash, Opal Bash.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="images/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="getting-started.html">Getting started</a>
+      <a href="terminal.html" aria-current="page">Terminal</a>
+      <a href="configuration.html">Configuration</a>
+      <a href="plugins.html">Plugins</a>
+      <a href="faq.html">FAQ</a>
+      <a href="https://github.com/gjnail/opal">GitHub</a>
+      <a class="btn btn-primary btn-small" href="getting-started.html#install">Install</a>
+    </nav>
+  </div>
+</header>
+<div class="docs">
+  <aside class="sidebar" aria-label="Documentation">
+    <h2>Start here</h2>
+    <ul>
+      <li><a href="getting-started.html">Getting started</a></li>
+      <li><a href="terminal.html" aria-current="page">Opal Terminal</a></li>
+      <li><a href="faq.html">FAQ and troubleshooting</a></li>
+    </ul>
+    <h2>Reference</h2>
+    <ul>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="themes.html">Themes</a></li>
+      <li><a href="plugins.html">Plugins</a></li>
+      <li><a href="commands.html">Commands</a></li>
+    </ul>
+  </aside>
+
+  <main id="main" class="prose">
+    <h1>Opal Terminal</h1>
+    <p class="lede">opal's own terminal app. It reads the same <code>config.toml</code> as the prompt, takes its colors from the same theme, and uses the marks the prompt sends around each command, so the terminal and your shells work as one tool. On Windows it comes with its own bash, Opal Bash.</p>
+    <div class="note">
+      <p>Opal Terminal is developed and used on Windows. The macOS and Linux builds pass their tests in CI on every change, but haven't been used on a real Mac or Linux desktop yet. <a href="https://github.com/gjnail/opal/issues">Reports</a> are welcome.</p>
+    </div>
+    <p>opal doesn't need it: the prompt and everything else on this site work in any terminal. It also runs any shell or program, not only ones set up with opal; the features that follow commands need a prompt that sends OSC 133 marks, as opal's does.</p>
+
+    <h2 id="install">Installing and opening it</h2>
+    <p>The <a href="getting-started.html#install">install scripts</a> install Opal Terminal along with opal:</p>
+    <div class="table-wrap"><table>
+      <tr><th>System</th><th>Where it goes</th><th>How to open it</th></tr>
+      <tr><td>Windows</td><td><code>%LOCALAPPDATA%\opal\terminal</code>, with Opal Bash in its <code>shell</code> folder</td><td>Opal Terminal in the Start menu</td></tr>
+      <tr><td>macOS</td><td><code>~/Applications/Opal Terminal.app</code></td><td>Launchpad or Spotlight</td></tr>
+      <tr><td>Linux</td><td><code>~/.local/bin/opal-terminal</code>, with a menu entry</td><td>Your desktop's app menu</td></tr>
+    </table></div>
+    <p>From any shell, <code>opal terminal</code> opens it in the current folder. Its options come after that: <code>-profile NAME</code> picks the shell, <code>-dir PATH</code> another folder, and a command after them runs instead of a shell.</p>
+    <pre><code>opal terminal
+opal terminal -profile "Windows PowerShell"
+opal terminal htop</code></pre>
+    <p>A few things about the install:</p>
+    <ul>
+      <li>Set <code>OPAL_NO_TERMINAL=1</code> before running the install script to leave the terminal out (or pass <code>-NoTerminal</code> to <code>install.ps1</code>). On Linux the script also skips it when no graphical session is running, and on WSL and Termux; <code>OPAL_WITH_TERMINAL=1</code> installs it anyway.</li>
+      <li>The scripts download <code>opal-terminal_&lt;os&gt;_&lt;arch&gt;</code> from the latest release and check it against <code>opal-terminal_SHA256SUMS.txt</code>. Releases after 0.1.0 have these archives. From a clone of the repository they build it instead when Go 1.26 is installed.</li>
+      <li>If installing the terminal fails, opal itself stays installed, and the script says why.</li>
+      <li>On Linux it needs the Wayland or X11, xkbcommon and EGL libraries, which desktop systems already have.</li>
+      <li>The macOS app has an ad-hoc signature, not a Developer ID one. The install script's copy opens normally; a copy downloaded with a browser needs <code>xattr -dr com.apple.quarantine "Opal Terminal.app"</code>, or Open Anyway in System Settings &gt; Privacy &amp; Security.</li>
+    </ul>
+    <p><code>opal update</code> updates the <code>opal</code> program only. To update Opal Terminal, run the install script again. On Windows, close Opal Terminal first: the script won't replace files that are in use.</p>
+
+    <h2 id="opal-bash">Opal Bash</h2>
+    <p>On Windows, Opal Terminal comes with its own bash. It's MSYS2's bash with the Unix tools you'd expect: coreutils (<code>ls</code>, <code>cp</code>, <code>mv</code>, <code>cat</code>, <code>sort</code>, <code>wc</code> and the rest), <code>grep</code>, <code>sed</code>, <code>awk</code>, <code>find</code> and <code>xargs</code>, <code>diff</code>, <code>less</code>, <code>tar</code>, <code>gzip</code> and <code>which</code>. New tabs open it unless <code>shell</code> in the <a href="configuration.html#terminal"><code>[terminal]</code> settings</a> names another shell.</p>
+    <p>It's kept apart from the rest of the machine:</p>
+    <ul>
+      <li>It reads its own startup file, <code>shell/etc/opal/bashrc</code> in Opal Terminal's folder, instead of <code>~/.bash_profile</code> and <code>~/.bashrc</code>. That file loads opal, so the prompt, aliases, completion and Ctrl+R history are there without <code>opal setup</code> editing anything.</li>
+      <li>Its up-arrow history is its own, in <code>%LOCALAPPDATA%\opal\bash_history</code>. Ctrl+R still searches the commands of every shell.</li>
+      <li>Nothing is added to your PATH, and your other shells stay as they were. Inside Opal Bash the bundled tools come first, then your Windows PATH, so <code>git</code>, <code>node</code>, <code>python</code> and other Windows programs work as usual.</li>
+      <li>Drives are <code>/c</code>, <code>/d</code> and so on, <code>/tmp</code> is your Windows temp folder, and <code>~</code> is your Windows profile folder (or <code>HOME</code>, if you've set it).</li>
+    </ul>
+    <p>Aliases and functions for every shell belong in <code>config.toml</code>. For things only bash understands, create <code>~/.config/opal/bashrc</code>; Opal Bash reads it after loading opal:</p>
+    <pre><code># ~/.config/opal/bashrc
+shopt -s globstar
+export LESS=-R</code></pre>
+    <p>The tools are MSYS2 packages, pinned by version and checksum in the repository's <a href="https://github.com/gjnail/opal/blob/main/terminal/packaging/shell/packages.lock">packages.lock</a>. MSYS2 builds them for x64 only, so the ARM64 download has the x64 build, which Windows 11 on ARM runs under emulation; that hasn't been tried yet. Most of them are under the GPL: <code>shell/PACKAGES.txt</code> lists each package's license, and each release has their source as <code>opal-terminal_shell-sources.tar</code>.</p>
+
+    <h2 id="shells">Shells and profiles</h2>
+    <p>The command palette has a "New tab" entry for each shell Opal Terminal finds. On Windows that's Opal Bash, PowerShell 7, Windows PowerShell, Command Prompt and each WSL distribution, plus other shells it recognizes. On macOS and Linux it's your login shell and the ones in <code>/etc/shells</code>. <code>opal-terminal -list-profiles</code> prints the list.</p>
+    <p><code>shell</code> picks the one new tabs open, by name or as a command line. Your own profiles can run any command, with arguments, a starting folder and environment variables:</p>
+    <pre><code>[terminal]
+shell = "PowerShell"
+
+[[terminal.profiles]]
+name = "work box"
+command = "ssh"
+args = ["me@work"]</code></pre>
+
+    <h2 id="features">What it does</h2>
+
+    <h3 id="tabs">Tabs and panes</h3>
+    <ul>
+      <li>Tabs can be dragged to reorder, closed with a middle click, renamed and duplicated.</li>
+      <li>Panes split right, down, or along the longer side, with dividers you can drag or move from the keyboard. A pane can be zoomed to fill the tab.</li>
+      <li>Broadcast mode sends what you type to every pane in the tab.</li>
+      <li>A pane closes when its shell exits normally. When it exits with an error, the pane stays open with the exit code, and Enter starts the shell again.</li>
+    </ul>
+
+    <h3 id="shell-integration">Following your commands</h3>
+    <p>With opal's prompt, the terminal knows where each command starts and ends:</p>
+    <ul>
+      <li>a mark in the gutter next to each command, colored by its exit status;</li>
+      <li>Ctrl+Up and Ctrl+Down jump between prompts;</li>
+      <li>Ctrl+Shift+E selects the last command's output, and the command palette can copy it;</li>
+      <li>clicking inside the command you're typing moves the shell's cursor there;</li>
+      <li>when a command that ran longer than 10 seconds (<code>notify_after</code>) finishes in a background tab or an unfocused window, the tab gets a note and you get a desktop notification. On Windows the taskbar button also flashes.</li>
+    </ul>
+    <p>Opal Terminal bundles the Nerd Font symbols, so opal's prompt uses Nerd Font icons inside it without installing a font.</p>
+
+    <h3 id="palette">Command palette, history and folders</h3>
+    <p>Ctrl+Shift+P lists every action with its key, fuzzy-matched as you type. Start the query with <code>!</code> to search opal's shared history from every shell instead: Enter types the command at the prompt, Shift+Enter runs it. Start it with <code>@</code> to list the folders <code>j</code> knows, most used first; Enter opens a new tab there. Ctrl+Shift+H and Ctrl+Shift+J open those two lists directly.</p>
+
+    <h3 id="quick-select">Quick select</h3>
+    <p>Ctrl+Shift+Space puts a one- or two-letter label on every URL, path, git hash, IP address, email address and UUID on screen. Typing a label copies that match; typing it in uppercase also pastes it at the prompt. The labels start on the home row.</p>
+
+    <h3 id="find">Find, selection and links</h3>
+    <ul>
+      <li>Find in scrollback (Ctrl+Shift+F), with case and regex toggles.</li>
+      <li>Select by character, word (double-click), line (triple-click) or block (Alt+drag). Copy on select is optional. Ctrl+C copies when text is selected and interrupts the program when nothing is.</li>
+      <li>Ctrl+click opens links, both OSC 8 hyperlinks and plain URLs in the text.</li>
+    </ul>
+
+    <h3 id="images">Inline images</h3>
+    <p>Sixel, the kitty graphics protocol and iTerm2's image sequence all work, so programs that show pictures in the terminal can use whichever they support. Images belong to the line they start on: they scroll, reflow and leave the scrollback with their text. kitty's Unicode placeholders and animation aren't supported yet.</p>
+    <p>The ConPTY built into Windows drops the escape sequences images use, so the Windows download includes Microsoft's newer <code>conpty.dll</code> and <code>OpenConsole.exe</code>, and Opal Terminal uses them.</p>
+
+    <h3 id="text">Text and colors</h3>
+    <ul>
+      <li>Colors come from the opal theme, so the terminal matches the prompt. <code>theme</code> and <code>background</code> under <code>[terminal]</code> give it a different one, individual colors and the 16-color palette can be overridden, and <code>min_contrast</code> lifts text that's hard to read on its background.</li>
+      <li>Font fallback covers CJK, color emoji and the Nerd Font icons the prompt uses.</li>
+      <li>Box drawing, block elements, braille and powerline separators are drawn from their shapes instead of the font, so they line up without gaps at any size.</li>
+      <li>The emulation follows xterm: scrollback that reflows when the window is resized, true color, curly and colored underlines, emoji sequences as one character, bracketed paste, mouse reporting, the kitty keyboard protocol and synchronized output.</li>
+    </ul>
+
+    <h3 id="notifications">Notifications and the clipboard</h3>
+    <p>Programs can post desktop notifications (OSC 9, 99 and 777). They show as notifications on Windows, in Notification Center on macOS, and through the desktop's notification service on Linux. By default they only appear when the window isn't focused.</p>
+    <p>Programs may set the clipboard (OSC 52), which is how copying works over ssh. Reading it is off by default, since any program you run, including one on a remote machine, could otherwise read what you last copied.</p>
+
+    <h3 id="restore">Session restore</h3>
+    <p>When you close the last window, its tabs, splits, shells, folders and up to 2000 lines of each pane's output are saved, and they come back the next time you open Opal Terminal. Closing the last tab instead starts fresh. <code>restore_session = false</code> turns this off.</p>
+
+    <h2 id="keys">Keys</h2>
+    <p>The defaults are below. Ctrl+Comma (Cmd+Comma on macOS) opens the settings page, where you can choose an action and press its new shortcut, or press Delete to remove a binding.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Action</th><th>Windows and Linux</th><th>macOS</th></tr>
+      <tr><td>New tab, new window</td><td><kbd>Ctrl+Shift+T</kbd>, <kbd>Ctrl+Shift+N</kbd></td><td><kbd>Cmd+T</kbd>, <kbd>Cmd+N</kbd></td></tr>
+      <tr><td>Close the pane</td><td><kbd>Ctrl+Shift+W</kbd></td><td><kbd>Cmd+W</kbd></td></tr>
+      <tr><td>Next, previous tab</td><td><kbd>Ctrl+Tab</kbd>, <kbd>Ctrl+Shift+Tab</kbd></td><td><kbd>Ctrl+Tab</kbd>, <kbd>Ctrl+Shift+Tab</kbd></td></tr>
+      <tr><td>Tab 1 to 9</td><td><kbd>Ctrl+Alt+1</kbd> to <kbd>9</kbd></td><td><kbd>Cmd+1</kbd> to <kbd>9</kbd></td></tr>
+      <tr><td>Split right, down</td><td><kbd>Alt+Shift+Plus</kbd>, <kbd>Alt+Shift+Minus</kbd></td><td><kbd>Cmd+D</kbd>, <kbd>Cmd+Shift+D</kbd></td></tr>
+      <tr><td>Split along the longer side</td><td><kbd>Alt+Shift+D</kbd></td><td>palette</td></tr>
+      <tr><td>Move between panes</td><td><kbd>Alt+arrows</kbd></td><td><kbd>Cmd+Alt+arrows</kbd></td></tr>
+      <tr><td>Move a divider</td><td><kbd>Alt+Shift+arrows</kbd></td><td><kbd>Cmd+Ctrl+arrows</kbd></td></tr>
+      <tr><td>Zoom the pane</td><td><kbd>Ctrl+Shift+Z</kbd></td><td><kbd>Cmd+Shift+Enter</kbd></td></tr>
+      <tr><td>Copy, paste</td><td><kbd>Ctrl+Shift+C</kbd>, <kbd>Ctrl+Shift+V</kbd> (also <kbd>Ctrl+V</kbd> on Windows)</td><td><kbd>Cmd+C</kbd>, <kbd>Cmd+V</kbd></td></tr>
+      <tr><td>Find</td><td><kbd>Ctrl+Shift+F</kbd></td><td><kbd>Cmd+F</kbd></td></tr>
+      <tr><td>Command palette</td><td><kbd>Ctrl+Shift+P</kbd></td><td><kbd>Cmd+Shift+P</kbd></td></tr>
+      <tr><td>Quick select</td><td><kbd>Ctrl+Shift+Space</kbd></td><td><kbd>Cmd+Shift+Space</kbd></td></tr>
+      <tr><td>Search history, recent folders</td><td><kbd>Ctrl+Shift+H</kbd>, <kbd>Ctrl+Shift+J</kbd></td><td><kbd>Cmd+Shift+H</kbd>, <kbd>Cmd+Shift+J</kbd></td></tr>
+      <tr><td>Previous, next prompt</td><td><kbd>Ctrl+Up</kbd>, <kbd>Ctrl+Down</kbd></td><td><kbd>Cmd+Up</kbd>, <kbd>Cmd+Down</kbd></td></tr>
+      <tr><td>Select the last command's output</td><td><kbd>Ctrl+Shift+E</kbd></td><td>palette</td></tr>
+      <tr><td>Font size</td><td><kbd>Ctrl+Plus</kbd>, <kbd>Ctrl+Minus</kbd>, <kbd>Ctrl+0</kbd></td><td><kbd>Cmd+Plus</kbd>, <kbd>Cmd+Minus</kbd>, <kbd>Cmd+0</kbd></td></tr>
+      <tr><td>Clear scrollback</td><td><kbd>Ctrl+Shift+K</kbd></td><td><kbd>Cmd+K</kbd></td></tr>
+      <tr><td>Full screen</td><td><kbd>F11</kbd> (also <kbd>Alt+Enter</kbd> on Windows)</td><td><kbd>Cmd+Ctrl+F</kbd></td></tr>
+      <tr><td>Broadcast input, rename the tab</td><td><kbd>Ctrl+Shift+I</kbd>, <kbd>Ctrl+Shift+R</kbd></td><td><kbd>Cmd+Shift+I</kbd>, <kbd>Cmd+Shift+R</kbd></td></tr>
+      <tr><td>Settings</td><td><kbd>Ctrl+Comma</kbd></td><td><kbd>Cmd+Comma</kbd></td></tr>
+    </table></div>
+    <p>Keys can also be set in <code>config.toml</code>, by action name. The <a href="configuration.html#terminal-keys">configuration reference</a> lists the names.</p>
+
+    <h2 id="settings">Settings</h2>
+    <p>The settings page covers fonts, cursor, colors, shell, scrollback, notifications, the clipboard and every key. Changes apply as you make them, and are written into the <code>[terminal]</code> table of <code>config.toml</code> line by line, so your comments and the rest of the file stay as they were. <code>opal-terminal -settings</code> opens it at launch. The <a href="configuration.html#terminal">configuration reference</a> lists every setting.</p>
+
+    <h2 id="build">Building it yourself</h2>
+    <p>It needs Go 1.26 or newer, and cgo on macOS and Linux. The <a href="https://github.com/gjnail/opal/tree/main/terminal#readme">terminal README</a> has the build commands, how Opal Bash and the Windows ConPTY files are fetched, and how the source is laid out.</p>
+
+    <div class="pager">
+      <a href="getting-started.html"><small>Previous</small>Getting started</a>
+      <a class="next" href="configuration.html"><small>Next</small>Configuration</a>
+    </div>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>opal is free and open source under the MIT license. This site has no analytics or cookies.</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/gjnail/opal">Source code</a>
+      <a href="https://github.com/gjnail/opal/releases">Releases</a>
+      <a href="https://github.com/gjnail/opal/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/gjnail/opal/issues">Report a problem</a>
+      <a href="https://ko-fi.com/gnail">Support on Ko-fi</a>
+    </nav>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
+</body>
+</html>

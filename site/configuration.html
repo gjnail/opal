@@ -16,6 +16,7 @@
     <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
     <nav class="site-nav" aria-label="Main">
       <a href="getting-started.html">Getting started</a>
+      <a href="terminal.html">Terminal</a>
       <a href="configuration.html" aria-current="page">Configuration</a>
       <a href="plugins.html">Plugins</a>
       <a href="faq.html">FAQ</a>
@@ -29,6 +30,7 @@
     <h2>Start here</h2>
     <ul>
       <li><a href="getting-started.html">Getting started</a></li>
+      <li><a href="terminal.html">Opal Terminal</a></li>
       <li><a href="faq.html">FAQ and troubleshooting</a></li>
     </ul>
     <h2>Reference</h2>
@@ -49,7 +51,7 @@
     <div class="table-wrap"><table>
       <tr><th>Setting</th><th>Default</th><th>What it does</th></tr>
       <tr><td><code>theme</code></td><td><code>"fire"</code></td><td>The prompt theme: <code>fire</code>, <code>black</code>, <code>boulder</code>, or one of your own.</td></tr>
-      <tr><td><code>icons</code></td><td><code>"auto"</code></td><td><code>"nerd"</code> for Nerd Font glyphs, <code>"unicode"</code>, or <code>"ascii"</code>. <code>"auto"</code> uses Nerd Font glyphs in terminals that include them (WezTerm, Ghostty) and Unicode elsewhere.</td></tr>
+      <tr><td><code>icons</code></td><td><code>"auto"</code></td><td><code>"nerd"</code> for Nerd Font glyphs, <code>"unicode"</code>, or <code>"ascii"</code>. <code>"auto"</code> uses Nerd Font glyphs in terminals that include them (Opal Terminal, WezTerm, Ghostty) and Unicode elsewhere.</td></tr>
       <tr><td><code>color</code></td><td><code>"auto"</code></td><td><code>"truecolor"</code>, <code>"256"</code>, <code>"16"</code> or <code>"none"</code>. <code>"auto"</code> asks the terminal. <code>NO_COLOR</code> is respected.</td></tr>
       <tr><td><code>background</code></td><td><code>"dark"</code></td><td>Set to <code>"light"</code> on a light terminal background; themes then use darker colors.</td></tr>
       <tr><td><code>greeting</code></td><td><code>true</code></td><td>Show the opal banner when a new terminal opens. Shells started inside that terminal don't show it again.</td></tr>
@@ -95,6 +97,75 @@
       <tr><td><code>update.repo</code></td><td><code>"gjnail/opal"</code></td><td>Where <code>opal update</code> downloads releases from.</td></tr>
     </table></div>
 
+    <h2 id="terminal">[terminal]</h2>
+    <p><a href="terminal.html">Opal Terminal</a>'s settings. Its settings page (Ctrl+Comma, or Cmd+Comma on macOS) edits them and applies each change right away; changes made by hand apply after Reload settings in the command palette, or the next time Opal Terminal starts.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Setting</th><th>Default</th><th>What it does</th></tr>
+      <tr><td><code>font_family</code></td><td>see right</td><td>A font name or a list of them; the first one installed is used. Without it, the first installed of Cascadia Mono, Cascadia Code and Consolas on Windows; SF Mono, Menlo and Monaco on macOS; JetBrains Mono, DejaVu Sans Mono and Noto Sans Mono on Linux.</td></tr>
+      <tr><td><code>font_size</code></td><td><code>12</code> (<code>13</code> on macOS)</td><td>In points.</td></tr>
+      <tr><td><code>line_height</code></td><td><code>1.0</code></td><td>Row height, as a multiple of the font's.</td></tr>
+      <tr><td><code>cell_width</code></td><td><code>1.0</code></td><td>Widens or narrows every cell.</td></tr>
+      <tr><td><code>shell</code></td><td>the first shell found</td><td>What new tabs open: a profile name (<code>"PowerShell"</code>, <code>"Opal Bash"</code>, one of yours) or a command line. On Windows the first shell found is Opal Bash.</td></tr>
+      <tr><td><code>scrollback</code></td><td><code>10000</code></td><td>Lines kept above the screen in each pane.</td></tr>
+      <tr><td><code>grapheme_clustering</code></td><td><code>true</code></td><td>Treat emoji sequences and letters with combining marks as one character.</td></tr>
+      <tr><td><code>cursor_style</code></td><td><code>"block"</code></td><td><code>"block"</code>, <code>"bar"</code> or <code>"underline"</code>. Programs can change it while they run.</td></tr>
+      <tr><td><code>cursor_blink</code></td><td><code>true</code></td><td>Blink the cursor.</td></tr>
+      <tr><td><code>copy_on_select</code></td><td><code>false</code></td><td>Copy text as soon as it's selected.</td></tr>
+      <tr><td><code>word_chars</code></td><td><code>"-_./~:@+%#?&amp;="</code></td><td>Characters that count as part of a word when you double-click, besides letters and digits.</td></tr>
+      <tr><td><code>bold_is_bright</code></td><td><code>false</code></td><td>Show bold text in the bright version of its color.</td></tr>
+      <tr><td><code>min_contrast</code></td><td><code>1.0</code></td><td>Lightens or darkens text that's hard to read on its background. <code>4.5</code> is the WCAG level for body text; <code>1.0</code> leaves colors alone.</td></tr>
+      <tr><td><code>padding</code></td><td><code>8</code></td><td>Space around the text, in pixels at 100% display scaling.</td></tr>
+      <tr><td><code>bell</code></td><td><code>"visual"</code></td><td><code>"visual"</code> flashes the pane, <code>"sound"</code> also plays the system sound (on Windows so far), <code>"none"</code> ignores the bell.</td></tr>
+      <tr><td><code>notify_after</code></td><td><code>10</code></td><td>Seconds a command has to run before its tab gets a note, and you get a notification, when it finishes in the background.</td></tr>
+      <tr><td><code>notifications</code></td><td><code>"unfocused"</code></td><td>When desktop notifications appear: <code>"unfocused"</code> (only when the window isn't focused), <code>"always"</code> or <code>"never"</code>.</td></tr>
+      <tr><td><code>restore_session</code></td><td><code>true</code></td><td>Reopen the last window's tabs, panes and recent output at launch.</td></tr>
+      <tr><td><code>theme</code>, <code>background</code></td><td>the prompt's</td><td>Give the terminal a different theme, or light or dark variant, than the prompt uses.</td></tr>
+    </table></div>
+    <p>Programs can use the clipboard through OSC 52, which is how copying works over ssh:</p>
+    <div class="table-wrap"><table>
+      <tr><th>Setting</th><th>Default</th><th>What it does</th></tr>
+      <tr><td><code>terminal.clipboard.write</code></td><td><code>true</code></td><td>Programs may set the clipboard.</td></tr>
+      <tr><td><code>terminal.clipboard.read</code></td><td><code>false</code></td><td>Programs may read it. Any program you run, including on a remote machine, could then read what you last copied.</td></tr>
+    </table></div>
+    <p><code>[terminal.colors]</code> overrides colors the theme sets: <code>foreground</code>, <code>background</code>, <code>cursor</code>, <code>cursor_text</code>, <code>selection</code>, and <code>palette</code>, a list of up to 16 colors for the ANSI palette.</p>
+    <pre><code>[terminal]
+font_family = ["JetBrains Mono", "Cascadia Mono"]
+font_size = 13
+shell = "PowerShell"
+
+[terminal.colors]
+background = "#101014"
+palette = ["#000000", "#ff5555"]    # the first two ANSI colors</code></pre>
+
+    <h3 id="terminal-profiles">Profiles</h3>
+    <p>Each <code>[[terminal.profiles]]</code> entry adds a shell or program to the command palette's "New tab" list, and <code>shell</code> can name it. A profile with the same name as a shell Opal Terminal finds replaces that one.</p>
+    <div class="table-wrap"><table>
+      <tr><th>Key</th><th>What it does</th></tr>
+      <tr><td><code>name</code></td><td>What the palette and the tab show.</td></tr>
+      <tr><td><code>command</code>, <code>args</code></td><td>The program and its arguments.</td></tr>
+      <tr><td><code>cwd</code></td><td>The folder it starts in.</td></tr>
+      <tr><td><code>env</code></td><td>Environment variables to set, as a table.</td></tr>
+      <tr><td><code>login</code></td><td>Start it as a login shell (macOS and Linux).</td></tr>
+    </table></div>
+    <pre><code>[[terminal.profiles]]
+name = "work box"
+command = "ssh"
+args = ["me@work"]
+
+[[terminal.profiles]]
+name = "api"
+command = "pwsh"
+cwd = "~/src/api"
+env = { ASPNETCORE_ENVIRONMENT = "Development" }</code></pre>
+
+    <h3 id="terminal-keys">Keys</h3>
+    <p><code>[terminal.keys]</code> maps a shortcut to an action. <code>"none"</code> removes a default. Shortcuts are written like <code>"ctrl+shift+t"</code>, <code>"alt+enter"</code> or <code>"super+k"</code> (Cmd on macOS). The <a href="terminal.html#keys">defaults</a> are on the Opal Terminal page.</p>
+    <pre><code>[terminal.keys]
+"ctrl+shift+t" = "new_tab"
+"ctrl+alt+k" = "clear_scrollback"
+"f11" = "none"</code></pre>
+    <p>The actions: <code>new_tab</code>, <code>new_window</code>, <code>duplicate_tab</code>, <code>rename_tab</code>, <code>close_tab</code>, <code>close_pane</code>, <code>next_tab</code>, <code>prev_tab</code>, <code>goto_tab_1</code> to <code>goto_tab_9</code>, <code>split_right</code>, <code>split_down</code>, <code>split_auto</code>, <code>focus_left</code>, <code>focus_right</code>, <code>focus_up</code>, <code>focus_down</code>, <code>resize_left</code>, <code>resize_right</code>, <code>resize_up</code>, <code>resize_down</code>, <code>toggle_zoom</code>, <code>toggle_broadcast</code>, <code>toggle_fullscreen</code>, <code>copy</code>, <code>paste</code>, <code>select_all</code>, <code>select_last_output</code>, <code>copy_last_output</code>, <code>find</code>, <code>quick_select</code>, <code>command_palette</code>, <code>history_search</code>, <code>recent_dirs</code>, <code>prev_prompt</code>, <code>next_prompt</code>, <code>scroll_up</code>, <code>scroll_down</code>, <code>scroll_page_up</code>, <code>scroll_page_down</code>, <code>scroll_top</code>, <code>scroll_bottom</code>, <code>clear_scrollback</code>, <code>reset_terminal</code>, <code>restart_pane</code>, <code>font_bigger</code>, <code>font_smaller</code>, <code>font_reset</code>, <code>settings</code>, <code>open_config</code> and <code>reload_config</code>.</p>
+
     <h2 id="aliases">Your own aliases, functions and environment variables</h2>
     <p>These go in <code>[aliases]</code>, <code>[functions.NAME]</code> and <code>[env]</code>, and take precedence over plugins. A plain string works in every shell:</p>
     <pre><code>[aliases]
@@ -125,7 +196,7 @@ pwsh = '$d = Join-Path $HOME "src/$($args[0])"; New-Item -ItemType Directory -Fo
       <tr><td><code>OPAL_DATA_DIR</code></td><td>Use another folder for the jump database, the shared history and caches.</td></tr>
     </table></div>
     <div class="pager">
-      <a href="getting-started.html"><small>Previous</small>Getting started</a>
+      <a href="terminal.html"><small>Previous</small>Opal Terminal</a>
       <a class="next" href="themes.html"><small>Next</small>Themes</a>
     </div>
   </main>

@@ -16,6 +16,7 @@
     <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
     <nav class="site-nav" aria-label="Main">
       <a href="getting-started.html" aria-current="page">Getting started</a>
+      <a href="terminal.html">Terminal</a>
       <a href="configuration.html">Configuration</a>
       <a href="plugins.html">Plugins</a>
       <a href="faq.html">FAQ</a>
@@ -29,6 +30,7 @@
     <h2>Start here</h2>
     <ul>
       <li><a href="getting-started.html" aria-current="page">Getting started</a></li>
+      <li><a href="terminal.html">Opal Terminal</a></li>
       <li><a href="faq.html">FAQ and troubleshooting</a></li>
     </ul>
     <h2>Reference</h2>
@@ -47,7 +49,7 @@
     <h2 id="install">1. Install</h2>
     <p>On Windows, in PowerShell:</p>
     <pre><code>irm https://raw.githubusercontent.com/gjnail/opal/main/install/install.ps1 | iex</code></pre>
-    <p>On macOS and Linux, and in Git Bash or WSL:</p>
+    <p>On macOS and Linux, and in WSL:</p>
     <pre><code>curl -fsSL https://raw.githubusercontent.com/gjnail/opal/main/install/install.sh | sh</code></pre>
     <p>The script downloads the latest release, checks it against the release's <code>SHA256SUMS.txt</code>, and puts <code>opal</code> in <code>%LOCALAPPDATA%\opal\bin</code> on Windows or <code>~/.local/bin</code> elsewhere. Then it runs <code>opal setup</code>, which:</p>
     <ul>
@@ -56,7 +58,7 @@
       <li>imports your existing PowerShell, bash, zsh and fish history into the shared history;</li>
       <li>on Windows, offers to upgrade PSReadLine if it's too old for suggestions.</li>
     </ul>
-    <p>The script also installs Opal Terminal, the terminal app that goes with opal: with a Start menu shortcut on Windows, in <code>~/Applications</code> on macOS, and with a menu entry on Linux desktops. Set <code>OPAL_NO_TERMINAL=1</code> before running it to leave the terminal out. <code>opal terminal</code> opens it in the current folder.</p>
+    <p>The script also installs <a href="terminal.html">Opal Terminal</a>, opal's own terminal app: with a Start menu shortcut on Windows, where it comes with its own bash, Opal Bash; in <code>~/Applications</code> on macOS; and with a menu entry on Linux desktops. Set <code>OPAL_NO_TERMINAL=1</code> before running it to leave the terminal out. <code>opal terminal</code> opens it in the current folder.</p>
     <p>To build from source instead, clone the repository and run <code>./install/install.sh</code> or <code>.\install\install.ps1</code>. You need Go 1.22 or newer, or 1.24 or newer on macOS; Opal Terminal needs Go 1.26, and is downloaded instead when your Go is older.</p>
 
     <h2 id="first-look">2. Open a new terminal</h2>
@@ -98,7 +100,7 @@ opal theme set boulder</code></pre>
     <h2 id="update">Updating and removing opal</h2>
     <p><code>opal update</code> installs the latest release (or, if you built opal from a clone, pulls and rebuilds it). <code>opal setup --remove</code> removes the blocks opal added to your startup files; after that you can delete the <code>opal</code> program and the folders listed in <a href="faq.html#data">the FAQ</a>.</p>
     <div class="pager">
-      <a class="next" href="configuration.html"><small>Next</small>Configuration</a>
+      <a class="next" href="terminal.html"><small>Next</small>Opal Terminal</a>
     </div>
   </main>
 </div>

@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>opal: one shell setup for zsh, bash, fish and PowerShell</title>
-  <meta name="description" content="opal gives zsh, bash, fish and PowerShell the same prompt, aliases, tab completion, suggestions and history, from one config file, on Windows, macOS and Linux.">
+  <meta name="description" content="opal gives zsh, bash, fish and PowerShell the same prompt, aliases, tab completion, suggestions and history, from one config file, on Windows, macOS and Linux, and has a terminal app of its own, Opal Terminal.">
   <meta name="color-scheme" content="light dark">
   <link rel="icon" href="images/icon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="assets/style.css">
@@ -16,6 +16,7 @@
     <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
     <nav class="site-nav" aria-label="Main">
       <a href="getting-started.html">Getting started</a>
+      <a href="terminal.html">Terminal</a>
       <a href="configuration.html">Configuration</a>
       <a href="plugins.html">Plugins</a>
       <a href="faq.html">FAQ</a>
@@ -29,7 +30,7 @@
   <section class="hero">
     <div class="spectrum" aria-hidden="true"></div>
     <h1>One shell setup for zsh, bash, fish and PowerShell</h1>
-    <p class="lede">opal gives every shell you use the same prompt, aliases, tab completion, suggestions and command history, from one config file, on Windows, macOS and Linux.</p>
+    <p class="lede">opal gives every shell you use the same prompt, aliases, tab completion, suggestions and command history, from one config file, on Windows, macOS and Linux. It also has a terminal app of its own.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="getting-started.html#install">Install opal</a>
       <a class="btn btn-secondary" href="getting-started.html">Getting started</a>
@@ -92,10 +93,40 @@ function global:gst {
   </section>
 
   <section class="section">
+    <div class="split reverse">
+      <div>
+        <h2>Opal Terminal</h2>
+        <p>opal also has a terminal app of its own. It reads the same config, uses the same theme, and knows where each command starts and ends from the marks opal's prompt sends.</p>
+        <ul class="checks">
+          <li>On Windows it comes with Opal Bash: bash with <code>ls</code>, <code>grep</code>, <code>sed</code>, <code>awk</code> and the other Unix tools, set up with opal and kept apart from your other shells.</li>
+          <li>Tabs, split panes, and a command palette that also searches the history of every shell.</li>
+          <li>Jump between prompts, select a command's output, and get a notification when a long command finishes in the background.</li>
+          <li>Quick select copies a URL, path or git hash on screen when you type its label.</li>
+          <li>Inline images through sixel, the kitty graphics protocol and iTerm2's image sequence.</li>
+          <li>Tabs, panes and their recent output come back the next time you open it.</li>
+        </ul>
+        <p style="color:var(--muted)">It's used on Windows today. The macOS and Linux builds pass their tests but haven't been tried on real machines yet.</p>
+        <a href="terminal.html">About Opal Terminal</a>
+      </div>
+      <pre><code># open it in this folder
+opal terminal
+
+# or with another shell, or a program
+opal terminal -profile PowerShell
+opal terminal htop
+
+# ~/.config/opal/config.toml
+[terminal]
+font_size = 13
+notifications = "unfocused"</code></pre>
+    </div>
+  </section>
+
+  <section class="section">
     <h2>Runs on</h2>
     <p class="sub">CI loads opal into each of these shells on every change.</p>
     <div class="stats">
-      <div class="stat"><div class="num" style="font-size:1.3rem">Windows</div><p>Windows PowerShell 5.1, PowerShell 7, Git Bash, and any shell in WSL.</p></div>
+      <div class="stat"><div class="num" style="font-size:1.3rem">Windows</div><p>Windows PowerShell 5.1, PowerShell 7, bash, and any shell in WSL.</p></div>
       <div class="stat"><div class="num" style="font-size:1.3rem">macOS</div><p>zsh, the bash 3.2 that ships with macOS, newer bash, fish and PowerShell 7.</p></div>
       <div class="stat"><div class="num" style="font-size:1.3rem">Linux</div><p>bash, zsh, fish and PowerShell 7, on x86_64 and ARM64.</p></div>
     </div>

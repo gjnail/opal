@@ -11,15 +11,15 @@ and Linux. Every shell gets the same prompt, aliases, tab completion,
 suggestions and command history, written in that shell's own syntax.
 
 [Opal Terminal](#opal-terminal) is opal's own terminal app. On Windows it
-comes with its own bash, the way Git Bash does: [Opal Bash](#opal-bash) is
-MSYS2's bash and Unix tools, set up with opal and kept apart from your other
-shells. It also has tabs and split panes, inline images, quick select, and a
+comes with its own bash: [Opal Bash](#opal-bash) is MSYS2's bash and Unix
+tools, set up with opal and kept apart from your other shells. It also has tabs and split panes, inline images, quick select, and a
 command palette that searches the history every shell writes. It runs on
 Windows today. The macOS and Linux builds pass their tests in CI but haven't
 been used on real machines yet.
 
 **[Website](https://gjnail.github.io/opal/)** ·
 **[Getting started](https://gjnail.github.io/opal/getting-started.html)** ·
+**[Opal Terminal](https://gjnail.github.io/opal/terminal.html)** ·
 **[Configuration](https://gjnail.github.io/opal/configuration.html)** ·
 **[Plugins](https://gjnail.github.io/opal/plugins.html)** ·
 **[FAQ](https://gjnail.github.io/opal/faq.html)** ·
@@ -51,7 +51,7 @@ On Windows, in PowerShell:
 irm https://raw.githubusercontent.com/gjnail/opal/main/install/install.ps1 | iex
 ```
 
-On macOS and Linux (and in Git Bash or WSL):
+On macOS and Linux (and in WSL):
 
 ```
 curl -fsSL https://raw.githubusercontent.com/gjnail/opal/main/install/install.sh | sh
@@ -264,14 +264,15 @@ It's developed and used on Windows. The macOS and Linux code builds and passes
 its tests in CI on every change, but nobody has run it on a Mac or a Linux
 desktop yet.
 
+The website's [Opal Terminal page](https://gjnail.github.io/opal/terminal.html)
+covers the same ground with every default key for Windows, Linux and macOS.
 The keys below are the Windows and Linux defaults. macOS uses Cmd where they
 use Ctrl+Shift, and every key can be changed.
 
 ### Opal Bash
 
-On Windows, Opal Terminal comes with its own bash, the way Git for Windows
-comes with Git Bash. It's the same MSYS2 bash and runtime that Git Bash is
-built on, with the Unix tools you'd expect: coreutils (`ls`, `cp`, `mv`,
+On Windows, Opal Terminal comes with its own bash: MSYS2's bash and
+runtime, with the Unix tools you'd expect: coreutils (`ls`, `cp`, `mv`,
 `cat`, `sort`, `wc` and the rest), `grep`, `sed`, `awk`, `find` and `xargs`,
 `diff`, `less`, `tar`, `gzip` and `which`. New tabs open it unless `shell` in
 `config.toml` names another shell.
@@ -286,13 +287,12 @@ It's kept apart from the rest of the machine:
 - Its up-arrow history is its own, in opal's data folder
   (`%LOCALAPPDATA%\opal\bash_history`). Ctrl+R still searches the commands of
   every shell.
-- Nothing is added to your PATH, and PowerShell, Command Prompt, Git Bash and
-  WSL stay as they were. Inside Opal Bash the bundled tools come first, then
+- Nothing is added to your PATH, and your other shells stay as they were.
+  Inside Opal Bash the bundled tools come first, then
   your Windows PATH, so `git`, `node`, `python` and other Windows programs
   work as usual.
 - Drives are `/c`, `/d` and so on, `/tmp` is your Windows temp folder, and
-  `~` is your Windows profile folder (or `HOME`, if you've set it), as in Git
-  Bash.
+  `~` is your Windows profile folder (or `HOME`, if you've set it).
 
 The tools are MSYS2 packages, pinned by version and checksum in
 [packages.lock](terminal/packaging/shell/packages.lock). MSYS2 builds them
@@ -308,11 +308,12 @@ each release has their source as `opal-terminal_shell-sources.tar`.
 - Panes split right, down, or along the longer side, with dividers you can
   drag or move from the keyboard. A pane can be zoomed to fill the tab.
 - Broadcast mode sends what you type to every pane in the tab.
-- New tabs can run any detected shell: Opal Bash, PowerShell 7, Windows
-  PowerShell, Command Prompt, Git Bash and each WSL distribution on Windows,
+- New tabs can run any shell Opal Terminal finds: Opal Bash, PowerShell 7,
+  Windows PowerShell, Command Prompt and each WSL distribution on Windows,
   and the shells in `/etc/shells` elsewhere. Your own profiles (an ssh
   command, a shell with extra arguments, a working directory, environment
-  variables) go in `config.toml`.
+  variables) go in `config.toml`; they're added to the list, and new tabs
+  open one only if `shell` names it.
 
 ### Shell integration
 
@@ -434,13 +435,13 @@ shell (`opal-terminal htop`).
 
 | | Windows | macOS | Linux |
 |---|---|---|---|
-| opal | Windows PowerShell 5.1 and Git Bash by hand; those and PowerShell 7 in CI | bash 3.2, zsh and PowerShell 7 in CI | bash 5, zsh, fish and PowerShell 7 in CI |
+| opal | Windows PowerShell 5.1 and bash by hand; those and PowerShell 7 in CI | bash 3.2, zsh and PowerShell 7 in CI | bash 5, zsh, fish and PowerShell 7 in CI |
 | Opal Terminal | Yes | Builds and passes tests in CI; not run on a Mac yet | Builds and passes tests in CI; not run on a desktop yet |
 | Opal Bash | Yes (x64; the x64 build under emulation on ARM64, untested) | Not included; the system's shells are used | Not included; the system's shells are used |
 | Inline images | Yes, with the newer ConPTY | Untested | Untested |
 | Desktop notifications | Yes (toasts) | Untested (Notification Center) | Untested (freedesktop service or `notify-send`) |
 
-opal is developed on Windows 11 with Windows PowerShell 5.1 and Git Bash. CI
+opal is developed on Windows 11 with Windows PowerShell 5.1 and bash. CI
 runs the test suite on Windows, macOS and Linux and loads opal into each of
 the shells above on every change. WSL counts as Linux. Reports from other
 shells, terminals and systems are welcome.
@@ -514,8 +515,8 @@ See the [terminal README](terminal/README.md#layout) for the source layout.
 
 ### Opal Bash
 
-Opal Bash is an MSYS2 root next to `opal-terminal.exe`, laid out the way Git
-for Windows lays out Git Bash: `usr/bin` holds bash, the tools and
+Opal Bash is an MSYS2 root in the `shell` folder next to `opal-terminal.exe`:
+`usr/bin` holds bash, the tools and
 `msys-2.0.dll`, and `etc` holds the mount table, the account lookup settings
 and Opal's startup file. Opal Terminal starts it as
 `bash --noprofile --rcfile /etc/opal/bashrc -i`.

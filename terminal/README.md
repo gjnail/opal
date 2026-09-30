@@ -64,9 +64,8 @@ and signs it ad hoc; on Linux it adds the desktop entry and icon.
 ## Opal Bash
 
 On Windows, Opal Terminal comes with Opal Bash: MSYS2's bash and Unix tools
-in a `shell` folder next to `opal-terminal.exe`, the way Git for Windows ships
-Git Bash. When the folder is there, Opal Bash is the first profile and what
-new tabs open. For a build of your own, run this in `terminal/`:
+in a `shell` folder next to `opal-terminal.exe`. When the folder is there,
+Opal Bash is the first profile and what new tabs open. For a build of your own, run this in `terminal/`:
 
 ```sh
 go run ./tools/fetchshell

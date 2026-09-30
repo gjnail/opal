@@ -16,6 +16,7 @@
     <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
     <nav class="site-nav" aria-label="Main">
       <a href="getting-started.html">Getting started</a>
+      <a href="terminal.html">Terminal</a>
       <a href="configuration.html">Configuration</a>
       <a href="plugins.html">Plugins</a>
       <a href="faq.html" aria-current="page">FAQ</a>
@@ -29,6 +30,7 @@
     <h2>Start here</h2>
     <ul>
       <li><a href="getting-started.html">Getting started</a></li>
+      <li><a href="terminal.html">Opal Terminal</a></li>
       <li><a href="faq.html" aria-current="page">FAQ and troubleshooting</a></li>
     </ul>
     <h2>Reference</h2>
@@ -56,10 +58,11 @@
       <p>opal's binaries aren't code-signed. The install scripts download with PowerShell or curl, which doesn't trigger these warnings. If you downloaded an archive with a browser, Windows may show "Windows protected your PC" (click <strong>More info</strong>, then <strong>Run anyway</strong>) and macOS may refuse to open it until you allow it in System Settings &gt; Privacy &amp; Security.</p>
       <p>To check that a download was built from this repository, compare it with the release's <code>SHA256SUMS.txt</code>, or with the <a href="https://cli.github.com/">GitHub CLI</a>:</p>
       <pre><code>gh attestation verify opal_windows_amd64.zip --repo gjnail/opal</code></pre>
+      <p>Opal Terminal's downloads (<code>opal-terminal_windows_amd64.zip</code> and so on) have their own <code>opal-terminal_SHA256SUMS.txt</code> and are attested the same way.</p>
     </details>
     <details id="not-loaded">
       <summary>I installed opal but my prompt didn't change.</summary>
-      <p>Open a new terminal: shells that were already running don't read the new startup block. If that doesn't help, run <code>opal setup --dry-run</code> to see which startup files opal knows about, and check that your terminal starts the shell you expect. On macOS and in Git Bash, bash starts as a login shell and reads <code>.bash_profile</code>; setup makes that file load <code>.bashrc</code>.</p>
+      <p>Open a new terminal: shells that were already running don't read the new startup block. If that doesn't help, run <code>opal setup --dry-run</code> to see which startup files opal knows about, and check that your terminal starts the shell you expect. On macOS, and in terminals that start bash as a login shell, bash reads <code>.bash_profile</code>; setup makes that file load <code>.bashrc</code>. Opal Bash reads neither; see <a href="#opal-bash-rc">below</a>.</p>
     </details>
 
     <h2 id="features">Features</h2>
@@ -88,18 +91,49 @@
       <p>On Windows, the first prompt after starting a terminal can take a little longer while Windows loads git.</p>
     </details>
 
+    <h2 id="terminal">Opal Terminal</h2>
+    <details id="terminal-needed">
+      <summary>Do I need Opal Terminal to use opal?</summary>
+      <p>No. The prompt, completion, suggestions, history and tools work in any terminal. <a href="terminal.html">Opal Terminal</a> is an extra that uses the same config and theme. To install opal without it, set <code>OPAL_NO_TERMINAL=1</code> before running the install script.</p>
+    </details>
+    <details id="opal-bash-rc">
+      <summary>Opal Bash doesn't read my <code>~/.bashrc</code>.</summary>
+      <p>That's on purpose: Opal Bash reads its own startup file, which loads opal, so it isn't affected by what other bash setups on the machine put in <code>~/.bashrc</code> and <code>~/.bash_profile</code>. Aliases, functions and environment variables for every shell go in <code>config.toml</code> (see <a href="configuration.html#aliases">Configuration</a>). For things only bash understands, such as <code>shopt</code> settings, create <code>~/.config/opal/bashrc</code>; Opal Bash reads it after loading opal.</p>
+    </details>
+    <details id="terminal-shell">
+      <summary>How do I make new tabs open PowerShell instead of Opal Bash?</summary>
+      <p>Choose it under Shell on the settings page (Ctrl+Comma), or set it in <code>config.toml</code>:</p>
+      <pre><code>[terminal]
+shell = "PowerShell"</code></pre>
+      <p>The command palette's "New tab" entries open any of the other shells without changing the default.</p>
+    </details>
+    <details id="terminal-running">
+      <summary>The install script says Opal Terminal or its bash is running.</summary>
+      <p>On Windows, the script won't replace files that are in use. Close every Opal Terminal window, and any program you started from Opal Bash that's still running, then run the script again.</p>
+    </details>
+    <details id="terminal-macos">
+      <summary>macOS won't open Opal Terminal.</summary>
+      <p>The app has an ad-hoc signature rather than a Developer ID one, so macOS blocks a copy that was downloaded with a browser. The install script's copy isn't affected. Allow it with Open Anyway in System Settings &gt; Privacy &amp; Security, or run:</p>
+      <pre><code>xattr -dr com.apple.quarantine "$HOME/Applications/Opal Terminal.app"</code></pre>
+    </details>
+    <details id="terminal-images">
+      <summary>Images don't show in Opal Terminal on Windows.</summary>
+      <p>The ConPTY built into Windows drops the escape sequences images use. Opal Terminal uses Microsoft's newer one when <code>conpty.dll</code> and <code>OpenConsole.exe</code> are next to <code>opal-terminal.exe</code>. The install script and the Windows download include them; for a build of your own, run <code>terminal/scripts/fetch-conpty.ps1</code>.</p>
+    </details>
+
     <h2 id="privacy">Privacy and data</h2>
     <details id="data">
       <summary>Where does opal keep its files?</summary>
       <ul>
         <li>Config: <code>~/.config/opal/</code> on every system, including Windows (<code>%USERPROFILE%\.config\opal</code>).</li>
-        <li>Data: <code>%LOCALAPPDATA%\opal</code> on Windows, <code>~/.local/share/opal</code> elsewhere. It holds <code>history.tsv</code> (the shared history), <code>jump.tsv</code> (remembered folders), and caches for git status and tool completions.</li>
+        <li>Data: <code>%LOCALAPPDATA%\opal</code> on Windows, <code>~/.local/share/opal</code> elsewhere. It holds <code>history.tsv</code> (the shared history), <code>jump.tsv</code> (remembered folders), caches for git status and tool completions, Opal Bash's <code>bash_history</code>, and Opal Terminal's <code>terminal-session.json</code>, which holds the recent output of each pane for session restore.</li>
         <li>The program: <code>%LOCALAPPDATA%\opal\bin</code> or <code>~/.local/bin</code> when installed with the scripts.</li>
+        <li>Opal Terminal: <code>%LOCALAPPDATA%\opal\terminal</code> and a Start menu shortcut on Windows, <code>~/Applications/Opal Terminal.app</code> on macOS, and <code>~/.local/bin/opal-terminal</code> with a menu entry in <code>~/.local/share/applications</code> on Linux.</li>
       </ul>
     </details>
     <details id="network">
       <summary>Does opal send anything anywhere?</summary>
-      <p>No. opal only goes online when you run <code>opal update</code>, <code>opal plugin install</code> or <code>opal plugin update</code>, and on Windows when <code>opal setup</code> offers to upgrade PSReadLine and you accept.</p>
+      <p>No. opal only goes online when you run <code>opal update</code>, <code>opal plugin install</code> or <code>opal plugin update</code>, and on Windows when <code>opal setup</code> offers to upgrade PSReadLine and you accept. Opal Terminal has no network code. Installing it from a clone of the repository downloads Opal Bash's packages from MSYS2 and the newer ConPTY from Microsoft's NuGet feed.</p>
     </details>
     <details id="private-commands">
       <summary>How do I keep a command out of the history?</summary>
@@ -109,7 +143,7 @@
     <h2 id="removing">Removing opal</h2>
     <details id="uninstall">
       <summary>How do I uninstall opal?</summary>
-      <p>Run <code>opal setup --remove</code> to take opal out of your startup files, then delete the program and the folders listed above. On Windows, also remove <code>%LOCALAPPDATA%\opal\bin</code> from your user PATH in Settings &gt; System &gt; About &gt; Advanced system settings &gt; Environment Variables.</p>
+      <p>Run <code>opal setup --remove</code> to take opal out of your startup files, then delete the program, Opal Terminal and the folders listed above. On Windows, also remove <code>%LOCALAPPDATA%\opal\bin</code> from your user PATH in Settings &gt; System &gt; About &gt; Advanced system settings &gt; Environment Variables.</p>
     </details>
     <details id="report">
       <summary>Something is wrong. Where do I report it?</summary>
