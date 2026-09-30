@@ -256,6 +256,9 @@ func (p *Pane) handlePointer(gtx layout.Context) {
 			if btn == vt.MouseLeft && p.sel.active && cfg.CopyOnSelect {
 				w.copySelection(p)
 			}
+			if btn == vt.MouseLeft && !p.sel.active && p.clicks.count == 1 && mods == 0 && inside {
+				p.clickToMove(cell)
+			}
 
 		case pointer.Move:
 			if tracking && p.term.MouseTracking() == vt.MouseTrackAny && inside {
@@ -270,6 +273,60 @@ func (p *Pane) handlePointer(gtx layout.Context) {
 			p.handleWheel(gtx, e, mods, cell, px, tracking)
 		}
 	}
+}
+
+// clickToMove moves the shell's cursor to a click inside the command being
+// typed, by sending arrow keys. It needs shell integration: the input is
+// the part of the line marked by OSC 133;B, and nothing happens elsewhere.
+func (p *Pane) clickToMove(cell image.Point) {
+	if p.scroll != 0 {
+		return
+	}
+	p.term.Lock()
+	cx, cy := p.term.CursorPos()
+	alt := p.term.AltScreen()
+	var moves int
+	ok := false
+	if !alt && cell.Y == cy {
+		l := p.term.ScreenLine(cy)
+		first, last := -1, -1
+		for x, c := range l.Cells {
+			if c.A.Semantic() == vt.SemanticInput && (c.R != 0 || x <= cx) {
+				if first < 0 {
+					first = x
+				}
+				last = x
+			}
+		}
+		if first >= 0 {
+			target := clampInt(cell.X, first, max(last+1, cx))
+			// Count characters, not cells: a wide character is one arrow
+			// press.
+			from, to := min(target, cx), max(target, cx)
+			for x := from; x < to && x < len(l.Cells); x++ {
+				if !l.Cells[x].Spacer() {
+					moves++
+				}
+			}
+			if target < cx {
+				moves = -moves
+			}
+			ok = moves != 0
+		}
+	}
+	p.term.Unlock()
+	if !ok {
+		return
+	}
+	k := vt.KeyRight
+	if moves < 0 {
+		k, moves = vt.KeyLeft, -moves
+	}
+	var b []byte
+	for i := 0; i < moves; i++ {
+		b = append(b, p.term.EncodeKey(vt.KeyEvent{Key: k})...)
+	}
+	p.send(b)
 }
 
 // updateHover finds a link under the mouse while the open-link modifier

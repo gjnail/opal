@@ -2,11 +2,15 @@ package ui
 
 import (
 	"image"
+	"path/filepath"
 	"strings"
 	"testing"
+	"time"
 
 	"gioui.org/io/key"
 
+	"opal/internal/history"
+	"opal/internal/jump"
 	"opal/terminal/internal/vt"
 )
 
@@ -173,6 +177,75 @@ func TestQuickPatterns(t *testing.T) {
 	want := []string{"https://example.com/x", `C:\Users\me\src`, "~/src/opal/main.go", "3f2a9c1", "10.0.0.1:8080"}
 	if strings.Join(got, "|") != strings.Join(want, "|") {
 		t.Fatalf("got %q\nwant %q", got, want)
+	}
+}
+
+func TestPaletteHistoryAndDirs(t *testing.T) {
+	data := t.TempDir()
+	t.Setenv("OPAL_DATA_DIR", data)
+	now := time.Now().Unix()
+	for i, c := range []string{"git status", "go test ./...", "git status", "docker ps"} {
+		if err := history.Append(history.Entry{When: now - int64(100-i), Status: 0, DurMS: 5, Shell: "pwsh", Cmd: c}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	dir := t.TempDir()
+	if err := jump.Add(dir); err != nil {
+		t.Fatal(err)
+	}
+	po := &paletteOverlay{loaded: map[byte]bool{}}
+	po.edit.set("!git")
+	po.filter()
+	if len(po.items) != 1 || po.items[0].title != "git status" || po.items[0].run == nil {
+		t.Fatalf("history items = %+v", po.items)
+	}
+	po.edit.set("!")
+	po.filter()
+	if len(po.items) != 3 || po.items[0].title != "docker ps" {
+		t.Fatalf("all history (newest first, unique) = %+v", po.items)
+	}
+	po.edit.set("@" + filepath.Base(dir))
+	po.filter()
+	if len(po.items) != 1 {
+		t.Fatalf("dir items = %+v", po.items)
+	}
+}
+
+// recordPTY captures what the terminal sends to the program.
+type recordPTY struct {
+	deadPTY
+	sent []byte
+}
+
+func (r *recordPTY) Write(b []byte) (int, error) {
+	r.sent = append(r.sent, b...)
+	return len(b), nil
+}
+
+func TestClickToMove(t *testing.T) {
+	term := vt.New(vt.Options{Cols: 40, Rows: 3})
+	// Prompt "$ ", then the typed command "echo 中文 hi" with the cursor
+	// at its end.
+	term.WriteString("\x1b]133;A\x07$ \x1b]133;B\x07echo 中文 hi")
+	rec := &recordPTY{}
+	p := &Pane{term: term, pty: rec}
+	// Click on the "e" of "echo": the cursor is after "hi", 10 characters
+	// (11 cells, one wide pair) to the right.
+	p.clickToMove(image.Pt(2, 0))
+	if got, want := string(rec.sent), strings.Repeat("\x1b[D", 10); got != want {
+		t.Fatalf("sent %q, want %q", got, want)
+	}
+	// Clicks in the prompt itself go to the start of the input.
+	rec.sent = nil
+	p.clickToMove(image.Pt(0, 0))
+	if strings.Count(string(rec.sent), "\x1b[D") != 10 {
+		t.Fatalf("click on prompt sent %q", rec.sent)
+	}
+	// Other rows do nothing.
+	rec.sent = nil
+	p.clickToMove(image.Pt(2, 1))
+	if len(rec.sent) != 0 {
+		t.Fatal("click off the prompt row must not move the cursor")
 	}
 }
 

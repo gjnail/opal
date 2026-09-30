@@ -72,6 +72,7 @@ type Window struct {
 	pendingCopy string
 	// rowsRendered counts row cache misses in the current frame.
 	rowsRendered int
+	hwnd         uintptr // native window, where the platform has one
 	wantPaste    bool
 }
 
@@ -168,6 +169,8 @@ func (w *Window) run() {
 			return
 		case app.ConfigEvent:
 			w.mode = e.Config.Mode
+		case app.ViewEvent:
+			w.nativeWindow(e)
 		case app.FrameEvent:
 			start := time.Now()
 			w.rowsRendered = 0
@@ -797,6 +800,7 @@ func (w *Window) processTermEvents(gtx layout.Context) {
 				case vt.EvBell:
 					if cfg.Bell != "none" {
 						p.bellAt = time.Now()
+						w.requestAttention()
 					}
 				case vt.EvCWD:
 					p.cwd = e.Path
@@ -818,6 +822,7 @@ func (w *Window) processTermEvents(gtx layout.Context) {
 						msg += e.Body
 					}
 					w.addToast("%s", msg)
+					w.requestAttention()
 				case vt.EvProgress:
 					p.progress = e
 				case vt.EvCommandFinished:
@@ -827,9 +832,11 @@ func (w *Window) processTermEvents(gtx layout.Context) {
 							status = fmt.Sprintf("failed (exit %d)", e.Mark.Exit)
 						}
 						w.addToast("Command %s after %s", status, d.Round(time.Second))
+						w.requestAttention()
 					}
 				case vt.EvAttention:
 					p.bellAt = time.Now()
+					w.requestAttention()
 				}
 			}
 			if ti != w.active && p.term.Seq() != p.lastSeq {

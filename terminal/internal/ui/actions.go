@@ -30,6 +30,8 @@ func (w *Window) actionList() []actionDef {
 		{"split_auto", "Split pane (longest side)"},
 		{"find", "Find in scrollback"},
 		{"quick_select", "Quick select (copy a URL, path or hash by label)"},
+		{"history_search", "Search command history (all shells)"},
+		{"recent_dirs", "Open a tab in a recent directory"},
 		{"copy", "Copy selection"},
 		{"paste", "Paste"},
 		{"select_all", "Select all"},
@@ -219,6 +221,10 @@ func (w *Window) runActionSized(id string, size image.Point) {
 		}
 	case "command_palette":
 		w.openPalette("")
+	case "history_search":
+		w.openPalette("!")
+	case "recent_dirs":
+		w.openPalette("@")
 	case "rename_tab":
 		if t != nil {
 			w.openRename(t)

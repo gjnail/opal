@@ -3,9 +3,11 @@ package ui
 import (
 	"fmt"
 	"image"
+	"os"
 	"regexp"
 	"sort"
 	"strings"
+	"time"
 	"unicode"
 
 	"gioui.org/io/event"
@@ -14,6 +16,8 @@ import (
 	"gioui.org/layout"
 	"gioui.org/op/clip"
 
+	"opal/internal/history"
+	"opal/internal/jump"
 	"opal/terminal/internal/vt"
 )
 
@@ -155,26 +159,127 @@ func (w *Window) panel(gtx layout.Context, r image.Rectangle) {
 type paletteItem struct {
 	id, title, keys string
 	score           int
+	// run overrides running id as an action; shift is Shift+Enter.
+	run func(w *Window, shift bool)
 }
 
+// The palette searches actions by default; "!" searches Opal's shared
+// command history and "@" its frecent directories.
 type paletteOverlay struct {
-	edit  lineEdit
-	all   []paletteItem
-	items []paletteItem
-	sel   int
-	tags  [16]int
+	edit    lineEdit
+	all     []paletteItem
+	items   []paletteItem
+	sel     int
+	tags    [16]int
+	cwd     string
+	history []history.Command
+	dirs    []jump.Entry
+	loaded  map[byte]bool
 }
 
 func (w *Window) openPalette(query string) {
-	po := &paletteOverlay{}
+	po := &paletteOverlay{loaded: map[byte]bool{}}
 	for _, a := range w.actionList() {
 		ks := keysFor(w.keys, a.id)
 		po.all = append(po.all, paletteItem{id: a.id, title: a.title, keys: strings.Join(ks, "  ")})
+	}
+	if p := w.activePane(); p != nil {
+		po.cwd = p.currentDir()
 	}
 	po.edit.set(query)
 	po.filter()
 	w.overlay = po
 	w.invalidate()
+}
+
+// ago renders a time as "5m ago".
+func ago(unix int64) string {
+	d := time.Since(time.Unix(unix, 0))
+	switch {
+	case d < time.Minute:
+		return "just now"
+	case d < time.Hour:
+		return fmt.Sprintf("%dm ago", int(d.Minutes()))
+	case d < 48*time.Hour:
+		return fmt.Sprintf("%dh ago", int(d.Hours()))
+	}
+	return fmt.Sprintf("%dd ago", int(d.Hours()/24))
+}
+
+func (po *paletteOverlay) historyItems(q string) []paletteItem {
+	if !po.loaded['!'] {
+		po.loaded['!'] = true
+		if entries, err := history.Load(); err == nil {
+			po.history = history.Unique(entries)
+		}
+	}
+	cmds := po.history
+	if q != "" {
+		cmds = history.Search(cmds, q, history.AllShells, po.cwd, "")
+	}
+	var out []paletteItem
+	for _, c := range cmds {
+		if len(out) >= 300 {
+			break
+		}
+		cmd := c.Cmd
+		keys := ago(c.When)
+		if c.Status != 0 {
+			keys = fmt.Sprintf("exit %d  %s", c.Status, keys)
+		}
+		out = append(out, paletteItem{
+			title: strings.ReplaceAll(cmd, "\n", " ⏎ "),
+			keys:  keys,
+			run: func(w *Window, shift bool) {
+				p := w.activePane()
+				if p == nil {
+					return
+				}
+				// Paste so the shell treats it as typed text; Shift+Enter
+				// also runs it.
+				p.paste(cmd)
+				if shift {
+					p.send([]byte{'\r'})
+				}
+			},
+		})
+	}
+	return out
+}
+
+func (po *paletteOverlay) dirItems(q string) []paletteItem {
+	if !po.loaded['@'] {
+		po.loaded['@'] = true
+		po.dirs, _ = jump.Ranked()
+	}
+	home, _ := os.UserHomeDir()
+	words := strings.Fields(q)
+	var out []paletteItem
+	for _, d := range po.dirs {
+		if len(words) > 0 && !jump.Match(d.Path, words) {
+			continue
+		}
+		path := d.Path
+		title := path
+		if home != "" && strings.HasPrefix(strings.ToLower(path), strings.ToLower(home)) {
+			title = "~" + path[len(home):]
+		}
+		out = append(out, paletteItem{
+			title: title,
+			keys:  "new tab",
+			run: func(w *Window, shift bool) {
+				prof := w.app.cfg.DefaultProfile()
+				if p := w.activePane(); p != nil && p.profile.Name != "error" {
+					prof = p.profile
+				}
+				w.newTab(prof, path, w.lastSize)
+			},
+		})
+		if len(out) >= 300 {
+			break
+		}
+	}
+	return out
 }
 
 // fuzzyScore matches query as a subsequence of s, rewarding runs and word
@@ -206,6 +311,15 @@ func fuzzyScore(query, s string) int {
 
 func (po *paletteOverlay) filter() {
 	q := strings.TrimSpace(po.edit.String())
+	po.sel = 0
+	if rest, ok := strings.CutPrefix(q, "!"); ok {
+		po.items = po.historyItems(strings.TrimSpace(rest))
+		return
+	}
+	if rest, ok := strings.CutPrefix(q, "@"); ok {
+		po.items = po.dirItems(strings.TrimSpace(rest))
+		return
+	}
 	po.items = po.items[:0]
 	for _, it := range po.all {
 		s := fuzzyScore(q, it.title)
@@ -235,10 +349,18 @@ func (po *paletteOverlay) key(w *Window, e key.Event) {
 		}
 	case key.NameReturn, key.NameEnter:
 		if po.sel < len(po.items) {
-			id := po.items[po.sel].id
+			it := po.items[po.sel]
 			w.overlay = nil
-			w.runAction(id)
+			if it.run != nil {
+				it.run(w, e.Modifiers.Contain(key.ModShift))
+			} else {
+				w.runAction(it.id)
+			}
 		}
+	case key.NamePageDown:
+		po.sel = min(po.sel+len(po.tags), max(0, len(po.items)-1))
+	case key.NamePageUp:
+		po.sel = max(po.sel-len(po.tags), 0)
 	default:
 		if po.edit.key(e) {
 			po.filter()
@@ -265,7 +387,7 @@ func (po *paletteOverlay) draw(gtx layout.Context, w *Window, size image.Point) 
 	r := image.Rect(x0, y0, x0+width, y0+h)
 	w.panel(gtx, r)
 
-	w.drawField(gtx, &po.edit, image.Pt(x0+pad, y0+w.dp(6)), cells-2, "Type a command")
+	w.drawField(gtx, &po.edit, image.Pt(x0+pad, y0+w.dp(6)), cells-2, "Type a command  (! history, @ directories)")
 	fillRect(gtx, image.Rect(x0, y0+rowH+w.dp(3), x0+width, y0+rowH+w.dp(4)), c.panelBorder)
 
 	// Keep the selection in view.
@@ -303,7 +425,11 @@ func (po *paletteOverlay) draw(gtx layout.Context, w *Window, size image.Point) 
 			if pe, ok := ev.(pointer.Event); ok {
 				if pe.Kind == pointer.Press {
 					w.overlay = nil
-					w.runAction(it.id)
+					if it.run != nil {
+						it.run(w, pe.Modifiers.Contain(key.ModShift))
+					} else {
+						w.runAction(it.id)
+					}
 					return
 				}
 				po.sel = first + i
