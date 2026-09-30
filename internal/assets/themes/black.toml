@@ -1,0 +1,62 @@
+name = "black"
+description = "Colored blocks on a dark background, with the shell name in the first block. Uses powerline separators with a Nerd Font."
+style = "blocks"
+lines = 2
+frame = false
+dir_style = "full"
+git_style = "full"
+left  = ["shell", "host", "dir", "git", "venv", "duration", "jobs", "status"]
+right = ["time"]
+gradient = ["#6EF3D6", "#9DB4FF", "#D59CFF", "#FF8FCF"]
+
+[colors]
+text      = "#EEF0FF"
+on_hue    = "#0E0D16"
+muted     = "#9296B5"
+frame     = "#343852"
+branch    = "#FFD58A"
+staged    = "#7EF0B4"
+modified  = "#FFB36B"
+untracked = "#86C8FF"
+conflict  = "#FF8FB5"
+stash     = "#C4A5FF"
+ahead     = "#86C8FF"
+behind    = "#FF9BD0"
+state     = "#FF8FB5"
+duration  = "#EEF0FF"
+jobs      = "#EEF0FF"
+error     = "#FFFFFF"
+venv      = "#EEF0FF"
+host      = "#FFD58A"
+root      = "#FF8FB5"
+time      = "#9296B5"
+
+# Background color of each block.
+[blocks]
+host     = "#261C35"
+dir      = "#12172A"
+git      = "#1E1631"
+venv     = "#0D2527"
+duration = "#191C30"
+jobs     = "#191C30"
+status   = "#5C0F33"
+default  = "#15172A"
+
+[hues]
+zsh     = "#4BE3A0"
+bash    = "#FF6F59"
+fish    = "#FFC94A"
+pwsh    = "#5AA9FF"
+default = "#EEF0FF"
+
+[syntax]
+command    = "hue"
+keyword    = "stash"
+parameter  = "untracked"
+string     = "branch"
+number     = "behind"
+operator   = "muted"
+variable   = "staged"
+comment    = "muted"
+error      = "conflict"
+suggestion = "frame"

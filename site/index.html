@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>opal: one shell setup for zsh, bash, fish and PowerShell</title>
+  <meta name="description" content="opal gives zsh, bash, fish and PowerShell the same prompt, aliases, tab completion, suggestions and history, from one config file, on Windows, macOS and Linux.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="images/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="getting-started.html">Getting started</a>
+      <a href="configuration.html">Configuration</a>
+      <a href="plugins.html">Plugins</a>
+      <a href="faq.html">FAQ</a>
+      <a href="https://github.com/gjnail/opal">GitHub</a>
+      <a class="btn btn-primary btn-small" href="getting-started.html#install">Install</a>
+    </nav>
+  </div>
+</header>
+
+<main id="main">
+  <section class="hero">
+    <div class="spectrum" aria-hidden="true"></div>
+    <h1>One shell setup for zsh, bash, fish and PowerShell</h1>
+    <p class="lede">opal gives every shell you use the same prompt, aliases, tab completion, suggestions and command history, from one config file, on Windows, macOS and Linux.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="getting-started.html#install">Install opal</a>
+      <a class="btn btn-secondary" href="getting-started.html">Getting started</a>
+    </div>
+    <p class="hero-meta">Free and open source (MIT) · One program, no dependencies · No accounts, no tracking</p>
+  </section>
+
+  <div class="hero-shot">
+<pre class="term" aria-label="The fire theme in zsh, bash, fish and PowerShell"><span class="term-label">zsh  </span><span style="color:#57536E">╭─</span><span style="color:#4BE3A0;font-weight:700">◆</span> <span style="color:#6EF3D6;font-weight:700">o</span><span style="color:#71EADF;font-weight:700">p</span><span style="color:#74E1E8;font-weight:700">a</span><span style="color:#77D8F1;font-weight:700">l</span><span style="color:#7ACEF9">/</span><span style="color:#80C5FF">i</span><span style="color:#8FBCFF">n</span><span style="color:#9CB3FF">t</span><span style="color:#A7AAFF">e</span><span style="color:#B1A1FF">r</span><span style="color:#BE9BFA">n</span><span style="color:#CE99F0">a</span><span style="color:#DE97E6">l</span><span style="color:#ED94DC">/</span><span style="color:#FB90D2;font-weight:700">p</span><span style="color:#FF99C3;font-weight:700">r</span><span style="color:#FFA4B1;font-weight:700">o</span><span style="color:#FFAF9E;font-weight:700">m</span><span style="color:#FFB988;font-weight:700">p</span><span style="color:#FFC36E;font-weight:700">t</span> <span style="color:#8C89A6">on </span><span style="color:#FFD58A;font-weight:700">main</span><span style="color:#86C8FF"> ⇡1</span><span style="color:#7EF0B4"> +2</span><span style="color:#FFB36B"> !1</span><span style="color:#86C8FF"> ?3</span>                      <span style="color:#C4A5FF">took 3.2s</span>
+<span class="term-label">     </span><span style="color:#57536E">╰─</span><span style="color:#4BE3A0;font-weight:700">❯</span> 
+<span class="term-label">bash </span><span style="color:#57536E">╭─</span><span style="color:#FF6F59;font-weight:700">◆</span> <span style="color:#6EF3D6;font-weight:700">o</span><span style="color:#71EADF;font-weight:700">p</span><span style="color:#74E1E8;font-weight:700">a</span><span style="color:#77D8F1;font-weight:700">l</span><span style="color:#7ACEF9">/</span><span style="color:#80C5FF">i</span><span style="color:#8FBCFF">n</span><span style="color:#9CB3FF">t</span><span style="color:#A7AAFF">e</span><span style="color:#B1A1FF">r</span><span style="color:#BE9BFA">n</span><span style="color:#CE99F0">a</span><span style="color:#DE97E6">l</span><span style="color:#ED94DC">/</span><span style="color:#FB90D2;font-weight:700">p</span><span style="color:#FF99C3;font-weight:700">r</span><span style="color:#FFA4B1;font-weight:700">o</span><span style="color:#FFAF9E;font-weight:700">m</span><span style="color:#FFB988;font-weight:700">p</span><span style="color:#FFC36E;font-weight:700">t</span> <span style="color:#8C89A6">on </span><span style="color:#FFD58A;font-weight:700">main</span><span style="color:#86C8FF"> ⇡1</span><span style="color:#7EF0B4"> +2</span><span style="color:#FFB36B"> !1</span><span style="color:#86C8FF"> ?3</span> <span style="color:#6EF3D6">◇ api</span>
+<span class="term-label">     </span><span style="color:#57536E">╰─</span><span style="color:#FF6F59;font-weight:700">❯</span> 
+<span class="term-label">fish </span><span style="color:#57536E">╭─</span><span style="color:#FFC94A;font-weight:700">◆</span> <span style="color:#6EF3D6;font-weight:700">o</span><span style="color:#71EADF;font-weight:700">p</span><span style="color:#74E1E8;font-weight:700">a</span><span style="color:#77D8F1;font-weight:700">l</span><span style="color:#7ACEF9">/</span><span style="color:#80C5FF">i</span><span style="color:#8FBCFF">n</span><span style="color:#9CB3FF">t</span><span style="color:#A7AAFF">e</span><span style="color:#B1A1FF">r</span><span style="color:#BE9BFA">n</span><span style="color:#CE99F0">a</span><span style="color:#DE97E6">l</span><span style="color:#ED94DC">/</span><span style="color:#FB90D2;font-weight:700">p</span><span style="color:#FF99C3;font-weight:700">r</span><span style="color:#FFA4B1;font-weight:700">o</span><span style="color:#FFAF9E;font-weight:700">m</span><span style="color:#FFB988;font-weight:700">p</span><span style="color:#FFC36E;font-weight:700">t</span> <span style="color:#8C89A6">on </span><span style="color:#FFD58A;font-weight:700">main</span><span style="color:#86C8FF"> ⇡1</span><span style="color:#7EF0B4"> +2</span><span style="color:#FFB36B"> !1</span><span style="color:#86C8FF"> ?3</span>                            <span style="color:#86C8FF">✦ 1</span>
+<span class="term-label">     </span><span style="color:#57536E">╰─</span><span style="color:#FFC94A;font-weight:700">❯</span> 
+<span class="term-label">pwsh </span><span style="color:#57536E">╭─</span><span style="color:#5AA9FF;font-weight:700">◆</span> <span style="color:#6EF3D6;font-weight:700">o</span><span style="color:#71EADF;font-weight:700">p</span><span style="color:#74E1E8;font-weight:700">a</span><span style="color:#77D8F1;font-weight:700">l</span><span style="color:#7ACEF9">\</span><span style="color:#80C5FF">i</span><span style="color:#8FBCFF">n</span><span style="color:#9CB3FF">t</span><span style="color:#A7AAFF">e</span><span style="color:#B1A1FF">r</span><span style="color:#BE9BFA">n</span><span style="color:#CE99F0">a</span><span style="color:#DE97E6">l</span><span style="color:#ED94DC">\</span><span style="color:#FB90D2;font-weight:700">p</span><span style="color:#FF99C3;font-weight:700">r</span><span style="color:#FFA4B1;font-weight:700">o</span><span style="color:#FFAF9E;font-weight:700">m</span><span style="color:#FFB988;font-weight:700">p</span><span style="color:#FFC36E;font-weight:700">t</span> <span style="color:#8C89A6">on </span><span style="color:#FFD58A;font-weight:700">main</span><span style="color:#86C8FF"> ⇡1</span><span style="color:#7EF0B4"> +2</span><span style="color:#FFB36B"> !1</span><span style="color:#86C8FF"> ?3</span>                <span style="color:#FF4D8D;font-weight:700">✘ 127</span><span style="color:#8C89A6"> not found</span>
+<span class="term-label">     </span><span style="color:#57536E">╰─</span><span style="color:#FF4D8D;font-weight:700">❯</span> </pre>
+  </div>
+
+  <section class="section">
+    <h2>What it sets up</h2>
+    <p class="sub">Everything Oh My Zsh users expect, in every shell, with the same config.</p>
+    <div class="cards">
+      <a class="card" href="themes.html"><div class="card-body"><span class="tag">All shells</span><h3>Prompt</h3><p>Three themes with git status, command duration, exit codes, virtualenvs and SSH or root markers. The prompt symbol's color tells you which shell you're in.</p></div></a>
+      <a class="card" href="plugins.html"><div class="card-body"><span class="tag">All shells</span><h3>Aliases and plugins</h3><p>Oh My Zsh's git aliases and other plugins, written once and translated into each shell's own syntax.</p></div></a>
+      <a class="card" href="getting-started.html#completion"><div class="card-body"><span class="tag">All shells</span><h3>Tab completion</h3><p>Git branches, remotes and changed files, even in PowerShell, which has none of its own. Completions from docker, kubectl, gh and other tools are set up too.</p></div></a>
+      <a class="card" href="getting-started.html#suggestions"><div class="card-body"><span class="tag">fish · PowerShell · zsh · bash with ble.sh</span><h3>Suggestions</h3><p>Grey text completes what you're typing from your history. Press Tab or the Right arrow to take it.</p></div></a>
+      <a class="card" href="getting-started.html#history"><div class="card-body"><span class="tag">All shells</span><h3>Shared history</h3><p>Every command from every shell goes into one history. Ctrl+R searches all of it, or just this folder or this shell.</p></div></a>
+      <a class="card" href="commands.html"><div class="card-body"><span class="tag">All shells</span><h3>Tools</h3><p><code>j</code> to jump between folders, <code>open</code>, clipboard, <code>extract</code>, <code>ports</code>, and <code>pkg install</code> for whatever package manager you have.</p></div></a>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="split">
+      <div>
+        <h2>Written for each shell</h2>
+        <p>opal is a single program. When a shell starts, <code>opal init</code> prints code written for that shell, so nothing is emulated.</p>
+        <ul class="checks">
+          <li>Aliases become fish abbreviations and PowerShell functions that pass on arguments and pipeline input.</li>
+          <li>PowerShell's own aliases, like <code>gc</code> and <code>gl</code>, are kept unless you choose otherwise.</li>
+          <li>Works with bash 3.2 on macOS as well as bash 5, and with Windows PowerShell 5.1 as well as PowerShell 7.</li>
+          <li>The prompt never runs text from folder or branch names.</li>
+          <li>Setup only edits a marked block in your startup files and keeps a backup.</li>
+        </ul>
+        <a href="getting-started.html">Get started</a>
+      </div>
+      <pre><code># the git plugin's "gst" in each shell
+
+# zsh and bash
+alias -- gst='git status'
+
+# fish
+abbr -a -g -- gst 'git status'
+
+# PowerShell
+function global:gst {
+    if ($MyInvocation.ExpectingInput) { $input | git status @args }
+    else { git status @args }
+}</code></pre>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Runs on</h2>
+    <p class="sub">CI loads opal into each of these shells on every change.</p>
+    <div class="stats">
+      <div class="stat"><div class="num" style="font-size:1.3rem">Windows</div><p>Windows PowerShell 5.1, PowerShell 7, Git Bash, and any shell in WSL.</p></div>
+      <div class="stat"><div class="num" style="font-size:1.3rem">macOS</div><p>zsh, the bash 3.2 that ships with macOS, newer bash, fish and PowerShell 7.</p></div>
+      <div class="stat"><div class="num" style="font-size:1.3rem">Linux</div><p>bash, zsh, fish and PowerShell 7, on x86_64 and ARM64.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="cta">
+      <h2>Try it in a minute</h2>
+      <p style="color:var(--muted)">One command installs opal and sets up every shell it finds. <code>opal setup --remove</code> takes it out again.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="getting-started.html#install">Install opal</a>
+        <a class="btn btn-secondary" href="https://github.com/gjnail/opal">View on GitHub</a>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>opal is free and open source under the MIT license. This site has no analytics or cookies.</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/gjnail/opal">Source code</a>
+      <a href="https://github.com/gjnail/opal/releases">Releases</a>
+      <a href="https://github.com/gjnail/opal/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/gjnail/opal/issues">Report a problem</a>
+      <a href="https://ko-fi.com/gnail">Support on Ko-fi</a>
+    </nav>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
+</body>
+</html>

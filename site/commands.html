@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Commands · opal</title>
+  <meta name="description" content="Every opal command: setup, doctor, themes, plugins, history, update, and the tools that behave the same on every OS.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="images/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="getting-started.html">Getting started</a>
+      <a href="configuration.html">Configuration</a>
+      <a href="plugins.html">Plugins</a>
+      <a href="faq.html">FAQ</a>
+      <a href="https://github.com/gjnail/opal">GitHub</a>
+      <a class="btn btn-primary btn-small" href="getting-started.html#install">Install</a>
+    </nav>
+  </div>
+</header>
+<div class="docs">
+  <aside class="sidebar" aria-label="Documentation">
+    <h2>Start here</h2>
+    <ul>
+      <li><a href="getting-started.html">Getting started</a></li>
+      <li><a href="faq.html">FAQ and troubleshooting</a></li>
+    </ul>
+    <h2>Reference</h2>
+    <ul>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="themes.html">Themes</a></li>
+      <li><a href="plugins.html">Plugins</a></li>
+      <li><a href="commands.html" aria-current="page">Commands</a></li>
+    </ul>
+  </aside>
+
+  <main id="main" class="prose">
+    <h1>Commands</h1>
+    <p class="lede"><code>opal help</code> lists these too. Most of the tools also have short aliases from the <code>core</code> plugin.</p>
+
+    <h2 id="setup">Setup</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>opal setup</code></td><td>Adds opal to the startup file of every shell it finds. <code>--dry-run</code> shows what would change, <code>--remove</code> takes opal out again, and naming shells (<code>opal setup zsh</code>) limits it to those.</td></tr>
+      <tr><td><code>opal init SHELL</code></td><td>Prints the startup code for <code>zsh</code>, <code>bash</code>, <code>fish</code> or <code>pwsh</code>. This is what the startup files run.</td></tr>
+      <tr><td><code>opal doctor</code></td><td>Shows the system, shell, terminal, color support and clipboard opal detected, which features and plugins are active, and PowerShell aliases that clash with plugins.</td></tr>
+      <tr><td><code>opal update</code></td><td>Downloads the latest release and replaces the running program, after checking it against <code>SHA256SUMS.txt</code>. A copy built from a clone rebuilds from that clone instead; <code>--release</code> forces a download.</td></tr>
+      <tr><td><code>opal greet</code></td><td>Shows the banner that new terminals open with.</td></tr>
+      <tr><td><code>opal config edit</code></td><td>Opens the config file in <code>$VISUAL</code>, <code>$EDITOR</code>, or Notepad or nano.</td></tr>
+    </table></div>
+
+    <h2 id="look">Themes and plugins</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>opal theme list</code></td><td>Lists the themes.</td></tr>
+      <tr><td><code>opal theme preview [NAME]</code></td><td>Shows themes as each shell would draw them. <code>--html</code> and <code>--svg</code> write them for web pages.</td></tr>
+      <tr><td><code>opal theme set NAME</code></td><td>Switches theme.</td></tr>
+      <tr><td><code>opal plugin list</code></td><td>Lists plugins and whether each is active.</td></tr>
+      <tr><td><code>opal plugin enable|disable NAME</code></td><td>Turns a plugin on or off.</td></tr>
+      <tr><td><code>opal plugin install REPO</code></td><td>Installs a plugin from git. See <a href="plugins.html#install">Plugins</a>.</td></tr>
+    </table></div>
+
+    <h2 id="history">History and folders</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Command</th><th>What it does</th></tr>
+      <tr><td><code>opal history</code></td><td>Opens the history search (the same as Ctrl+R).</td></tr>
+      <tr><td><code>opal history list [N]</code></td><td>Prints the last N commands.</td></tr>
+      <tr><td><code>opal history import</code></td><td>Imports the PowerShell, bash, zsh and fish history files again.</td></tr>
+      <tr><td><code>opal jump list</code></td><td>Lists remembered folders, best match first. <code>opal jump add DIR</code> and <code>opal jump remove DIR</code> change the list.</td></tr>
+    </table></div>
+
+    <h2 id="tools">Tools</h2>
+    <div class="table-wrap"><table>
+      <tr><th>Command</th><th>Alias</th><th>What it does</th></tr>
+      <tr><td><code>opal open PATH</code></td><td><code>open</code></td><td>Opens a file, folder or URL with the default app. In WSL it opens it in Windows.</td></tr>
+      <tr><td><code>opal clip copy [TEXT]</code></td><td><code>clipcopy</code></td><td>Copies text or standard input to the clipboard. Over SSH it uses OSC 52, so the text reaches the clipboard of the computer you're sitting at, if your terminal supports it.</td></tr>
+      <tr><td><code>opal clip paste</code></td><td><code>clippaste</code></td><td>Prints the clipboard.</td></tr>
+      <tr><td><code>opal extract FILE</code></td><td><code>x</code></td><td>Unpacks zip, tar, tar.gz and tar.bz2 itself, and hands xz, zst, 7z and rar to tar, 7-Zip or unrar. An archive with one top-level folder becomes that folder; anything else goes into a new folder named after the archive. A single compressed file, such as <code>log.gz</code>, is decompressed next to it. Existing files are never overwritten.</td></tr>
+      <tr><td><code>opal ports [PORT]</code></td><td><code>ports</code></td><td>Lists listening TCP ports with the process behind each.</td></tr>
+      <tr><td><code>opal path</code></td><td><code>paths</code></td><td>Prints <code>PATH</code> one folder per line, marking missing and duplicate entries.</td></tr>
+      <tr><td><code>opal pkg VERB [NAMES]</code></td><td><code>pkg</code></td><td>Runs the system package manager. See <a href="plugins.html#built-in">the pkg plugin</a>.</td></tr>
+      <tr><td><code>opal js VERB [ARGS]</code></td><td><code>jsi</code>, <code>jsr</code>...</td><td>Runs npm, pnpm, yarn or bun, picked from the project's lockfile.</td></tr>
+      <tr><td><code>opal venv create [DIR]</code></td><td><code>mkvenv</code></td><td>Creates a Python virtualenv with this system's Python 3.</td></tr>
+    </table></div>
+    <div class="pager">
+      <a href="plugins.html"><small>Previous</small>Plugins</a>
+      <a class="next" href="faq.html"><small>Next</small>FAQ and troubleshooting</a>
+    </div>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>opal is free and open source under the MIT license. This site has no analytics or cookies.</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/gjnail/opal">Source code</a>
+      <a href="https://github.com/gjnail/opal/releases">Releases</a>
+      <a href="https://github.com/gjnail/opal/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/gjnail/opal/issues">Report a problem</a>
+      <a href="https://ko-fi.com/gnail">Support on Ko-fi</a>
+    </nav>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
+</body>
+</html>

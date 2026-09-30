@@ -1,0 +1,49 @@
+name = "core"
+description = "Navigation, listings, and portable helpers: open, clipboard, extract, ports"
+
+[env]
+CLICOLOR = { macos = "1" }
+# Our prompt shows the virtualenv itself; stop activate scripts rewriting it.
+VIRTUAL_ENV_DISABLE_PROMPT = "1"
+
+[aliases]
+".."   = "cd .."
+"..."  = "cd ../.."
+"...." = "cd ../../.."
+"-"    = { sh = "cd -" }
+
+# GNU ls on Linux and Git Bash, BSD ls on macOS; fish and PowerShell color on their own.
+ls   = { macos = "ls -G", linux = "ls --color=auto", "bash.windows" = "ls --color=auto", "zsh.windows" = "ls --color=auto", fish = "", pwsh = "" }
+ll   = { sh = "ls -lh", fish = "", pwsh = "Get-ChildItem" }
+la   = { sh = "ls -lAh", fish = "", pwsh = "Get-ChildItem -Force" }
+grep = { sh = "grep --color=auto" }
+
+# Same command, every OS. The binary picks the right backend.
+clipcopy  = "opal clip copy"
+clippaste = "opal clip paste"
+pbcopy    = { default = "opal clip copy", unless = ["pbcopy"] }
+pbpaste   = { default = "opal clip paste", unless = ["pbpaste"] }
+open      = { default = "opal open", macos = "" }
+x         = "opal extract"
+extract   = "opal extract"
+ports     = "opal ports"
+paths     = "opal path"
+
+[functions.mkcd]
+desc = "Make a directory (with parents) and cd into it"
+sh   = 'mkdir -p -- "$1" && cd -- "$1"'
+fish = 'mkdir -p -- $argv[1]; and cd -- $argv[1]'
+pwsh = '$d = New-Item -ItemType Directory -Force -Path $args[0]; Set-Location -LiteralPath $d.FullName'
+
+[functions.up]
+desc = "Go up N directories (default 1)"
+sh   = 'local n="${1:-1}" p=""; while [ "$n" -gt 0 ]; do p="../$p"; n=$((n - 1)); done; cd -- "${p:-.}"'
+fish = 'set -l n 1; set -q argv[1]; and set n $argv[1]; cd (string repeat -n $n ../)'
+pwsh = '$n = 1; if ($args.Count) { $n = [int]$args[0] }; Set-Location -Path ((@("..") * $n) -join [IO.Path]::DirectorySeparatorChar)'
+
+[functions.reload]
+desc = "Restart the shell so config changes take effect"
+zsh  = 'exec zsh'
+bash = 'exec "$BASH"'
+fish = 'exec fish'
+pwsh = '& (Get-Process -Id $PID).Path -NoLogo; exit'

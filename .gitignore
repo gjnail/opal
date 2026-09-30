@@ -1,0 +1,5 @@
+/opal
+/opal.exe
+/dist/
+*.opal-backup
+.claude/launch.json

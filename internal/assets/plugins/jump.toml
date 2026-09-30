@@ -1,0 +1,15 @@
+name = "jump"
+description = "j <words> jumps to your most frecent matching directory; ji picks one with fzf"
+
+[functions.j]
+desc = "Jump to the best-ranked directory matching the words"
+sh   = 'local d; d="$(opal jump query -- "$@")" && cd -- "$d"'
+fish = 'set -l d (opal jump query -- $argv); and cd -- $d'
+pwsh = '$d = & opal jump query @args; if ($LASTEXITCODE -eq 0 -and $d) { Set-Location -LiteralPath $d }'
+
+[functions.ji]
+desc = "Pick a recent directory interactively"
+requires = ["fzf"]
+sh   = 'local d; d="$(opal jump list --paths | fzf --height 40% --reverse --query "$*")" && cd -- "$d"'
+fish = 'set -l d (opal jump list --paths | fzf --height 40% --reverse --query "$argv"); and cd -- $d'
+pwsh = '$d = & opal jump list --paths | fzf --height 40% --reverse --query "$args"; if ($d) { Set-Location -LiteralPath $d }'

@@ -1,0 +1,81 @@
+name = "boulder"
+description = "One line in muted colors, with a shortened path and compact git status."
+style = "line"
+lines = 1
+frame = false
+dir_style = "short"
+git_style = "compact"
+left  = ["host", "dir", "git", "venv", "duration", "jobs", "status"]
+right = []
+gradient = ["#5FD4C4", "#7FB2F0"]
+
+[colors]
+text      = "#E6DDD3"
+muted     = "#9A8C7E"
+frame     = "#5A4E44"
+branch    = "#C9A27A"
+staged    = "#8FCFA0"
+modified  = "#E0A86E"
+untracked = "#C9A27A"
+conflict  = "#E8807A"
+stash     = "#C9A27A"
+ahead     = "#7FB2F0"
+behind    = "#7FB2F0"
+state     = "#E8807A"
+duration  = "#9A8C7E"
+jobs      = "#C9A27A"
+error     = "#E8807A"
+venv      = "#5FD4C4"
+host      = "#E0A86E"
+root      = "#E8807A"
+time      = "#9A8C7E"
+
+[hues]
+zsh     = "#5FD4A0"
+bash    = "#F08A6A"
+fish    = "#E8C170"
+pwsh    = "#6FA8F0"
+default = "#E6DDD3"
+
+[syntax]
+command    = "hue"
+keyword    = "branch"
+parameter  = "text"
+string     = "modified"
+number     = "modified"
+operator   = "muted"
+variable   = "venv"
+comment    = "frame"
+error      = "error"
+suggestion = "frame"
+
+[light]
+gradient = ["#137A6E", "#2E5F9E"]
+
+[light.colors]
+text      = "#3A2F26"
+muted     = "#7D6E60"
+frame     = "#C4B6A8"
+branch    = "#7A5530"
+staged    = "#2E7A45"
+modified  = "#9A5A1C"
+untracked = "#7A5530"
+conflict  = "#B3342C"
+stash     = "#7A5530"
+ahead     = "#2E5F9E"
+behind    = "#2E5F9E"
+state     = "#B3342C"
+duration  = "#7D6E60"
+jobs      = "#7A5530"
+error     = "#B3342C"
+venv      = "#137A6E"
+host      = "#9A5A1C"
+root      = "#B3342C"
+time      = "#7D6E60"
+
+[light.hues]
+zsh     = "#1E7F52"
+bash    = "#B84A2A"
+fish    = "#8C6414"
+pwsh    = "#2E5F9E"
+default = "#3A2F26"

@@ -1,0 +1,22 @@
+name = "docker"
+description = "Docker and Compose shortcuts"
+requires = ["docker"]
+
+[aliases]
+dps    = "docker ps"
+dpa    = "docker ps --all"
+di     = "docker images"
+drm    = "docker rm"
+drmi   = "docker rmi"
+dex    = "docker exec --interactive --tty"
+drun   = "docker run --rm --interactive --tty"
+dlog   = "docker logs --follow"
+dstop  = "docker stop"
+dprune = "docker system prune"
+dc     = "docker compose"
+dcu    = "docker compose up --detach"
+dcd    = "docker compose down"
+dcl    = "docker compose logs --follow"
+dcb    = "docker compose build"
+dcr    = "docker compose run --rm"
+dcps   = "docker compose ps"

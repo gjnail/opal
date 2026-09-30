@@ -1,0 +1,6 @@
+name = "pkg"
+description = "pkg install|remove|search|update|upgrade|list|info on brew, apt, dnf, pacman, zypper, apk, winget, scoop or choco"
+
+[aliases]
+# Termux and FreeBSD already ship a `pkg`; leave theirs alone.
+pkg = { default = "opal pkg", unless = ["pkg"] }

@@ -1,0 +1,78 @@
+# Tools that can print their own shell completions. For each one installed,
+# opal runs the generator once, caches the script, and regenerates it only
+# when the tool itself changes. Keys: bash zsh fish pwsh (a command to run),
+# or pwsh_code (PowerShell to include as-is, for tools with no generator).
+
+[docker]
+bash = "docker completion bash"
+zsh  = "docker completion zsh"
+fish = "docker completion fish"
+pwsh = "docker completion powershell"
+
+[kubectl]
+bash = "kubectl completion bash"
+zsh  = "kubectl completion zsh"
+fish = "kubectl completion fish"
+pwsh = "kubectl completion powershell"
+
+[helm]
+bash = "helm completion bash"
+zsh  = "helm completion zsh"
+fish = "helm completion fish"
+pwsh = "helm completion powershell"
+
+[gh]
+bash = "gh completion -s bash"
+zsh  = "gh completion -s zsh"
+fish = "gh completion -s fish"
+pwsh = "gh completion -s powershell"
+
+[rustup]
+bash = "rustup completions bash"
+zsh  = "rustup completions zsh"
+fish = "rustup completions fish"
+pwsh = "rustup completions powershell"
+
+[uv]
+bash = "uv generate-shell-completion bash"
+zsh  = "uv generate-shell-completion zsh"
+fish = "uv generate-shell-completion fish"
+pwsh = "uv generate-shell-completion powershell"
+
+[deno]
+bash = "deno completions bash"
+zsh  = "deno completions zsh"
+fish = "deno completions fish"
+pwsh = "deno completions powershell"
+
+[pnpm]
+bash = "pnpm completion bash"
+zsh  = "pnpm completion zsh"
+fish = "pnpm completion fish"
+pwsh = "pnpm completion pwsh"
+
+[just]
+bash = "just --completions bash"
+zsh  = "just --completions zsh"
+fish = "just --completions fish"
+pwsh = "just --completions powershell"
+
+[npm]
+bash = "npm completion"
+zsh  = "npm completion"
+
+[winget]
+pwsh_code = '''
+Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
+    param($wordToComplete, $commandAst, $cursorPosition)
+    $enc = [Console]::OutputEncoding
+    [Console]::OutputEncoding = $global:__opal_utf8
+    try {
+        $word = $wordToComplete.Replace('"', '""')
+        $line = $commandAst.ToString().Replace('"', '""')
+        winget complete --word="$word" --commandline "$line" --position $cursorPosition | ForEach-Object {
+            [System.Management.Automation.CompletionResult]::new($_, $_, 'ParameterValue', $_)
+        }
+    } finally { [Console]::OutputEncoding = $enc }
+}
+'''

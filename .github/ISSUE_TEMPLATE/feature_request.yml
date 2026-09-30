@@ -1,0 +1,24 @@
+name: Feature request
+description: A plugin, theme or feature idea
+labels: [enhancement]
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: What are you trying to do?
+      description: Describe the situation or problem first, before a solution.
+    validations:
+      required: true
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would help?
+  - type: checkboxes
+    id: shells
+    attributes:
+      label: Shells it matters for
+      options:
+        - label: PowerShell
+        - label: zsh
+        - label: bash
+        - label: fish

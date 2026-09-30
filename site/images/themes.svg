@@ -1,0 +1,472 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="725" height="586" viewBox="0 0 725 586">
+<rect width="100%" height="100%" rx="10" fill="#14131c"/>
+<g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, 'Cascadia Mono', monospace" font-size="14" xml:space="preserve">
+<text x="18.0" y="33.8" fill="#e9e6f2" font-weight="700">fire</text>
+<text x="18.0" y="55.8" fill="#6f6b87">zsh</text>
+<text x="76.8" y="55.8" fill="#57536E">╭─</text>
+<text x="93.6" y="55.8" fill="#4BE3A0" font-weight="700">◆</text>
+<text x="110.4" y="55.8" fill="#6EF3D6" font-weight="700">o</text>
+<text x="118.8" y="55.8" fill="#71EADF" font-weight="700">p</text>
+<text x="127.2" y="55.8" fill="#74E1E8" font-weight="700">a</text>
+<text x="135.6" y="55.8" fill="#77D8F1" font-weight="700">l</text>
+<text x="144.0" y="55.8" fill="#7ACEF9">/</text>
+<text x="152.4" y="55.8" fill="#80C5FF">i</text>
+<text x="160.8" y="55.8" fill="#8FBCFF">n</text>
+<text x="169.2" y="55.8" fill="#9CB3FF">t</text>
+<text x="177.6" y="55.8" fill="#A7AAFF">e</text>
+<text x="186.0" y="55.8" fill="#B1A1FF">r</text>
+<text x="194.4" y="55.8" fill="#BE9BFA">n</text>
+<text x="202.8" y="55.8" fill="#CE99F0">a</text>
+<text x="211.2" y="55.8" fill="#DE97E6">l</text>
+<text x="219.6" y="55.8" fill="#ED94DC">/</text>
+<text x="228.0" y="55.8" fill="#FB90D2" font-weight="700">p</text>
+<text x="236.4" y="55.8" fill="#FF99C3" font-weight="700">r</text>
+<text x="244.8" y="55.8" fill="#FFA4B1" font-weight="700">o</text>
+<text x="253.2" y="55.8" fill="#FFAF9E" font-weight="700">m</text>
+<text x="261.6" y="55.8" fill="#FFB988" font-weight="700">p</text>
+<text x="270.0" y="55.8" fill="#FFC36E" font-weight="700">t</text>
+<text x="286.8" y="55.8" fill="#8C89A6">on </text>
+<text x="312.0" y="55.8" fill="#FFD58A" font-weight="700">main</text>
+<text x="354.0" y="55.8" fill="#86C8FF">⇡1</text>
+<text x="379.2" y="55.8" fill="#7EF0B4">+2</text>
+<text x="404.4" y="55.8" fill="#FFB36B">!1</text>
+<text x="429.6" y="55.8" fill="#86C8FF">?3</text>
+<text x="631.2" y="55.8" fill="#C4A5FF">took 3.2s</text>
+<text x="76.8" y="77.8" fill="#57536E">╰─</text>
+<text x="93.6" y="77.8" fill="#4BE3A0" font-weight="700">❯</text>
+<text x="18.0" y="99.8" fill="#6f6b87">bash</text>
+<text x="76.8" y="99.8" fill="#57536E">╭─</text>
+<text x="93.6" y="99.8" fill="#FF6F59" font-weight="700">◆</text>
+<text x="110.4" y="99.8" fill="#6EF3D6" font-weight="700">o</text>
+<text x="118.8" y="99.8" fill="#71EADF" font-weight="700">p</text>
+<text x="127.2" y="99.8" fill="#74E1E8" font-weight="700">a</text>
+<text x="135.6" y="99.8" fill="#77D8F1" font-weight="700">l</text>
+<text x="144.0" y="99.8" fill="#7ACEF9">/</text>
+<text x="152.4" y="99.8" fill="#80C5FF">i</text>
+<text x="160.8" y="99.8" fill="#8FBCFF">n</text>
+<text x="169.2" y="99.8" fill="#9CB3FF">t</text>
+<text x="177.6" y="99.8" fill="#A7AAFF">e</text>
+<text x="186.0" y="99.8" fill="#B1A1FF">r</text>
+<text x="194.4" y="99.8" fill="#BE9BFA">n</text>
+<text x="202.8" y="99.8" fill="#CE99F0">a</text>
+<text x="211.2" y="99.8" fill="#DE97E6">l</text>
+<text x="219.6" y="99.8" fill="#ED94DC">/</text>
+<text x="228.0" y="99.8" fill="#FB90D2" font-weight="700">p</text>
+<text x="236.4" y="99.8" fill="#FF99C3" font-weight="700">r</text>
+<text x="244.8" y="99.8" fill="#FFA4B1" font-weight="700">o</text>
+<text x="253.2" y="99.8" fill="#FFAF9E" font-weight="700">m</text>
+<text x="261.6" y="99.8" fill="#FFB988" font-weight="700">p</text>
+<text x="270.0" y="99.8" fill="#FFC36E" font-weight="700">t</text>
+<text x="286.8" y="99.8" fill="#8C89A6">on </text>
+<text x="312.0" y="99.8" fill="#FFD58A" font-weight="700">main</text>
+<text x="354.0" y="99.8" fill="#86C8FF">⇡1</text>
+<text x="379.2" y="99.8" fill="#7EF0B4">+2</text>
+<text x="404.4" y="99.8" fill="#FFB36B">!1</text>
+<text x="429.6" y="99.8" fill="#86C8FF">?3</text>
+<text x="454.8" y="99.8" fill="#6EF3D6">◇ api</text>
+<text x="76.8" y="121.8" fill="#57536E">╰─</text>
+<text x="93.6" y="121.8" fill="#FF6F59" font-weight="700">❯</text>
+<text x="18.0" y="143.8" fill="#6f6b87">fish</text>
+<text x="76.8" y="143.8" fill="#57536E">╭─</text>
+<text x="93.6" y="143.8" fill="#FFC94A" font-weight="700">◆</text>
+<text x="110.4" y="143.8" fill="#6EF3D6" font-weight="700">o</text>
+<text x="118.8" y="143.8" fill="#71EADF" font-weight="700">p</text>
+<text x="127.2" y="143.8" fill="#74E1E8" font-weight="700">a</text>
+<text x="135.6" y="143.8" fill="#77D8F1" font-weight="700">l</text>
+<text x="144.0" y="143.8" fill="#7ACEF9">/</text>
+<text x="152.4" y="143.8" fill="#80C5FF">i</text>
+<text x="160.8" y="143.8" fill="#8FBCFF">n</text>
+<text x="169.2" y="143.8" fill="#9CB3FF">t</text>
+<text x="177.6" y="143.8" fill="#A7AAFF">e</text>
+<text x="186.0" y="143.8" fill="#B1A1FF">r</text>
+<text x="194.4" y="143.8" fill="#BE9BFA">n</text>
+<text x="202.8" y="143.8" fill="#CE99F0">a</text>
+<text x="211.2" y="143.8" fill="#DE97E6">l</text>
+<text x="219.6" y="143.8" fill="#ED94DC">/</text>
+<text x="228.0" y="143.8" fill="#FB90D2" font-weight="700">p</text>
+<text x="236.4" y="143.8" fill="#FF99C3" font-weight="700">r</text>
+<text x="244.8" y="143.8" fill="#FFA4B1" font-weight="700">o</text>
+<text x="253.2" y="143.8" fill="#FFAF9E" font-weight="700">m</text>
+<text x="261.6" y="143.8" fill="#FFB988" font-weight="700">p</text>
+<text x="270.0" y="143.8" fill="#FFC36E" font-weight="700">t</text>
+<text x="286.8" y="143.8" fill="#8C89A6">on </text>
+<text x="312.0" y="143.8" fill="#FFD58A" font-weight="700">main</text>
+<text x="354.0" y="143.8" fill="#86C8FF">⇡1</text>
+<text x="379.2" y="143.8" fill="#7EF0B4">+2</text>
+<text x="404.4" y="143.8" fill="#FFB36B">!1</text>
+<text x="429.6" y="143.8" fill="#86C8FF">?3</text>
+<text x="681.6" y="143.8" fill="#86C8FF">✦ 1</text>
+<text x="76.8" y="165.8" fill="#57536E">╰─</text>
+<text x="93.6" y="165.8" fill="#FFC94A" font-weight="700">❯</text>
+<text x="18.0" y="187.8" fill="#6f6b87">pwsh</text>
+<text x="76.8" y="187.8" fill="#57536E">╭─</text>
+<text x="93.6" y="187.8" fill="#5AA9FF" font-weight="700">◆</text>
+<text x="110.4" y="187.8" fill="#6EF3D6" font-weight="700">o</text>
+<text x="118.8" y="187.8" fill="#71EADF" font-weight="700">p</text>
+<text x="127.2" y="187.8" fill="#74E1E8" font-weight="700">a</text>
+<text x="135.6" y="187.8" fill="#77D8F1" font-weight="700">l</text>
+<text x="144.0" y="187.8" fill="#7ACEF9">\</text>
+<text x="152.4" y="187.8" fill="#80C5FF">i</text>
+<text x="160.8" y="187.8" fill="#8FBCFF">n</text>
+<text x="169.2" y="187.8" fill="#9CB3FF">t</text>
+<text x="177.6" y="187.8" fill="#A7AAFF">e</text>
+<text x="186.0" y="187.8" fill="#B1A1FF">r</text>
+<text x="194.4" y="187.8" fill="#BE9BFA">n</text>
+<text x="202.8" y="187.8" fill="#CE99F0">a</text>
+<text x="211.2" y="187.8" fill="#DE97E6">l</text>
+<text x="219.6" y="187.8" fill="#ED94DC">\</text>
+<text x="228.0" y="187.8" fill="#FB90D2" font-weight="700">p</text>
+<text x="236.4" y="187.8" fill="#FF99C3" font-weight="700">r</text>
+<text x="244.8" y="187.8" fill="#FFA4B1" font-weight="700">o</text>
+<text x="253.2" y="187.8" fill="#FFAF9E" font-weight="700">m</text>
+<text x="261.6" y="187.8" fill="#FFB988" font-weight="700">p</text>
+<text x="270.0" y="187.8" fill="#FFC36E" font-weight="700">t</text>
+<text x="286.8" y="187.8" fill="#8C89A6">on </text>
+<text x="312.0" y="187.8" fill="#FFD58A" font-weight="700">main</text>
+<text x="354.0" y="187.8" fill="#86C8FF">⇡1</text>
+<text x="379.2" y="187.8" fill="#7EF0B4">+2</text>
+<text x="404.4" y="187.8" fill="#FFB36B">!1</text>
+<text x="429.6" y="187.8" fill="#86C8FF">?3</text>
+<text x="580.8" y="187.8" fill="#FF4D8D" font-weight="700">✘ 127</text>
+<text x="631.2" y="187.8" fill="#8C89A6">not found</text>
+<text x="76.8" y="209.8" fill="#57536E">╰─</text>
+<text x="93.6" y="209.8" fill="#FF4D8D" font-weight="700">❯</text>
+<text x="18.0" y="253.8" fill="#e9e6f2" font-weight="700">black</text>
+<text x="18.0" y="275.8" fill="#6f6b87">zsh</text>
+<rect x="76.8" y="262.0" width="8.4" height="18.0" fill="#4BE3A0"/>
+<rect x="85.2" y="262.0" width="42.0" height="18.0" fill="#4BE3A0"/>
+<text x="85.2" y="275.8" fill="#0E0D16" font-weight="700">◆ zsh</text>
+<rect x="127.2" y="262.0" width="8.4" height="18.0" fill="#4BE3A0"/>
+<rect x="135.6" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<rect x="144.0" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="144.0" y="275.8" fill="#6EF3D6" font-weight="700">o</text>
+<rect x="152.4" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="152.4" y="275.8" fill="#79EADD" font-weight="700">p</text>
+<rect x="160.8" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="160.8" y="275.8" fill="#81E0E4" font-weight="700">a</text>
+<rect x="169.2" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="169.2" y="275.8" fill="#89D6EB" font-weight="700">l</text>
+<rect x="177.6" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="177.6" y="275.8" fill="#90CCF1">/</text>
+<rect x="186.0" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="186.0" y="275.8" fill="#96C2F7">i</text>
+<rect x="194.4" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="194.4" y="275.8" fill="#9BB8FD">n</text>
+<rect x="202.8" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="202.8" y="275.8" fill="#A4B2FF">t</text>
+<rect x="211.2" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="211.2" y="275.8" fill="#AEAEFF">e</text>
+<rect x="219.6" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="219.6" y="275.8" fill="#B7ABFF">r</text>
+<rect x="228.0" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="228.0" y="275.8" fill="#BFA7FF">n</text>
+<rect x="236.4" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="236.4" y="275.8" fill="#C8A3FF">a</text>
+<rect x="244.8" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="244.8" y="275.8" fill="#D09FFF">l</text>
+<rect x="253.2" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="253.2" y="275.8" fill="#D79CFD">/</text>
+<rect x="261.6" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="261.6" y="275.8" fill="#DE9AF5" font-weight="700">p</text>
+<rect x="270.0" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="270.0" y="275.8" fill="#E598EE" font-weight="700">r</text>
+<rect x="278.4" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="278.4" y="275.8" fill="#EC96E6" font-weight="700">o</text>
+<rect x="286.8" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="286.8" y="275.8" fill="#F294DE" font-weight="700">m</text>
+<rect x="295.2" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="295.2" y="275.8" fill="#F992D7" font-weight="700">p</text>
+<rect x="303.6" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="303.6" y="275.8" fill="#FF8FCF" font-weight="700">t</text>
+<rect x="312.0" y="262.0" width="8.4" height="18.0" fill="#12172A"/>
+<rect x="320.4" y="262.0" width="8.4" height="18.0" fill="#1E1631"/>
+<rect x="328.8" y="262.0" width="33.6" height="18.0" fill="#1E1631"/>
+<text x="328.8" y="275.8" fill="#FFD58A" font-weight="700">main</text>
+<rect x="362.4" y="262.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="370.8" y="275.8" fill="#86C8FF">⇡1</text>
+<rect x="387.6" y="262.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="396.0" y="275.8" fill="#7EF0B4">+2</text>
+<rect x="412.8" y="262.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="421.2" y="275.8" fill="#FFB36B">!1</text>
+<rect x="438.0" y="262.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="446.4" y="275.8" fill="#86C8FF">?3</text>
+<rect x="463.2" y="262.0" width="8.4" height="18.0" fill="#1E1631"/>
+<rect x="471.6" y="262.0" width="8.4" height="18.0" fill="#191C30"/>
+<rect x="480.0" y="262.0" width="75.6" height="18.0" fill="#191C30"/>
+<text x="480.0" y="275.8" fill="#EEF0FF">took 3.2s</text>
+<rect x="555.6" y="262.0" width="8.4" height="18.0" fill="#191C30"/>
+<text x="76.8" y="297.8" fill="#4BE3A0" font-weight="700">❯</text>
+<text x="18.0" y="319.8" fill="#6f6b87">bash</text>
+<rect x="76.8" y="306.0" width="8.4" height="18.0" fill="#FF6F59"/>
+<rect x="85.2" y="306.0" width="50.4" height="18.0" fill="#FF6F59"/>
+<text x="85.2" y="319.8" fill="#0E0D16" font-weight="700">◆ bash</text>
+<rect x="135.6" y="306.0" width="8.4" height="18.0" fill="#FF6F59"/>
+<rect x="144.0" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<rect x="152.4" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="152.4" y="319.8" fill="#6EF3D6" font-weight="700">o</text>
+<rect x="160.8" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="160.8" y="319.8" fill="#79EADD" font-weight="700">p</text>
+<rect x="169.2" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="169.2" y="319.8" fill="#81E0E4" font-weight="700">a</text>
+<rect x="177.6" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="177.6" y="319.8" fill="#89D6EB" font-weight="700">l</text>
+<rect x="186.0" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="186.0" y="319.8" fill="#90CCF1">/</text>
+<rect x="194.4" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="194.4" y="319.8" fill="#96C2F7">i</text>
+<rect x="202.8" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="202.8" y="319.8" fill="#9BB8FD">n</text>
+<rect x="211.2" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="211.2" y="319.8" fill="#A4B2FF">t</text>
+<rect x="219.6" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="219.6" y="319.8" fill="#AEAEFF">e</text>
+<rect x="228.0" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="228.0" y="319.8" fill="#B7ABFF">r</text>
+<rect x="236.4" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="236.4" y="319.8" fill="#BFA7FF">n</text>
+<rect x="244.8" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="244.8" y="319.8" fill="#C8A3FF">a</text>
+<rect x="253.2" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="253.2" y="319.8" fill="#D09FFF">l</text>
+<rect x="261.6" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="261.6" y="319.8" fill="#D79CFD">/</text>
+<rect x="270.0" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="270.0" y="319.8" fill="#DE9AF5" font-weight="700">p</text>
+<rect x="278.4" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="278.4" y="319.8" fill="#E598EE" font-weight="700">r</text>
+<rect x="286.8" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="286.8" y="319.8" fill="#EC96E6" font-weight="700">o</text>
+<rect x="295.2" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="295.2" y="319.8" fill="#F294DE" font-weight="700">m</text>
+<rect x="303.6" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="303.6" y="319.8" fill="#F992D7" font-weight="700">p</text>
+<rect x="312.0" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="312.0" y="319.8" fill="#FF8FCF" font-weight="700">t</text>
+<rect x="320.4" y="306.0" width="8.4" height="18.0" fill="#12172A"/>
+<rect x="328.8" y="306.0" width="8.4" height="18.0" fill="#1E1631"/>
+<rect x="337.2" y="306.0" width="33.6" height="18.0" fill="#1E1631"/>
+<text x="337.2" y="319.8" fill="#FFD58A" font-weight="700">main</text>
+<rect x="370.8" y="306.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="379.2" y="319.8" fill="#86C8FF">⇡1</text>
+<rect x="396.0" y="306.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="404.4" y="319.8" fill="#7EF0B4">+2</text>
+<rect x="421.2" y="306.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="429.6" y="319.8" fill="#FFB36B">!1</text>
+<rect x="446.4" y="306.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="454.8" y="319.8" fill="#86C8FF">?3</text>
+<rect x="471.6" y="306.0" width="8.4" height="18.0" fill="#1E1631"/>
+<rect x="480.0" y="306.0" width="8.4" height="18.0" fill="#0D2527"/>
+<rect x="488.4" y="306.0" width="42.0" height="18.0" fill="#0D2527"/>
+<text x="488.4" y="319.8" fill="#EEF0FF">◇ api</text>
+<rect x="530.4" y="306.0" width="8.4" height="18.0" fill="#0D2527"/>
+<text x="76.8" y="341.8" fill="#FF6F59" font-weight="700">❯</text>
+<text x="18.0" y="363.8" fill="#6f6b87">fish</text>
+<rect x="76.8" y="350.0" width="8.4" height="18.0" fill="#FFC94A"/>
+<rect x="85.2" y="350.0" width="50.4" height="18.0" fill="#FFC94A"/>
+<text x="85.2" y="363.8" fill="#0E0D16" font-weight="700">◆ fish</text>
+<rect x="135.6" y="350.0" width="8.4" height="18.0" fill="#FFC94A"/>
+<rect x="144.0" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<rect x="152.4" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="152.4" y="363.8" fill="#6EF3D6" font-weight="700">o</text>
+<rect x="160.8" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="160.8" y="363.8" fill="#79EADD" font-weight="700">p</text>
+<rect x="169.2" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="169.2" y="363.8" fill="#81E0E4" font-weight="700">a</text>
+<rect x="177.6" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="177.6" y="363.8" fill="#89D6EB" font-weight="700">l</text>
+<rect x="186.0" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="186.0" y="363.8" fill="#90CCF1">/</text>
+<rect x="194.4" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="194.4" y="363.8" fill="#96C2F7">i</text>
+<rect x="202.8" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="202.8" y="363.8" fill="#9BB8FD">n</text>
+<rect x="211.2" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="211.2" y="363.8" fill="#A4B2FF">t</text>
+<rect x="219.6" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="219.6" y="363.8" fill="#AEAEFF">e</text>
+<rect x="228.0" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="228.0" y="363.8" fill="#B7ABFF">r</text>
+<rect x="236.4" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="236.4" y="363.8" fill="#BFA7FF">n</text>
+<rect x="244.8" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="244.8" y="363.8" fill="#C8A3FF">a</text>
+<rect x="253.2" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="253.2" y="363.8" fill="#D09FFF">l</text>
+<rect x="261.6" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="261.6" y="363.8" fill="#D79CFD">/</text>
+<rect x="270.0" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="270.0" y="363.8" fill="#DE9AF5" font-weight="700">p</text>
+<rect x="278.4" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="278.4" y="363.8" fill="#E598EE" font-weight="700">r</text>
+<rect x="286.8" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="286.8" y="363.8" fill="#EC96E6" font-weight="700">o</text>
+<rect x="295.2" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="295.2" y="363.8" fill="#F294DE" font-weight="700">m</text>
+<rect x="303.6" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="303.6" y="363.8" fill="#F992D7" font-weight="700">p</text>
+<rect x="312.0" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="312.0" y="363.8" fill="#FF8FCF" font-weight="700">t</text>
+<rect x="320.4" y="350.0" width="8.4" height="18.0" fill="#12172A"/>
+<rect x="328.8" y="350.0" width="8.4" height="18.0" fill="#1E1631"/>
+<rect x="337.2" y="350.0" width="33.6" height="18.0" fill="#1E1631"/>
+<text x="337.2" y="363.8" fill="#FFD58A" font-weight="700">main</text>
+<rect x="370.8" y="350.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="379.2" y="363.8" fill="#86C8FF">⇡1</text>
+<rect x="396.0" y="350.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="404.4" y="363.8" fill="#7EF0B4">+2</text>
+<rect x="421.2" y="350.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="429.6" y="363.8" fill="#FFB36B">!1</text>
+<rect x="446.4" y="350.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="454.8" y="363.8" fill="#86C8FF">?3</text>
+<rect x="471.6" y="350.0" width="8.4" height="18.0" fill="#1E1631"/>
+<rect x="480.0" y="350.0" width="8.4" height="18.0" fill="#191C30"/>
+<rect x="488.4" y="350.0" width="25.2" height="18.0" fill="#191C30"/>
+<text x="488.4" y="363.8" fill="#EEF0FF">✦ 1</text>
+<rect x="513.6" y="350.0" width="8.4" height="18.0" fill="#191C30"/>
+<text x="76.8" y="385.8" fill="#FFC94A" font-weight="700">❯</text>
+<text x="18.0" y="407.8" fill="#6f6b87">pwsh</text>
+<rect x="76.8" y="394.0" width="8.4" height="18.0" fill="#5AA9FF"/>
+<rect x="85.2" y="394.0" width="50.4" height="18.0" fill="#5AA9FF"/>
+<text x="85.2" y="407.8" fill="#0E0D16" font-weight="700">◆ pwsh</text>
+<rect x="135.6" y="394.0" width="8.4" height="18.0" fill="#5AA9FF"/>
+<rect x="144.0" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<rect x="152.4" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="152.4" y="407.8" fill="#6EF3D6" font-weight="700">o</text>
+<rect x="160.8" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="160.8" y="407.8" fill="#79EADD" font-weight="700">p</text>
+<rect x="169.2" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="169.2" y="407.8" fill="#81E0E4" font-weight="700">a</text>
+<rect x="177.6" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="177.6" y="407.8" fill="#89D6EB" font-weight="700">l</text>
+<rect x="186.0" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="186.0" y="407.8" fill="#90CCF1">\</text>
+<rect x="194.4" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="194.4" y="407.8" fill="#96C2F7">i</text>
+<rect x="202.8" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="202.8" y="407.8" fill="#9BB8FD">n</text>
+<rect x="211.2" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="211.2" y="407.8" fill="#A4B2FF">t</text>
+<rect x="219.6" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="219.6" y="407.8" fill="#AEAEFF">e</text>
+<rect x="228.0" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="228.0" y="407.8" fill="#B7ABFF">r</text>
+<rect x="236.4" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="236.4" y="407.8" fill="#BFA7FF">n</text>
+<rect x="244.8" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="244.8" y="407.8" fill="#C8A3FF">a</text>
+<rect x="253.2" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="253.2" y="407.8" fill="#D09FFF">l</text>
+<rect x="261.6" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="261.6" y="407.8" fill="#D79CFD">\</text>
+<rect x="270.0" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="270.0" y="407.8" fill="#DE9AF5" font-weight="700">p</text>
+<rect x="278.4" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="278.4" y="407.8" fill="#E598EE" font-weight="700">r</text>
+<rect x="286.8" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="286.8" y="407.8" fill="#EC96E6" font-weight="700">o</text>
+<rect x="295.2" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="295.2" y="407.8" fill="#F294DE" font-weight="700">m</text>
+<rect x="303.6" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="303.6" y="407.8" fill="#F992D7" font-weight="700">p</text>
+<rect x="312.0" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<text x="312.0" y="407.8" fill="#FF8FCF" font-weight="700">t</text>
+<rect x="320.4" y="394.0" width="8.4" height="18.0" fill="#12172A"/>
+<rect x="328.8" y="394.0" width="8.4" height="18.0" fill="#1E1631"/>
+<rect x="337.2" y="394.0" width="33.6" height="18.0" fill="#1E1631"/>
+<text x="337.2" y="407.8" fill="#FFD58A" font-weight="700">main</text>
+<rect x="370.8" y="394.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="379.2" y="407.8" fill="#86C8FF">⇡1</text>
+<rect x="396.0" y="394.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="404.4" y="407.8" fill="#7EF0B4">+2</text>
+<rect x="421.2" y="394.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="429.6" y="407.8" fill="#FFB36B">!1</text>
+<rect x="446.4" y="394.0" width="25.2" height="18.0" fill="#1E1631"/>
+<text x="454.8" y="407.8" fill="#86C8FF">?3</text>
+<rect x="471.6" y="394.0" width="8.4" height="18.0" fill="#1E1631"/>
+<rect x="480.0" y="394.0" width="8.4" height="18.0" fill="#5C0F33"/>
+<rect x="488.4" y="394.0" width="42.0" height="18.0" fill="#5C0F33"/>
+<text x="488.4" y="407.8" fill="#FFFFFF" font-weight="700">✘ 127</text>
+<rect x="530.4" y="394.0" width="84.0" height="18.0" fill="#5C0F33"/>
+<text x="538.8" y="407.8" fill="#9296B5">not found</text>
+<rect x="614.4" y="394.0" width="8.4" height="18.0" fill="#5C0F33"/>
+<text x="76.8" y="429.8" fill="#FFFFFF" font-weight="700">❯</text>
+<text x="18.0" y="473.8" fill="#e9e6f2" font-weight="700">boulder</text>
+<text x="18.0" y="495.8" fill="#6f6b87">zsh</text>
+<text x="76.8" y="495.8" fill="#5FD4C4" font-weight="700">o</text>
+<text x="85.2" y="495.8" fill="#62D2C7" font-weight="700">p</text>
+<text x="93.6" y="495.8" fill="#64D0CA" font-weight="700">a</text>
+<text x="102.0" y="495.8" fill="#67CECD" font-weight="700">l</text>
+<text x="110.4" y="495.8" fill="#69CBD0">/</text>
+<text x="118.8" y="495.8" fill="#6BC9D3">i</text>
+<text x="127.2" y="495.8" fill="#6EC7D6">/</text>
+<text x="135.6" y="495.8" fill="#70C5D9" font-weight="700">p</text>
+<text x="144.0" y="495.8" fill="#72C3DC" font-weight="700">r</text>
+<text x="152.4" y="495.8" fill="#74C0DF" font-weight="700">o</text>
+<text x="160.8" y="495.8" fill="#76BEE2" font-weight="700">m</text>
+<text x="169.2" y="495.8" fill="#78BCE5" font-weight="700">p</text>
+<text x="177.6" y="495.8" fill="#7AB9E8" font-weight="700">t</text>
+<text x="194.4" y="495.8" fill="#C9A27A" font-weight="700">main</text>
+<text x="228.0" y="495.8" fill="#E0A86E">*</text>
+<text x="244.8" y="495.8" fill="#7FB2F0">⇡</text>
+<text x="261.6" y="495.8" fill="#9A8C7E">took 3.2s</text>
+<text x="345.6" y="495.8" fill="#5FD4A0" font-weight="700">❯</text>
+<text x="18.0" y="517.8" fill="#6f6b87">bash</text>
+<text x="76.8" y="517.8" fill="#5FD4C4" font-weight="700">o</text>
+<text x="85.2" y="517.8" fill="#62D2C7" font-weight="700">p</text>
+<text x="93.6" y="517.8" fill="#64D0CA" font-weight="700">a</text>
+<text x="102.0" y="517.8" fill="#67CECD" font-weight="700">l</text>
+<text x="110.4" y="517.8" fill="#69CBD0">/</text>
+<text x="118.8" y="517.8" fill="#6BC9D3">i</text>
+<text x="127.2" y="517.8" fill="#6EC7D6">/</text>
+<text x="135.6" y="517.8" fill="#70C5D9" font-weight="700">p</text>
+<text x="144.0" y="517.8" fill="#72C3DC" font-weight="700">r</text>
+<text x="152.4" y="517.8" fill="#74C0DF" font-weight="700">o</text>
+<text x="160.8" y="517.8" fill="#76BEE2" font-weight="700">m</text>
+<text x="169.2" y="517.8" fill="#78BCE5" font-weight="700">p</text>
+<text x="177.6" y="517.8" fill="#7AB9E8" font-weight="700">t</text>
+<text x="194.4" y="517.8" fill="#C9A27A" font-weight="700">main</text>
+<text x="228.0" y="517.8" fill="#E0A86E">*</text>
+<text x="244.8" y="517.8" fill="#7FB2F0">⇡</text>
+<text x="261.6" y="517.8" fill="#5FD4C4">◇ api</text>
+<text x="312.0" y="517.8" fill="#F08A6A" font-weight="700">❯</text>
+<text x="18.0" y="539.8" fill="#6f6b87">fish</text>
+<text x="76.8" y="539.8" fill="#5FD4C4" font-weight="700">o</text>
+<text x="85.2" y="539.8" fill="#62D2C7" font-weight="700">p</text>
+<text x="93.6" y="539.8" fill="#64D0CA" font-weight="700">a</text>
+<text x="102.0" y="539.8" fill="#67CECD" font-weight="700">l</text>
+<text x="110.4" y="539.8" fill="#69CBD0">/</text>
+<text x="118.8" y="539.8" fill="#6BC9D3">i</text>
+<text x="127.2" y="539.8" fill="#6EC7D6">/</text>
+<text x="135.6" y="539.8" fill="#70C5D9" font-weight="700">p</text>
+<text x="144.0" y="539.8" fill="#72C3DC" font-weight="700">r</text>
+<text x="152.4" y="539.8" fill="#74C0DF" font-weight="700">o</text>
+<text x="160.8" y="539.8" fill="#76BEE2" font-weight="700">m</text>
+<text x="169.2" y="539.8" fill="#78BCE5" font-weight="700">p</text>
+<text x="177.6" y="539.8" fill="#7AB9E8" font-weight="700">t</text>
+<text x="194.4" y="539.8" fill="#C9A27A" font-weight="700">main</text>
+<text x="228.0" y="539.8" fill="#E0A86E">*</text>
+<text x="244.8" y="539.8" fill="#7FB2F0">⇡</text>
+<text x="261.6" y="539.8" fill="#C9A27A">✦ 1</text>
+<text x="295.2" y="539.8" fill="#E8C170" font-weight="700">❯</text>
+<text x="18.0" y="561.8" fill="#6f6b87">pwsh</text>
+<text x="76.8" y="561.8" fill="#5FD4C4" font-weight="700">o</text>
+<text x="85.2" y="561.8" fill="#62D2C7" font-weight="700">p</text>
+<text x="93.6" y="561.8" fill="#64D0CA" font-weight="700">a</text>
+<text x="102.0" y="561.8" fill="#67CECD" font-weight="700">l</text>
+<text x="110.4" y="561.8" fill="#69CBD0">\</text>
+<text x="118.8" y="561.8" fill="#6BC9D3">i</text>
+<text x="127.2" y="561.8" fill="#6EC7D6">\</text>
+<text x="135.6" y="561.8" fill="#70C5D9" font-weight="700">p</text>
+<text x="144.0" y="561.8" fill="#72C3DC" font-weight="700">r</text>
+<text x="152.4" y="561.8" fill="#74C0DF" font-weight="700">o</text>
+<text x="160.8" y="561.8" fill="#76BEE2" font-weight="700">m</text>
+<text x="169.2" y="561.8" fill="#78BCE5" font-weight="700">p</text>
+<text x="177.6" y="561.8" fill="#7AB9E8" font-weight="700">t</text>
+<text x="194.4" y="561.8" fill="#C9A27A" font-weight="700">main</text>
+<text x="228.0" y="561.8" fill="#E0A86E">*</text>
+<text x="244.8" y="561.8" fill="#7FB2F0">⇡</text>
+<text x="261.6" y="561.8" fill="#E8807A" font-weight="700">✘ 127</text>
+<text x="312.0" y="561.8" fill="#9A8C7E">not found</text>
+<text x="396.0" y="561.8" fill="#E8807A" font-weight="700">❯</text>
+</g>
+</svg>

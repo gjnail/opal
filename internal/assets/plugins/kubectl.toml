@@ -1,0 +1,24 @@
+name = "kubectl"
+description = "kubectl shortcuts"
+requires = ["kubectl"]
+
+[aliases]
+k    = "kubectl"
+kg   = "kubectl get"
+kgp  = "kubectl get pods"
+kgs  = "kubectl get services"
+kgd  = "kubectl get deployments"
+kga  = "kubectl get all"
+kd   = "kubectl describe"
+kdp  = "kubectl describe pod"
+kl   = "kubectl logs --follow"
+kex  = "kubectl exec --stdin --tty"
+kaf  = "kubectl apply --filename"
+kdel = "kubectl delete"
+kctx = "kubectl config use-context"
+
+[functions.kns]
+desc = "Switch the current context's namespace"
+sh   = 'kubectl config set-context --current --namespace "$1"'
+fish = 'kubectl config set-context --current --namespace $argv[1]'
+pwsh = 'kubectl config set-context --current --namespace $args[0]'

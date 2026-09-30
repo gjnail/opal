@@ -1,0 +1,11 @@
+name = "node"
+description = "One set of shortcuts for npm, pnpm, yarn and bun, picked from the lockfile"
+
+[aliases]
+jsi = "opal js install"
+jsa = "opal js add"
+jsr = "opal js run"
+jsd = "opal js run dev"
+jsb = "opal js run build"
+jst = "opal js test"
+jsx = "opal js dlx"

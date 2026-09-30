@@ -1,0 +1,8 @@
+blank_issues_enabled: true
+contact_links:
+  - name: Report a security problem privately
+    url: https://github.com/gjnail/opal/security/advisories/new
+    about: Anything that could make a shell run a command it shouldn't.
+  - name: Questions and ideas
+    url: https://github.com/gjnail/opal/discussions
+    about: Ask how to do something, or share a plugin or theme.

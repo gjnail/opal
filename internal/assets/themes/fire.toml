@@ -1,0 +1,86 @@
+name = "fire"
+description = "Two lines. Gradient path, git status, command duration on the right, and a prompt symbol colored by shell."
+style = "line"
+lines = 2
+frame = true
+dir_style = "full"
+git_style = "full"
+left  = ["gem", "host", "dir", "git", "venv"]
+right = ["duration", "jobs", "status", "time"]
+
+# The path is colored along these stops, blended in OKLab.
+gradient = ["#6EF3D6", "#7CC7FF", "#B69CFF", "#FF8FCF", "#FFC36E"]
+
+[colors]
+text      = "#ECEAF4"
+muted     = "#8C89A6"
+frame     = "#57536E"
+branch    = "#FFD58A"
+staged    = "#7EF0B4"
+modified  = "#FFB36B"
+untracked = "#86C8FF"
+conflict  = "#FF4D8D"
+stash     = "#C4A5FF"
+ahead     = "#86C8FF"
+behind    = "#FF9BD0"
+state     = "#FF4D8D"
+duration  = "#C4A5FF"
+jobs      = "#86C8FF"
+error     = "#FF4D8D"
+venv      = "#6EF3D6"
+host      = "#FFD58A"
+root      = "#FF4D8D"
+time      = "#8C89A6"
+
+# Prompt symbol color for each shell.
+[hues]
+zsh     = "#4BE3A0"   # green
+bash    = "#FF6F59"   # red
+fish    = "#FFC94A"   # gold
+pwsh    = "#5AA9FF"   # blue
+default = "#ECEAF4"
+
+# Built-in syntax highlighting (fish, PowerShell/PSReadLine, zsh-syntax-
+# highlighting) follows the theme. Values: a color name above, "hue", or hex.
+[syntax]
+command    = "hue"
+keyword    = "stash"
+parameter  = "ahead"
+string     = "branch"
+number     = "behind"
+operator   = "muted"
+variable   = "venv"
+comment    = "frame"
+error      = "error"
+suggestion = "frame"
+
+[light]
+gradient = ["#0E8C74", "#2463C4", "#6B3FC4", "#C2337F", "#B8660A"]
+
+[light.colors]
+text      = "#23212E"
+muted     = "#6F6B85"
+frame     = "#B3AFC6"
+branch    = "#95600A"
+staged    = "#16844A"
+modified  = "#B35A0C"
+untracked = "#2463C4"
+conflict  = "#C8154F"
+stash     = "#6B3FC4"
+ahead     = "#2463C4"
+behind    = "#C2337F"
+state     = "#C8154F"
+duration  = "#6B3FC4"
+jobs      = "#2463C4"
+error     = "#C8154F"
+venv      = "#0E8C74"
+host      = "#95600A"
+root      = "#C8154F"
+time      = "#6F6B85"
+
+[light.hues]
+zsh     = "#12915B"
+bash    = "#D23B24"
+fish    = "#A87400"
+pwsh    = "#1F63D6"
+default = "#23212E"

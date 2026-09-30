@@ -1,0 +1,19 @@
+name = "python"
+description = "Virtualenvs that activate correctly in every shell (bin/ vs Scripts/, .fish vs .ps1)"
+
+[aliases]
+py      = { unix = "python3", windows = "", requires = ["python3"] }
+pyserve = { unix = "python3 -m http.server", windows = "python -m http.server" }
+vd      = "deactivate"
+
+[functions.va]
+desc = "Activate the nearest virtualenv (.venv, venv, env), searching upward"
+sh   = 'local f; f="$(opal venv activate-script --shell "$OPAL_SHELL" "$@")" && . "$f"'
+fish = 'set -l f (opal venv activate-script --shell fish $argv); and source $f'
+pwsh = '$f = & opal venv activate-script --shell pwsh @args; if ($LASTEXITCODE -eq 0 -and $f) { . $f }'
+
+[functions.mkvenv]
+desc = "Create a virtualenv (default .venv) with this OS's python, then activate it"
+sh   = 'opal venv create "$@" && va "$@"'
+fish = 'opal venv create $argv; and va $argv'
+pwsh = '& opal venv create @args; if ($LASTEXITCODE -eq 0) { va @args }'

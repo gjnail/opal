@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FAQ and troubleshooting · opal</title>
+  <meta name="description" content="Answers about installing opal, suggestions, PowerShell aliases, other shell tools, slow prompts, privacy and uninstalling.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="images/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="getting-started.html">Getting started</a>
+      <a href="configuration.html">Configuration</a>
+      <a href="plugins.html">Plugins</a>
+      <a href="faq.html" aria-current="page">FAQ</a>
+      <a href="https://github.com/gjnail/opal">GitHub</a>
+      <a class="btn btn-primary btn-small" href="getting-started.html#install">Install</a>
+    </nav>
+  </div>
+</header>
+<div class="docs">
+  <aside class="sidebar" aria-label="Documentation">
+    <h2>Start here</h2>
+    <ul>
+      <li><a href="getting-started.html">Getting started</a></li>
+      <li><a href="faq.html" aria-current="page">FAQ and troubleshooting</a></li>
+    </ul>
+    <h2>Reference</h2>
+    <ul>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="themes.html">Themes</a></li>
+      <li><a href="plugins.html">Plugins</a></li>
+      <li><a href="commands.html">Commands</a></li>
+    </ul>
+  </aside>
+
+  <main id="main" class="prose faq">
+    <h1>FAQ and troubleshooting</h1>
+    <p class="lede">Something missing? <a href="https://github.com/gjnail/opal/issues">Open an issue</a> and include the output of <code>opal doctor</code>.</p>
+
+    <h2 id="install-problems">Installing</h2>
+    <details id="execution-policy">
+      <summary>PowerShell says running scripts is disabled on this system.</summary>
+      <p>Windows PowerShell's default execution policy doesn't run profile scripts, so the startup block opal adds can't run. Allow local scripts for your account (this doesn't need administrator rights):</p>
+      <pre><code>Set-ExecutionPolicy -Scope CurrentUser RemoteSigned</code></pre>
+      <p><code>opal setup</code> warns about this when it sees it.</p>
+    </details>
+    <details id="smartscreen">
+      <summary>Windows or macOS warns that the program is from an unknown developer.</summary>
+      <p>opal's binaries aren't code-signed. The install scripts download with PowerShell or curl, which doesn't trigger these warnings. If you downloaded an archive with a browser, Windows may show "Windows protected your PC" (click <strong>More info</strong>, then <strong>Run anyway</strong>) and macOS may refuse to open it until you allow it in System Settings &gt; Privacy &amp; Security.</p>
+      <p>To check that a download was built from this repository, compare it with the release's <code>SHA256SUMS.txt</code>, or with the <a href="https://cli.github.com/">GitHub CLI</a>:</p>
+      <pre><code>gh attestation verify opal_windows_amd64.zip --repo gjnail/opal</code></pre>
+    </details>
+    <details id="not-loaded">
+      <summary>I installed opal but my prompt didn't change.</summary>
+      <p>Open a new terminal: shells that were already running don't read the new startup block. If that doesn't help, run <code>opal setup --dry-run</code> to see which startup files opal knows about, and check that your terminal starts the shell you expect. On macOS and in Git Bash, bash starts as a login shell and reads <code>.bash_profile</code>; setup makes that file load <code>.bashrc</code>.</p>
+    </details>
+
+    <h2 id="features">Features</h2>
+    <details id="suggestions">
+      <summary>I don't see grey suggestions.</summary>
+      <p>It depends on the shell:</p>
+      <ul>
+        <li>PowerShell: suggestions need PSReadLine 2.1 or newer, and Windows PowerShell 5.1 comes with 2.0. <code>opal doctor</code> shows your version. Upgrade it for your account with <code>Install-Module PSReadLine -Scope CurrentUser -Force -SkipPublisherCheck</code>, then open a new window.</li>
+        <li>bash: readline can't draw them. Install <a href="https://github.com/akinomyoga/ble.sh">ble.sh</a> and opal loads it.</li>
+        <li>zsh: opal draws them itself. If you load zsh-autosuggestions, it's used instead.</li>
+        <li>fish: suggestions are built in; check that <code>fish_autosuggestion_enabled</code> isn't 0.</li>
+      </ul>
+      <p>Suggestions only appear for commands you've run before in that shell.</p>
+    </details>
+    <details id="aliases-clash">
+      <summary>gc, gl or gp still run PowerShell commands.</summary>
+      <p>PowerShell has built-in aliases with those names (<code>gc</code> is Get-Content, <code>gl</code> is Get-Location, <code>gp</code> is Get-ItemProperty), and opal keeps them unless you set <code>shell.pwsh.clobber_builtin_aliases = true</code> in the config. <code>opal doctor</code> lists every clash.</p>
+    </details>
+    <details id="other-tools">
+      <summary>Can I use opal with Oh My Zsh, Starship or zsh-autosuggestions?</summary>
+      <p>opal sets the prompt, so another prompt tool loaded after opal replaces opal's prompt, and one loaded before it is replaced by opal's. Oh My Zsh's plugins, zsh-autosuggestions, zsh-syntax-highlighting and fzf's key bindings work alongside opal; opal colors zsh-syntax-highlighting to match the theme and leaves Tab to fzf-tab if you use it. Loading both Oh My Zsh's git plugin and opal's defines the same aliases twice, which is harmless.</p>
+    </details>
+    <details id="slow">
+      <summary>The prompt is slow in a big repository.</summary>
+      <p>opal waits for <code>git status</code> for 200 ms by default (<code>git_timeout_ms</code>). After that it shows the last known counts, marked with &hellip;, and updates them in the background, so the prompt shouldn't take much longer than that. Git's own <code>core.fsmonitor</code> and <code>core.untrackedCache</code> settings make <code>git status</code> itself faster in large repositories.</p>
+      <p>On Windows, the first prompt after starting a terminal can take a little longer while Windows loads git.</p>
+    </details>
+
+    <h2 id="privacy">Privacy and data</h2>
+    <details id="data">
+      <summary>Where does opal keep its files?</summary>
+      <ul>
+        <li>Config: <code>~/.config/opal/</code> on every system, including Windows (<code>%USERPROFILE%\.config\opal</code>).</li>
+        <li>Data: <code>%LOCALAPPDATA%\opal</code> on Windows, <code>~/.local/share/opal</code> elsewhere. It holds <code>history.tsv</code> (the shared history), <code>jump.tsv</code> (remembered folders), and caches for git status and tool completions.</li>
+        <li>The program: <code>%LOCALAPPDATA%\opal\bin</code> or <code>~/.local/bin</code> when installed with the scripts.</li>
+      </ul>
+    </details>
+    <details id="network">
+      <summary>Does opal send anything anywhere?</summary>
+      <p>No. opal only goes online when you run <code>opal update</code>, <code>opal plugin install</code> or <code>opal plugin update</code>, and on Windows when <code>opal setup</code> offers to upgrade PSReadLine and you accept.</p>
+    </details>
+    <details id="private-commands">
+      <summary>How do I keep a command out of the history?</summary>
+      <p>Start it with a space. The shared history skips those lines, as bash and zsh do. To stop recording entirely, set <code>shared = false</code> under <code>[history]</code>. The history file is readable only by your account.</p>
+    </details>
+
+    <h2 id="removing">Removing opal</h2>
+    <details id="uninstall">
+      <summary>How do I uninstall opal?</summary>
+      <p>Run <code>opal setup --remove</code> to take opal out of your startup files, then delete the program and the folders listed above. On Windows, also remove <code>%LOCALAPPDATA%\opal\bin</code> from your user PATH in Settings &gt; System &gt; About &gt; Advanced system settings &gt; Environment Variables.</p>
+    </details>
+    <details id="report">
+      <summary>Something is wrong. Where do I report it?</summary>
+      <p><a href="https://github.com/gjnail/opal/issues">Open an issue on GitHub</a> with your OS, shell and version, terminal, and the output of <code>opal doctor</code>. Problems that could make a shell run a command it shouldn't should be reported privately, as described in <a href="https://github.com/gjnail/opal/blob/main/SECURITY.md">SECURITY.md</a>. Pull requests are welcome; see the <a href="https://github.com/gjnail/opal/blob/main/CONTRIBUTING.md">contributing guide</a>.</p>
+    </details>
+    <div class="pager">
+      <a href="commands.html"><small>Previous</small>Commands</a>
+      <a class="next" href="getting-started.html"><small>Next</small>Getting started</a>
+    </div>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>opal is free and open source under the MIT license. This site has no analytics or cookies.</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/gjnail/opal">Source code</a>
+      <a href="https://github.com/gjnail/opal/releases">Releases</a>
+      <a href="https://github.com/gjnail/opal/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/gjnail/opal/issues">Report a problem</a>
+      <a href="https://ko-fi.com/gnail">Support on Ko-fi</a>
+    </nav>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
+</body>
+</html>

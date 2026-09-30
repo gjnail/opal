@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Getting started · opal</title>
+  <meta name="description" content="Install opal, see what it changes, and try the prompt, completion, suggestions and shared history.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="images/icon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" href="index.html"><img src="images/icon.svg" alt="" width="26" height="26">opal</a>
+    <nav class="site-nav" aria-label="Main">
+      <a href="getting-started.html" aria-current="page">Getting started</a>
+      <a href="configuration.html">Configuration</a>
+      <a href="plugins.html">Plugins</a>
+      <a href="faq.html">FAQ</a>
+      <a href="https://github.com/gjnail/opal">GitHub</a>
+      <a class="btn btn-primary btn-small" href="getting-started.html#install">Install</a>
+    </nav>
+  </div>
+</header>
+<div class="docs">
+  <aside class="sidebar" aria-label="Documentation">
+    <h2>Start here</h2>
+    <ul>
+      <li><a href="getting-started.html" aria-current="page">Getting started</a></li>
+      <li><a href="faq.html">FAQ and troubleshooting</a></li>
+    </ul>
+    <h2>Reference</h2>
+    <ul>
+      <li><a href="configuration.html">Configuration</a></li>
+      <li><a href="themes.html">Themes</a></li>
+      <li><a href="plugins.html">Plugins</a></li>
+      <li><a href="commands.html">Commands</a></li>
+    </ul>
+  </aside>
+
+  <main id="main" class="prose">
+    <h1>Getting started</h1>
+    <p class="lede">Install opal, open a new terminal, and try the features that work the same in every shell.</p>
+
+    <h2 id="install">1. Install</h2>
+    <p>On Windows, in PowerShell:</p>
+    <pre><code>irm https://raw.githubusercontent.com/gjnail/opal/main/install/install.ps1 | iex</code></pre>
+    <p>On macOS and Linux, and in Git Bash or WSL:</p>
+    <pre><code>curl -fsSL https://raw.githubusercontent.com/gjnail/opal/main/install/install.sh | sh</code></pre>
+    <p>The script downloads the latest release, checks it against the release's <code>SHA256SUMS.txt</code>, and puts <code>opal</code> in <code>%LOCALAPPDATA%\opal\bin</code> on Windows or <code>~/.local/bin</code> elsewhere. Then it runs <code>opal setup</code>, which:</p>
+    <ul>
+      <li>creates <code>~/.config/opal/config.toml</code>;</li>
+      <li>adds a block marked <code># &gt;&gt;&gt; opal &gt;&gt;&gt;</code> to the startup file of each shell it finds (<code>.zshrc</code>, <code>.bashrc</code>, fish's <code>conf.d/opal.fish</code>, and the profiles of Windows PowerShell and PowerShell 7), keeping a <code>.opal-backup</code> of each file it changes;</li>
+      <li>imports your existing PowerShell, bash, zsh and fish history into the shared history;</li>
+      <li>on Windows, offers to upgrade PSReadLine if it's too old for suggestions.</li>
+    </ul>
+    <p>To build from source instead, clone the repository and run <code>./install/install.sh</code> or <code>.\install\install.ps1</code>. You need Go 1.22 or newer.</p>
+
+    <h2 id="first-look">2. Open a new terminal</h2>
+    <p>Terminals that were already open don't see the change. In a new one you'll get a short banner and the prompt:</p>
+<pre class="term" aria-label="The fire theme in zsh, bash, fish and PowerShell"><span class="term-label">zsh  </span><span style="color:#57536E">╭─</span><span style="color:#4BE3A0;font-weight:700">◆</span> <span style="color:#6EF3D6;font-weight:700">o</span><span style="color:#71EADF;font-weight:700">p</span><span style="color:#74E1E8;font-weight:700">a</span><span style="color:#77D8F1;font-weight:700">l</span><span style="color:#7ACEF9">/</span><span style="color:#80C5FF">i</span><span style="color:#8FBCFF">n</span><span style="color:#9CB3FF">t</span><span style="color:#A7AAFF">e</span><span style="color:#B1A1FF">r</span><span style="color:#BE9BFA">n</span><span style="color:#CE99F0">a</span><span style="color:#DE97E6">l</span><span style="color:#ED94DC">/</span><span style="color:#FB90D2;font-weight:700">p</span><span style="color:#FF99C3;font-weight:700">r</span><span style="color:#FFA4B1;font-weight:700">o</span><span style="color:#FFAF9E;font-weight:700">m</span><span style="color:#FFB988;font-weight:700">p</span><span style="color:#FFC36E;font-weight:700">t</span> <span style="color:#8C89A6">on </span><span style="color:#FFD58A;font-weight:700">main</span><span style="color:#86C8FF"> ⇡1</span><span style="color:#7EF0B4"> +2</span><span style="color:#FFB36B"> !1</span><span style="color:#86C8FF"> ?3</span>                      <span style="color:#C4A5FF">took 3.2s</span>
+<span class="term-label">     </span><span style="color:#57536E">╰─</span><span style="color:#4BE3A0;font-weight:700">❯</span> 
+<span class="term-label">bash </span><span style="color:#57536E">╭─</span><span style="color:#FF6F59;font-weight:700">◆</span> <span style="color:#6EF3D6;font-weight:700">o</span><span style="color:#71EADF;font-weight:700">p</span><span style="color:#74E1E8;font-weight:700">a</span><span style="color:#77D8F1;font-weight:700">l</span><span style="color:#7ACEF9">/</span><span style="color:#80C5FF">i</span><span style="color:#8FBCFF">n</span><span style="color:#9CB3FF">t</span><span style="color:#A7AAFF">e</span><span style="color:#B1A1FF">r</span><span style="color:#BE9BFA">n</span><span style="color:#CE99F0">a</span><span style="color:#DE97E6">l</span><span style="color:#ED94DC">/</span><span style="color:#FB90D2;font-weight:700">p</span><span style="color:#FF99C3;font-weight:700">r</span><span style="color:#FFA4B1;font-weight:700">o</span><span style="color:#FFAF9E;font-weight:700">m</span><span style="color:#FFB988;font-weight:700">p</span><span style="color:#FFC36E;font-weight:700">t</span> <span style="color:#8C89A6">on </span><span style="color:#FFD58A;font-weight:700">main</span><span style="color:#86C8FF"> ⇡1</span><span style="color:#7EF0B4"> +2</span><span style="color:#FFB36B"> !1</span><span style="color:#86C8FF"> ?3</span> <span style="color:#6EF3D6">◇ api</span>
+<span class="term-label">     </span><span style="color:#57536E">╰─</span><span style="color:#FF6F59;font-weight:700">❯</span> 
+<span class="term-label">fish </span><span style="color:#57536E">╭─</span><span style="color:#FFC94A;font-weight:700">◆</span> <span style="color:#6EF3D6;font-weight:700">o</span><span style="color:#71EADF;font-weight:700">p</span><span style="color:#74E1E8;font-weight:700">a</span><span style="color:#77D8F1;font-weight:700">l</span><span style="color:#7ACEF9">/</span><span style="color:#80C5FF">i</span><span style="color:#8FBCFF">n</span><span style="color:#9CB3FF">t</span><span style="color:#A7AAFF">e</span><span style="color:#B1A1FF">r</span><span style="color:#BE9BFA">n</span><span style="color:#CE99F0">a</span><span style="color:#DE97E6">l</span><span style="color:#ED94DC">/</span><span style="color:#FB90D2;font-weight:700">p</span><span style="color:#FF99C3;font-weight:700">r</span><span style="color:#FFA4B1;font-weight:700">o</span><span style="color:#FFAF9E;font-weight:700">m</span><span style="color:#FFB988;font-weight:700">p</span><span style="color:#FFC36E;font-weight:700">t</span> <span style="color:#8C89A6">on </span><span style="color:#FFD58A;font-weight:700">main</span><span style="color:#86C8FF"> ⇡1</span><span style="color:#7EF0B4"> +2</span><span style="color:#FFB36B"> !1</span><span style="color:#86C8FF"> ?3</span>                            <span style="color:#86C8FF">✦ 1</span>
+<span class="term-label">     </span><span style="color:#57536E">╰─</span><span style="color:#FFC94A;font-weight:700">❯</span> 
+<span class="term-label">pwsh </span><span style="color:#57536E">╭─</span><span style="color:#5AA9FF;font-weight:700">◆</span> <span style="color:#6EF3D6;font-weight:700">o</span><span style="color:#71EADF;font-weight:700">p</span><span style="color:#74E1E8;font-weight:700">a</span><span style="color:#77D8F1;font-weight:700">l</span><span style="color:#7ACEF9">\</span><span style="color:#80C5FF">i</span><span style="color:#8FBCFF">n</span><span style="color:#9CB3FF">t</span><span style="color:#A7AAFF">e</span><span style="color:#B1A1FF">r</span><span style="color:#BE9BFA">n</span><span style="color:#CE99F0">a</span><span style="color:#DE97E6">l</span><span style="color:#ED94DC">\</span><span style="color:#FB90D2;font-weight:700">p</span><span style="color:#FF99C3;font-weight:700">r</span><span style="color:#FFA4B1;font-weight:700">o</span><span style="color:#FFAF9E;font-weight:700">m</span><span style="color:#FFB988;font-weight:700">p</span><span style="color:#FFC36E;font-weight:700">t</span> <span style="color:#8C89A6">on </span><span style="color:#FFD58A;font-weight:700">main</span><span style="color:#86C8FF"> ⇡1</span><span style="color:#7EF0B4"> +2</span><span style="color:#FFB36B"> !1</span><span style="color:#86C8FF"> ?3</span>                <span style="color:#FF4D8D;font-weight:700">✘ 127</span><span style="color:#8C89A6"> not found</span>
+<span class="term-label">     </span><span style="color:#57536E">╰─</span><span style="color:#FF4D8D;font-weight:700">❯</span> </pre>
+    <p>Inside a git repository the path starts at the repository's folder, and the counts after the branch are commits ahead (&#x21E1;), staged (+), modified (!) and untracked (?) files. The duration shows up after commands that take longer than two seconds, and the exit code after commands that fail.</p>
+    <p>Run <code>opal doctor</code> to see what opal detected about your system, terminal and shell, and which features are active.</p>
+
+    <h2 id="completion">3. Tab completion</h2>
+    <p>Type <code>git checkout </code> and press Tab to see your branches. The git aliases complete the same way: <code>gco </code> then Tab. In PowerShell this comes from opal; zsh, bash and fish already have git completion, and opal adds its own commands and the aliases.</p>
+    <p>If docker, kubectl, gh, helm, uv, deno, pnpm, just or winget is installed, opal also loads the completion script that tool generates. It's cached and loaded the first time you press Tab after that command.</p>
+
+    <h2 id="suggestions">4. Suggestions</h2>
+    <p>Start typing a command you've run before. Grey text shows the rest of it; press Tab or the Right arrow to accept it. In PowerShell, Ctrl+Space opens the completion menu even when a suggestion is showing, and F2 switches to a list of suggestions.</p>
+    <p>Suggestions come from fish and PSReadLine themselves, from opal's own engine in zsh (or zsh-autosuggestions if you load it), and from <a href="https://github.com/akinomyoga/ble.sh">ble.sh</a> in bash if it's installed. See <a href="faq.html#suggestions">the FAQ</a> if you don't see them.</p>
+
+    <h2 id="history">5. Shared history</h2>
+    <p>Press Ctrl+R. A full-screen search opens over every command you've run in any shell. Type words in any order to narrow it down, use the arrow keys to pick one, and press Enter to put it on your command line. Ctrl+R again switches between all shells, the current folder and the current shell. Esc closes it.</p>
+    <p>Commands that start with a space aren't recorded, as in bash and zsh.</p>
+
+    <h2 id="jump">6. Jump between folders</h2>
+    <p>opal remembers the folders you visit. <code>j proj</code> goes to the folder you use most whose name contains "proj". <code>j work api</code> narrows it down further. With fzf installed, <code>ji</code> lets you pick from a list.</p>
+
+    <h2 id="theme">7. Pick a theme</h2>
+    <pre><code>opal theme preview
+opal theme set boulder</code></pre>
+    <p>The new theme applies at the next prompt. See <a href="themes.html">Themes</a> for what each one looks like.</p>
+
+    <h2 id="config">8. Make it yours</h2>
+    <p><code>opal config edit</code> opens the config file. You can add your own aliases, functions and environment variables there, turn features off, and enable or disable plugins. See <a href="configuration.html">Configuration</a>.</p>
+
+    <h2 id="update">Updating and removing opal</h2>
+    <p><code>opal update</code> installs the latest release (or, if you built opal from a clone, pulls and rebuilds it). <code>opal setup --remove</code> removes the blocks opal added to your startup files; after that you can delete the <code>opal</code> program and the folders listed in <a href="faq.html#data">the FAQ</a>.</p>
+    <div class="pager">
+      <a class="next" href="configuration.html"><small>Next</small>Configuration</a>
+    </div>
+  </main>
+</div>
+
+<footer class="site-footer">
+  <div class="footer-inner">
+    <span>opal is free and open source under the MIT license. This site has no analytics or cookies.</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/gjnail/opal">Source code</a>
+      <a href="https://github.com/gjnail/opal/releases">Releases</a>
+      <a href="https://github.com/gjnail/opal/blob/main/CHANGELOG.md">Changelog</a>
+      <a href="https://github.com/gjnail/opal/issues">Report a problem</a>
+      <a href="https://ko-fi.com/gnail">Support on Ko-fi</a>
+    </nav>
+  </div>
+</footer>
+<script src="assets/site.js"></script>
+</body>
+</html>

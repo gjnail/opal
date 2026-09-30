@@ -1,0 +1,84 @@
+# opal configuration. zsh, bash, fish and PowerShell all read this file.
+# `opal doctor` shows what's active; `opal theme preview` shows the themes.
+# Reference: https://gjnail.github.io/opal/configuration.html
+
+# Prompt theme: fire, black or boulder
+theme = "fire"
+
+# Glyphs: "auto", "nerd" (needs a Nerd Font), "unicode" or "ascii"
+icons = "auto"
+
+# Colors: "auto", "truecolor", "256", "16" or "none"
+color = "auto"
+
+# Your terminal's background, so themes stay legible: "dark" or "light"
+background = "dark"
+
+# Say hello when a new terminal opens (shells nested inside it stay quiet).
+# See it any time with: opal greet
+greeting = true
+
+# Grey as-you-type suggestions from your history; Tab or Right arrow accepts.
+# (Built into fish and PowerShell's PSReadLine 2.1+; opal adds them to zsh,
+#  and to bash when ble.sh is installed.)
+suggestions = true
+
+# Load the completion scripts installed tools can generate (docker, kubectl,
+# gh, helm, uv, deno, pnpm, just, winget...). Generated once, cached.
+completions = true
+
+# Plugins are translated into each shell's native syntax.
+# Built in: core git jump python node docker kubectl pkg
+plugins = ["core", "git", "jump", "python", "node", "docker", "kubectl", "pkg"]
+
+# Prepended to PATH when they exist. ~ is expanded.
+path = ["~/.local/bin", "~/bin"]
+
+[prompt]
+blank_line = false          # empty line before each prompt
+duration_threshold = 2.0    # seconds before "took 3.2s" appears
+git_timeout_ms = 200        # past this, show the last known git state and refresh it in the background
+max_dir_depth = 4           # path components shown before shortening
+time = false                # show a clock
+transient = true            # redraw finished prompts as just the prompt symbol (zsh, fish, PowerShell)
+semantic_marks = true       # OSC 133/7 marks so terminals can jump between commands
+
+[history]
+shared = true               # one history across every shell you use
+ctrl_r = true               # Ctrl+R opens opal's fuzzy history picker
+
+[update]
+# repo = "gjnail/opal"      # where `opal update` downloads releases from
+
+[env]
+# EDITOR = "nvim"
+# PAGER = { unix = "less -R", windows = "" }
+
+[aliases]
+# A plain string works in every shell:
+# k = "kubectl"
+#
+# Or adapt it. Most specific key wins:
+#   zsh, bash, fish, pwsh, then sh (bash and zsh), then macos, linux, windows,
+#   wsl, unix, then default
+# ll = { unix = "ls -lh", pwsh = "Get-ChildItem" }
+
+# Functions carry one body per shell family:
+# [functions.hello]
+# sh   = 'echo "hello from $OPAL_SHELL, $1"'
+# fish = 'echo "hello from $OPAL_SHELL, $argv[1]"'
+# pwsh = 'Write-Output "hello from $env:OPAL_SHELL, $($args[0])"'
+
+[core]
+defaults = true             # history, completion and key-binding defaults
+
+[shell.fish]
+abbreviations = true        # aliases become abbreviations that expand as you type
+greeting = false            # keep fish's welcome message
+
+[shell.pwsh]
+clobber_builtin_aliases = false   # let plugins replace built-ins like gc, gl, gp, gcm
+utf8 = true                       # UTF-8 console I/O so glyphs from native tools survive
+
+[pkg]
+# prefer = "scoop"          # when several package managers are installed
