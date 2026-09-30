@@ -68,6 +68,11 @@ jobs:
       - name: PowerShell 7
         shell: pwsh
         run: pwsh -NoProfile -File test/smoke.ps1
+      - name: Show what opal generated (on failure)
+        if: failure()
+        run: |
+          OPAL_SHELL=bash opal doctor || true
+          opal init bash
 
   shells-macos:
     name: Shells (macOS)
@@ -85,6 +90,11 @@ jobs:
       - name: PowerShell 7
         shell: pwsh
         run: pwsh -NoProfile -File test/smoke.ps1
+      - name: Show what opal generated (on failure)
+        if: failure()
+        run: |
+          OPAL_SHELL=bash opal doctor || true
+          opal init bash
 
   shells-windows:
     name: Shells (Windows)
@@ -107,6 +117,12 @@ jobs:
       - name: Git Bash
         shell: bash
         run: bash --norc -i test/smoke.bash
+      - name: Show what opal generated (on failure)
+        if: failure()
+        shell: pwsh
+        run: |
+          $env:OPAL_SHELL = 'pwsh'; opal doctor
+          opal init pwsh
 
   cross-compile:
     name: Cross-compile

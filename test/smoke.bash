@@ -7,7 +7,7 @@ HISTFILE=$(mktemp) # and out of your shell history file
 
 eval "$(opal init bash)" || fail "init did not evaluate"
 [[ $OPAL_SHELL == bash ]] || fail "OPAL_SHELL not set"
-[[ $(type -t gst) == alias ]] || fail "gst should be an alias"
+[[ $(type -t gst) == alias ]] || fail "gst should be an alias, type -t says: $(type -t gst)"
 [[ $(type -t mkcd) == function ]] || fail "mkcd should be a function"
 [[ $(type -t j) == function ]] || fail "j should be a function"
 [[ $PS1 == '${_opal_ps}' ]] || fail "PS1 not installed"
