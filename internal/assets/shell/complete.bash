@@ -1,7 +1,11 @@
 # opal: tab completion for bash
 _opal_complete() {
-  local cur=${COMP_WORDS[COMP_CWORD]} IFS=$'\n'
-  COMPREPLY=($(opal complete --shell bash --cur="$cur" "${COMP_WORDS[@]:0:COMP_CWORD}" 2>/dev/null))
+  # Copy the words before IFS changes: with IFS set to a newline, bash 3.2
+  # doesn't pass a quoted array slice on as separate words.
+  local cur=${COMP_WORDS[COMP_CWORD]} words
+  words=("${COMP_WORDS[@]:0:COMP_CWORD}")
+  local IFS=$'\n'
+  COMPREPLY=($(opal complete --shell bash --cur="$cur" "${words[@]}" 2>/dev/null))
   # __files__ (or nothing) means: let readline complete paths (-o default).
   [[ ${COMPREPLY[0]-} == __files__ ]] && COMPREPLY=()
   return 0
