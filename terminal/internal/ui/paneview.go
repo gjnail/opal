@@ -82,6 +82,7 @@ func (p *Pane) draw(gtx layout.Context, focused bool) {
 	})
 	p.term.Unlock()
 
+	w.rowsRendered += len(jobs)
 	for _, j := range jobs {
 		ri := p.newRowImage(size)
 		rend.Draw(&j.row, ri.img)

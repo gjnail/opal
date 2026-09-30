@@ -37,22 +37,25 @@ type Window struct {
 	tabs   []*Tab
 	active int
 
-	fonts    *fonts.Set
-	rend     *render.Renderer
-	fontPt   float64
-	pxPerDp  float32
-	pal      vt.Palette
-	chrome   *chromeColors
-	labels   map[labelKey]*label
-	keys     map[string]string
-	frameNo  uint64
-	tabBar   tabBarState
-	overlay  overlay
-	toasts   []toast
-	focused  bool
-	gotFocus bool
-	mode     app.WindowMode
-	title    string
+	fonts   *fonts.Set
+	rend    *render.Renderer
+	fontPt  float64
+	pxPerDp float32
+	// The settings the loaded fonts were made for.
+	fontDp       float32
+	fontPtLoaded float64
+	pal          vt.Palette
+	chrome       *chromeColors
+	labels       map[labelKey]*label
+	keys         map[string]string
+	frameNo      uint64
+	tabBar       tabBarState
+	overlay      overlay
+	toasts       []toast
+	focused      bool
+	gotFocus     bool
+	mode         app.WindowMode
+	title        string
 
 	blinkOn    bool
 	blinkStart time.Time
@@ -67,7 +70,9 @@ type Window struct {
 	lastSize    image.Point
 	lastCaret   f32.Point
 	pendingCopy string
-	wantPaste   bool
+	// rowsRendered counts row cache misses in the current frame.
+	rowsRendered int
+	wantPaste    bool
 }
 
 type toast struct {
@@ -114,13 +119,17 @@ func (w *Window) pxPerPt() float32 {
 
 // ensureFonts (re)loads fonts when the size or display density changes.
 func (w *Window) ensureFonts(metric unit.Metric) {
-	if w.fonts != nil && metric.PxPerDp == w.pxPerDp && float64(w.fonts.SizePx()) == w.fontPt*float64(w.pxPerPt()) {
+	// Compare the inputs, not the resulting float32 pixel size: rounding
+	// made that differ every frame, rebuilding the fonts and every cached
+	// row each time.
+	if w.fonts != nil && metric.PxPerDp == w.fontDp && w.fontPt == w.fontPtLoaded {
 		return
 	}
 	w.pxPerDp = metric.PxPerDp
 	if w.pxPerDp <= 0 {
 		w.pxPerDp = 1
 	}
+	w.fontDp, w.fontPtLoaded = metric.PxPerDp, w.fontPt
 	cfg := w.app.cfg
 	f, err := fonts.New(fonts.Config{
 		Families:   cfg.FontFamily,
@@ -160,9 +169,13 @@ func (w *Window) run() {
 		case app.ConfigEvent:
 			w.mode = e.Config.Mode
 		case app.FrameEvent:
+			start := time.Now()
+			w.rowsRendered = 0
 			gtx := app.NewContext(&ops, e)
 			w.frame(gtx)
+			built := time.Since(start)
 			e.Frame(gtx.Ops)
+			debugf("frame build=%v submit=%v rows=%d", built, time.Since(start)-built, w.rowsRendered)
 		}
 	}
 }
