@@ -1,5 +1,5 @@
 name = "git"
-description = "Oh My Zsh's git aliases (gst, gco, gp and the rest) plus main-branch helpers"
+description = "Git aliases (gst, gco, gp and the rest) plus main-branch helpers"
 requires = ["git"]
 
 [aliases]

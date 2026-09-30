@@ -79,8 +79,8 @@
       <p>PowerShell has built-in aliases with those names (<code>gc</code> is Get-Content, <code>gl</code> is Get-Location, <code>gp</code> is Get-ItemProperty), and opal keeps them unless you set <code>shell.pwsh.clobber_builtin_aliases = true</code> in the config. <code>opal doctor</code> lists every clash.</p>
     </details>
     <details id="other-tools">
-      <summary>Can I use opal with Oh My Zsh, Starship or zsh-autosuggestions?</summary>
-      <p>opal sets the prompt, so another prompt tool loaded after opal replaces opal's prompt, and one loaded before it is replaced by opal's. Oh My Zsh's plugins, zsh-autosuggestions, zsh-syntax-highlighting and fzf's key bindings work alongside opal; opal colors zsh-syntax-highlighting to match the theme and leaves Tab to fzf-tab if you use it. Loading both Oh My Zsh's git plugin and opal's defines the same aliases twice, which is harmless.</p>
+      <summary>Can I use opal with other prompt tools or zsh plugins?</summary>
+      <p>opal sets the prompt, so another prompt tool such as Starship replaces opal's prompt if it's loaded after opal, and is replaced by it if it's loaded before. zsh-autosuggestions, zsh-syntax-highlighting and fzf's key bindings work alongside opal; opal colors zsh-syntax-highlighting to match the theme and leaves Tab to fzf-tab if you use it. If something else also defines git aliases with the same names, whichever loads last wins.</p>
     </details>
     <details id="slow">
       <summary>The prompt is slow in a big repository.</summary>
