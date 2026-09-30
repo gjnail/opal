@@ -11,6 +11,7 @@ import (
 
 	"opal/internal/history"
 	"opal/internal/jump"
+	"opal/terminal/internal/settings"
 	"opal/terminal/internal/vt"
 )
 
@@ -246,6 +247,58 @@ func TestClickToMove(t *testing.T) {
 	p.clickToMove(image.Pt(2, 1))
 	if len(rec.sent) != 0 {
 		t.Fatal("click off the prompt row must not move the cursor")
+	}
+}
+
+func TestSettingsPageEdits(t *testing.T) {
+	dir := t.TempDir()
+	t.Setenv("OPAL_CONFIG_DIR", dir)
+	t.Setenv("OPAL_DATA_DIR", dir)
+	a := &App{cfg: settings.Load(), windows: map[*Window]bool{}}
+	w := &Window{app: a, keys: keymap(nil)}
+	so := &settingsOverlay{rows: w.settingRows()}
+	find := func(label string) int {
+		for i, r := range so.rows {
+			if r.label == label {
+				return i
+			}
+		}
+		t.Fatalf("no row %q", label)
+		return -1
+	}
+	so.sel = find("Font size (points)")
+	so.change(w, 1)
+	so.change(w, 1)
+	if a.cfg.FontSize != 14 {
+		t.Fatalf("font size = %v, want 14", a.cfg.FontSize)
+	}
+	so.sel = find("Copy on select")
+	so.activate(w)
+	if !a.cfg.CopyOnSelect {
+		t.Fatal("toggle didn't stick")
+	}
+	so.sel = find("Cursor")
+	so.change(w, 1)
+	if a.cfg.CursorStyle != "bar" {
+		t.Fatalf("cursor = %q", a.cfg.CursorStyle)
+	}
+	so.sel = find("Programs may read the clipboard")
+	so.activate(w)
+	if !a.cfg.Clipboard.Read {
+		t.Fatal("clipboard read not saved")
+	}
+	// Record a shortcut for Find.
+	so.sel = find("Find in scrollback")
+	so.activate(w)
+	so.key(w, key.Event{Name: "K", Modifiers: key.ModCtrl | key.ModAlt})
+	if keymap(a.cfg.Keys)["ctrl+alt+k"] != "find" {
+		t.Fatalf("keys = %v", a.cfg.Keys)
+	}
+	// Delete resets a value to its default.
+	so.sel = find("Font size (points)")
+	so.key(w, key.Event{Name: key.NameDeleteForward})
+	if a.cfg.FontSize != settings.Defaults().FontSize {
+		t.Fatalf("reset font size = %v", a.cfg.FontSize)
 	}
 }
 

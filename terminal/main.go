@@ -21,6 +21,7 @@ func main() {
 	dir := flag.String("dir", "", "start in this directory")
 	showVersion := flag.Bool("version", false, "print the version")
 	listProfiles := flag.Bool("list-profiles", false, "list the shells Opal Terminal found")
+	openSettings := flag.Bool("settings", false, "open the settings page")
 	flag.Parse()
 
 	if *showVersion {
@@ -35,7 +36,7 @@ func main() {
 		}
 		return
 	}
-	o := ui.Options{Version: version, Dir: *dir}
+	o := ui.Options{Version: version, Dir: *dir, Settings: *openSettings}
 	if *profile != "" {
 		var found bool
 		for _, p := range cfg.ProfilesWithDetected() {

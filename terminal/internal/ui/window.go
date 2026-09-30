@@ -74,7 +74,8 @@ type Window struct {
 	// rowsRendered counts row cache misses in the current frame.
 	rowsRendered int
 	// restore holds a saved window to rebuild on the first frame.
-	restore *sessionWindow
+	restore             *sessionWindow
+	openSettingsOnStart bool
 	// closing is set once the last tab closed and the window is going away.
 	closing   bool
 	hwnd      uintptr // native window, where the platform has one
@@ -431,6 +432,11 @@ func (w *Window) frame(gtx layout.Context) {
 			}
 			w.newTab(prof, w.startDir, size)
 		}
+	}
+
+	if w.openSettingsOnStart {
+		w.openSettingsOnStart = false
+		w.openSettings()
 	}
 
 	w.handleInput(gtx, size)
@@ -821,6 +827,9 @@ func (w *Window) processTermEvents(gtx layout.Context) {
 			for _, ev := range p.term.TakeEvents() {
 				switch e := ev.(type) {
 				case vt.EvBell:
+					if cfg.Bell == "sound" {
+						w.beep()
+					}
 					if cfg.Bell != "none" {
 						p.bellAt = time.Now()
 						w.requestAttention()

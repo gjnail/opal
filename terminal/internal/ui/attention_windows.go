@@ -39,3 +39,8 @@ func (w *Window) requestAttention() {
 	fi.size = uint32(unsafe.Sizeof(fi))
 	procFlashWindowEx.Call(uintptr(unsafe.Pointer(&fi)))
 }
+
+var procMessageBeep = windows.NewLazySystemDLL("user32.dll").NewProc("MessageBeep")
+
+// beep plays the system's default sound, for bell = "sound".
+func (w *Window) beep() { procMessageBeep.Call(0) }

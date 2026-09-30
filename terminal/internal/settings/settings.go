@@ -45,6 +45,10 @@ type Config struct {
 
 	File     string   `toml:"-"`
 	Warnings []string `toml:"-"`
+	// ThemeLocal and BackgroundLocal say [terminal] overrides the
+	// prompt's theme or background (so the settings page edits it there).
+	ThemeLocal      bool `toml:"-"`
+	BackgroundLocal bool `toml:"-"`
 }
 
 // Colors override theme-derived colors. Any field left empty keeps the
@@ -216,6 +220,8 @@ func (r *rawConfig) apply(c *Config) {
 	setS(&c.WordChars, r.WordChars)
 	setS(&c.Theme, r.Theme)
 	setS(&c.Background, r.Background)
+	c.ThemeLocal = r.Theme != nil
+	c.BackgroundLocal = r.Background != nil
 	c.Colors = r.Colors
 	c.Profiles = r.Profiles
 	c.Keys = r.Keys

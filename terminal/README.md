@@ -66,8 +66,10 @@ Not done yet: kitty's Unicode placeholders and animation.
 
 ## Configuration
 
-Settings live in the `[terminal]` table of Opal's `config.toml`
-(`opal config edit`, or Ctrl+Comma in the terminal):
+Ctrl+Comma (Cmd+Comma on macOS) opens the settings page, which edits the
+values below and applies them as you change them; `opal-terminal -settings`
+opens it at launch. Everything is saved in the `[terminal]` table of Opal's
+`config.toml`, which you can also edit by hand (`opal config edit`):
 
 ```toml
 [terminal]
@@ -123,6 +125,9 @@ Default keys (macOS uses Cmd in place of Ctrl+Shift):
 | Ctrl+Shift+E | select the last command's output |
 | Ctrl+Plus / Minus / 0 | font size |
 | Ctrl+Shift+K | clear scrollback |
+| Ctrl+Shift+H / J | search command history / open a recent directory |
+| Shift+Insert, Ctrl+Insert | paste, copy |
+| Ctrl+Comma | settings |
 
 ## Layout
 

@@ -141,7 +141,7 @@ func defaultKeys() map[string]string {
 			"shift+pageup": "scroll_page_up", "shift+pagedown": "scroll_page_down",
 			"super+home": "scroll_top", "super+end": "scroll_bottom",
 			"super+k": "clear_scrollback", "super+ctrl+f": "toggle_fullscreen", "super+enter": "toggle_fullscreen",
-			"super+comma": "open_config", "super+shift+i": "toggle_broadcast", "super+shift+r": "rename_tab",
+			"super+comma": "settings", "super+shift+i": "toggle_broadcast", "super+shift+r": "rename_tab",
 		}
 		for i := 1; i <= 9; i++ {
 			k["super+"+string(rune('0'+i))] = "goto_tab_" + string(rune('0'+i))
@@ -165,7 +165,7 @@ func defaultKeys() map[string]string {
 		"shift+pageup": "scroll_page_up", "shift+pagedown": "scroll_page_down",
 		"ctrl+shift+home": "scroll_top", "ctrl+shift+end": "scroll_bottom",
 		"ctrl+shift+k": "clear_scrollback", "f11": "toggle_fullscreen",
-		"ctrl+comma": "open_config", "ctrl+shift+i": "toggle_broadcast", "ctrl+shift+r": "rename_tab",
+		"ctrl+comma": "settings", "ctrl+shift+i": "toggle_broadcast", "ctrl+shift+r": "rename_tab",
 		"ctrl+shift+e": "select_last_output",
 		"shift+insert": "paste", "ctrl+insert": "copy",
 	}

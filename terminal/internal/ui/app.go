@@ -17,6 +17,8 @@ type App struct {
 	cfg     *settings.Config
 	version string
 	windows map[*Window]bool
+	// settingsOnStart opens the settings page in the first window.
+	settingsOnStart bool
 }
 
 // Options come from the command line.
@@ -24,12 +26,14 @@ type Options struct {
 	Version string
 	Profile *settings.Profile
 	Dir     string
+	// Settings opens the settings page in the first window.
+	Settings bool
 }
 
 // Run opens the first window (or the windows saved from the last session)
 // and runs until the last one closes.
 func Run(cfg *settings.Config, o Options) {
-	a := &App{cfg: cfg, version: o.Version, windows: map[*Window]bool{}}
+	a := &App{cfg: cfg, version: o.Version, windows: map[*Window]bool{}, settingsOnStart: o.Settings}
 	restored := false
 	// A profile or directory on the command line asks for something
 	// specific, so it doesn't bring back the old session.
@@ -62,6 +66,8 @@ func (a *App) openWindowFrom(sw *sessionWindow) {
 func (a *App) start(w *Window) {
 	a.mu.Lock()
 	a.windows[w] = true
+	w.openSettingsOnStart = a.settingsOnStart
+	a.settingsOnStart = false
 	a.mu.Unlock()
 	go func() {
 		snap := w.run()

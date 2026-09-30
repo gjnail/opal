@@ -67,6 +67,7 @@ func (w *Window) actionList() []actionDef {
 		{"restart_pane", "Restart shell"},
 		{"toggle_broadcast", "Broadcast input to all panes in tab"},
 		{"toggle_fullscreen", "Toggle full screen"},
+		{"settings", "Settings"},
 		{"open_config", "Open settings file"},
 		{"reload_config", "Reload settings"},
 	}
@@ -290,6 +291,8 @@ func (w *Window) runActionSized(id string, size image.Point) {
 		} else {
 			w.gw.Option(app.Fullscreen.Option())
 		}
+	case "settings":
+		w.openSettings()
 	case "open_config":
 		w.openConfig()
 	case "reload_config":
