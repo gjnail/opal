@@ -1,6 +1,9 @@
 # Smoke test: load opal into an interactive bash and check the essentials.
 # Run with: bash --norc -i test/smoke.bash   (works on bash 3.2 through 5.x)
 fail() { echo "FAIL (bash $BASH_VERSION): $*" >&2; exit 1; }
+# bash 3.2 sets up `bash -i scriptname` as non-interactive, which turns alias
+# expansion off (and `type` then ignores aliases). A real interactive shell has it on.
+shopt -s expand_aliases
 export OPAL_COLOR=truecolor # CI terminals often claim no color support
 export OPAL_DATA_DIR=$(mktemp -d) # keep test commands out of your real history
 HISTFILE=$(mktemp) # and out of your shell history file

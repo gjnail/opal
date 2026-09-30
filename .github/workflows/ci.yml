@@ -72,12 +72,7 @@ jobs:
         if: failure()
         run: |
           OPAL_SHELL=bash opal doctor || true
-          opal init bash > "$RUNNER_TEMP/init.bash"
-          /bin/bash -n "$RUNNER_TEMP/init.bash" && echo "init.bash parses with /bin/bash $(/bin/bash -c 'echo $BASH_VERSION')"
-          /bin/bash --norc -i -c 'shopt expand_aliases; eval "$(opal init bash)"; shopt expand_aliases; alias | wc -l' 2>&1 || true
-          echo "--- traced re-run of the bash smoke test"
-          /bin/bash --norc -i -x test/smoke.bash > "$RUNNER_TEMP/trace.txt" 2>&1 || true
-          grep -n -E 'expand_aliases|unalias|posix|shopt|source |^\++ \. ' "$RUNNER_TEMP/trace.txt" | head -60 || true
+          opal init bash
 
   shells-macos:
     name: Shells (macOS)
@@ -99,12 +94,7 @@ jobs:
         if: failure()
         run: |
           OPAL_SHELL=bash opal doctor || true
-          opal init bash > "$RUNNER_TEMP/init.bash"
-          /bin/bash -n "$RUNNER_TEMP/init.bash" && echo "init.bash parses with /bin/bash $(/bin/bash -c 'echo $BASH_VERSION')"
-          /bin/bash --norc -i -c 'shopt expand_aliases; eval "$(opal init bash)"; shopt expand_aliases; alias | wc -l' 2>&1 || true
-          echo "--- traced re-run of the bash smoke test"
-          /bin/bash --norc -i -x test/smoke.bash > "$RUNNER_TEMP/trace.txt" 2>&1 || true
-          grep -n -E 'expand_aliases|unalias|posix|shopt|source |^\++ \. ' "$RUNNER_TEMP/trace.txt" | head -60 || true
+          opal init bash
 
   shells-windows:
     name: Shells (Windows)
