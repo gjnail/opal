@@ -17,7 +17,7 @@ eval "$(opal init bash)" || fail "init did not evaluate"
 [[ $PROMPT_COMMAND == _opal_precmd* ]] || fail "precmd must run first"
 complete -p opal >/dev/null 2>&1 || fail "opal completion not registered"
 COMP_WORDS=(opal theme set f); COMP_CWORD=3; _opal_complete
-[[ ${COMPREPLY[*]} == fire ]] || fail "opal theme set f<Tab> gave: ${COMPREPLY[*]}"
+[[ ${COMPREPLY[*]} == fire ]] || fail "opal theme set f<Tab> gave: '${COMPREPLY[*]}' (words: '${COMP_WORDS[*]:0:COMP_CWORD}'; opal complete alone prints: '$(opal complete --shell bash --cur=f opal theme set 2>&1)')"
 
 # Simulate PS0 having stamped a start time, then a failing command.
 if [[ -n ${EPOCHREALTIME-} ]]; then _opal_start=${EPOCHREALTIME//[^0-9]/}
