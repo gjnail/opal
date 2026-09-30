@@ -24,7 +24,8 @@ jobs:
       - uses: actions/checkout@v7
       - uses: actions/setup-go@v7
         with:
-          go-version-file: go.mod
+          # Go 1.24+ writes the LC_UUID that macOS needs to load the binary.
+          go-version: stable
 
       - name: Version
         id: version

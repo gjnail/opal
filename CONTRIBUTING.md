@@ -32,7 +32,9 @@ plugins:
 
 ## Building and testing
 
-You need Go 1.22 or newer (<https://go.dev/dl/>).
+You need Go 1.22 or newer (<https://go.dev/dl/>). On macOS, use Go 1.24 or
+newer: older versions don't write the `LC_UUID` load command, and recent
+macOS versions refuse to run binaries without it.
 
 ```
 go build -o opal .
