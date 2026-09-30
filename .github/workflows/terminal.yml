@@ -1,0 +1,51 @@
+name: Terminal
+
+# Opal Terminal is a nested module (terminal/), so the root CI doesn't build
+# it. It imports the CLI's theme, config and platform packages, so changes
+# there run this too.
+on:
+  push:
+    branches: [main]
+    paths: ["terminal/**", "internal/**", "go.mod", "go.sum", ".github/workflows/terminal.yml"]
+  pull_request:
+    paths: ["terminal/**", "internal/**", "go.mod", "go.sum", ".github/workflows/terminal.yml"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: Test (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    defaults:
+      run:
+        working-directory: terminal
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: stable
+          cache-dependency-path: terminal/go.sum
+      # Gio needs cgo and these headers on Linux.
+      - name: Install Gio's Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwayland-dev libx11-dev libx11-xcb-dev libxkbcommon-x11-dev \
+            libgles2-mesa-dev libegl1-mesa-dev libffi-dev libxcursor-dev libvulkan-dev
+      - run: go vet ./...
+      - run: go test ./...
+      - name: Build
+        shell: bash
+        run: |
+          if [ "$RUNNER_OS" = Windows ]; then
+            go build -ldflags=-H=windowsgui -o opal-terminal.exe .
+          else
+            go build -o opal-terminal .
+          fi
+          ls -l opal-terminal*
