@@ -72,7 +72,10 @@ jobs:
         if: failure()
         run: |
           OPAL_SHELL=bash opal doctor || true
-          opal init bash
+          opal init bash > "$RUNNER_TEMP/init.bash"
+          /bin/bash -n "$RUNNER_TEMP/init.bash" && echo "init.bash parses with /bin/bash $(/bin/bash -c 'echo $BASH_VERSION')"
+          echo "--- traced re-run of the bash smoke test (last 120 lines)"
+          /bin/bash --norc -i -x test/smoke.bash 2>&1 | tail -120 || true
 
   shells-macos:
     name: Shells (macOS)
@@ -94,7 +97,10 @@ jobs:
         if: failure()
         run: |
           OPAL_SHELL=bash opal doctor || true
-          opal init bash
+          opal init bash > "$RUNNER_TEMP/init.bash"
+          /bin/bash -n "$RUNNER_TEMP/init.bash" && echo "init.bash parses with /bin/bash $(/bin/bash -c 'echo $BASH_VERSION')"
+          echo "--- traced re-run of the bash smoke test (last 120 lines)"
+          /bin/bash --norc -i -x test/smoke.bash 2>&1 | tail -120 || true
 
   shells-windows:
     name: Shells (Windows)
