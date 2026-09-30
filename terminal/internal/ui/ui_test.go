@@ -269,8 +269,9 @@ func TestSettingsPageEdits(t *testing.T) {
 	so.sel = find("Font size (points)")
 	so.change(w, 1)
 	so.change(w, 1)
-	if a.cfg.FontSize != 14 {
-		t.Fatalf("font size = %v, want 14", a.cfg.FontSize)
+	// The default differs by system (13 on macOS).
+	if want := settings.Defaults().FontSize + 2; a.cfg.FontSize != want {
+		t.Fatalf("font size = %v, want %v", a.cfg.FontSize, want)
 	}
 	so.sel = find("Copy on select")
 	so.activate(w)
