@@ -338,10 +338,20 @@ func (t *Terminal) semanticPromptStart() {
 		}
 	}
 	m := &PromptMark{Started: nowFunc(), Exit: -1}
-	t.line(t.cur.y).Prompt = m
+	// The mark goes on the line where the prompt's first character lands,
+	// not where the cursor is now. Windows' ConPTY re-renders output and
+	// can pass OSC 133 through before the cursor move that preceded it.
+	t.pendingMark = m
 	t.lastPrompt = m
 	t.semantic = SemanticPrompt
 	t.seq++
+}
+
+// placePendingMark attaches a waiting prompt mark to the cursor's line.
+func (t *Terminal) placePendingMark() {
+	l := t.line(t.cur.y)
+	l.Prompt = t.pendingMark
+	t.pendingMark = nil
 }
 
 func (t *Terminal) osc133(rest string) {

@@ -378,7 +378,11 @@ func (t *Terminal) kittyFlags() int {
 }
 
 // KittyKeyboardFlags returns the active progressive enhancement flags.
-func (t *Terminal) KittyKeyboardFlags() int { return t.kittyFlags() }
+func (t *Terminal) KittyKeyboardFlags() int {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	return t.kittyFlags()
+}
 
 func (t *Terminal) kittyPush(flags int) {
 	if len(t.buf.kitty) >= 16 {

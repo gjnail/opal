@@ -317,6 +317,14 @@ func (t *Terminal) eraseDisplay(mode int, selective bool) {
 	t.cur.pendingWrap = false
 }
 
+// ClearScrollback drops the history above the screen.
+func (t *Terminal) ClearScrollback() {
+	t.mu.Lock()
+	defer t.mu.Unlock()
+	t.clearHistory()
+	t.seq++
+}
+
 // clearHistory drops all scrollback (ED 3).
 func (t *Terminal) clearHistory() {
 	if t.buf.count() > t.rows {

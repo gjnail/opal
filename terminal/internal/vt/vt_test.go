@@ -470,6 +470,21 @@ func TestShellIntegrationMarks(t *testing.T) {
 	}
 }
 
+// ConPTY can emit OSC 133;A before the cursor move that preceded it in the
+// shell's output (seen in a real trace of a transient prompt redraw). The
+// mark must land where the prompt is drawn.
+func TestPromptMarkFollowsFirstCharacter(t *testing.T) {
+	term := newTerm(20, 6)
+	term.WriteString("old prompt\r\n> echo hi")
+	term.WriteString("\x1b[2;1H          \x1b[2;20H\x1b]133;A\x1b\\\x1b[1;1H❯ \x1b]133;B\x1b\\echo hi\r\n\x1b]133;C\x1b\\hi\r\n")
+	if term.ScreenLine(0).Prompt == nil {
+		t.Fatal("mark should be on the line where the prompt was drawn")
+	}
+	if term.ScreenLine(1).Prompt != nil {
+		t.Fatal("mark must not stay where the cursor was when OSC 133;A arrived")
+	}
+}
+
 func TestNotificationsAndProgress(t *testing.T) {
 	term := newTerm(10, 1)
 	term.WriteString("\x1b]9;build done\x07\x1b]9;4;1;42\x07\x1b]777;notify;Title;Body\x07\x1b]99;;hi\x1b\\")

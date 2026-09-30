@@ -64,6 +64,10 @@ type Pane struct {
 	pressedBtn  vt.MouseButton
 	clicks      clickCounter
 	broadcast   bool
+
+	exitHandled    bool
+	clipboardReply bool
+	lastSeq        uint64
 }
 
 type rowImage struct {
@@ -192,11 +196,23 @@ outer:
 	return env
 }
 
-// readLoop copies the program's output into the terminal.
+// readLoop copies the program's output into the terminal. With
+// OPAL_TERMINAL_TRACE set to a file path, the raw output is also appended
+// there, which is how escape-sequence bugs get diagnosed.
 func (p *Pane) readLoop() {
 	buf := make([]byte, 64<<10)
+	var trace *os.File
+	if path := os.Getenv("OPAL_TERMINAL_TRACE"); path != "" {
+		trace, _ = os.OpenFile(fmt.Sprintf("%s.%d", path, p.id), os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0o600)
+	}
+	if trace != nil {
+		defer trace.Close()
+	}
 	for {
 		n, err := p.pty.Read(buf)
+		if n > 0 && trace != nil {
+			trace.Write(buf[:n])
+		}
 		if n > 0 {
 			p.term.Write(buf[:n])
 			if r := p.term.TakeReplies(); len(r) > 0 {
@@ -291,8 +307,13 @@ func (p *Pane) title() string {
 	p.term.Lock()
 	t := p.term.Title()
 	p.term.Unlock()
-	if t != "" {
+	// ConPTY sets the title to the executable's full path until the shell
+	// sets its own; the profile's name says more.
+	if t != "" && !(strings.HasSuffix(strings.ToLower(t), ".exe") && strings.ContainsAny(t, `\/`)) {
 		return t
+	}
+	if runtime.GOOS == "windows" && p.profile.Name != "" {
+		return p.profile.Name
 	}
 	p.procMu.Lock()
 	name := p.procName

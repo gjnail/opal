@@ -54,8 +54,9 @@ type Terminal struct {
 	// Keyboard protocol state.
 	modifyOtherKeys int
 
-	semantic   int
-	lastPrompt *PromptMark
+	semantic    int
+	lastPrompt  *PromptMark
+	pendingMark *PromptMark // waiting for the prompt's first character
 
 	link *Hyperlink
 

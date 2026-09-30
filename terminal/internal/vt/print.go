@@ -88,6 +88,9 @@ func (t *Terminal) printASCII(b []byte) {
 			}
 			c.pendingWrap = false
 		}
+		if t.pendingMark != nil {
+			t.placePendingMark()
+		}
 		x := c.x
 		cell.R = rune(ch)
 		if l.Cells[x].A&(attrWide|attrSpacer|attrExt) != 0 {
@@ -253,6 +256,9 @@ func (t *Terminal) putChar(r rune, w int) {
 	}
 	if t.modes.get(modeInsert) {
 		t.insertChars(w)
+	}
+	if t.pendingMark != nil {
+		t.placePendingMark()
 	}
 
 	l := t.line(c.y)
