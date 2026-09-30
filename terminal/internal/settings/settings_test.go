@@ -86,6 +86,30 @@ func TestDetectProfiles(t *testing.T) {
 	}
 }
 
+func TestDefaultProfileIgnoresExtraProfiles(t *testing.T) {
+	detected := DetectProfiles()
+	if len(detected) == 0 {
+		t.Skip("no shells found")
+	}
+	ssh := Profile{Name: "work box", Command: "ssh", Args: []string{"me@work"}}
+	c := &Config{Profiles: []Profile{ssh}}
+	if got := c.DefaultProfile(); got.Name != detected[0].Name {
+		t.Fatalf("default = %q, want the detected %q", got.Name, detected[0].Name)
+	}
+	// Named in `shell`, it's the default.
+	c.Shell = "Work Box"
+	if got := c.DefaultProfile(); got.Command != "ssh" {
+		t.Fatalf("shell = %q gave %+v", c.Shell, got)
+	}
+	// A profile with the detected shell's name replaces it.
+	c.Shell = ""
+	mine := Profile{Name: detected[0].Name, Command: "mine"}
+	c.Profiles = []Profile{ssh, mine}
+	if got := c.DefaultProfile(); got.Command != "mine" {
+		t.Fatalf("override: got %+v", got)
+	}
+}
+
 func TestBundledBash(t *testing.T) {
 	dir := t.TempDir()
 	if _, ok := bundledBash(dir); ok {

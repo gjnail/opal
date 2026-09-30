@@ -30,9 +30,8 @@ func (c *Config) ProfilesWithDetected() []Profile {
 // DefaultProfile picks what a new tab runs: the configured shell (a
 // profile name or a command line), else the platform's usual shell.
 func (c *Config) DefaultProfile() Profile {
-	all := c.ProfilesWithDetected()
 	if c.Shell != "" {
-		for _, p := range all {
+		for _, p := range c.ProfilesWithDetected() {
 			if strings.EqualFold(p.Name, c.Shell) {
 				return p
 			}
@@ -42,8 +41,19 @@ func (c *Config) DefaultProfile() Profile {
 			return Profile{Name: filepath.Base(fields[0]), Command: fields[0], Args: fields[1:]}
 		}
 	}
-	if len(all) > 0 {
-		return all[0]
+	// The profiles in the config come first in the lists, but they're
+	// extra choices: without `shell`, adding an ssh profile mustn't make
+	// every new tab open ssh. One named like the detected shell replaces it.
+	if detected := DetectProfiles(); len(detected) > 0 {
+		for _, p := range c.Profiles {
+			if strings.EqualFold(p.Name, detected[0].Name) {
+				return p
+			}
+		}
+		return detected[0]
+	}
+	if len(c.Profiles) > 0 {
+		return c.Profiles[0]
 	}
 	if runtime.GOOS == "windows" {
 		return Profile{Name: "Command Prompt", Command: "cmd.exe"}
