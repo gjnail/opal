@@ -2,6 +2,8 @@
 /opal-terminal.exe
 /conpty.dll
 /OpenConsole.exe
+# Opal Bash, written by tools/fetchshell.
+/shell/
 /*.png
 # Release builds (scripts/package.sh).
 /build/

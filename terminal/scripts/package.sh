@@ -5,7 +5,8 @@
 #
 # Run it from terminal/ on the system it targets: macOS and Linux builds use
 # cgo, and Windows builds run fetch-conpty.ps1 (set CONPTY_DIR to a folder
-# that already has conpty.dll and OpenConsole.exe to skip the download). It
+# that already has conpty.dll and OpenConsole.exe to skip the download) and
+# tools/fetchshell, which downloads the MSYS2 packages Opal Bash is made of. It
 # writes <outdir>/opal-terminal_<goos>_<goarch>.zip on Windows and .tar.gz
 # elsewhere; outdir defaults to dist.
 set -eu
@@ -82,6 +83,17 @@ windows)
 		"$ps" -NoProfile -ExecutionPolicy Bypass -File scripts/fetch-conpty.ps1 -Dest "$stage" -Arch "$carch"
 	fi
 	cp packaging/ConPTY-LICENSE.txt "$stage/"
+
+	# Opal Bash: MSYS2's bash and Unix tools, pinned in
+	# packaging/shell/packages.lock (see tools/fetchshell). MSYS2 builds
+	# them for x64 only, which Windows 11 on ARM runs under emulation.
+	GOOS= GOARCH= go run ./tools/fetchshell -out "$stage/shell"
+	{
+		printf '\n%s\n%s\n%s\n\n' "========================================================================" "Opal Bash (shell/)" "========================================================================"
+		echo "The shell folder holds MSYS2 packages. shell/PACKAGES.txt lists each one"
+		echo "with its license and where its source is, and shell/LICENSES has the"
+		echo "license texts."
+	} >> "$stage/THIRD-PARTY-LICENSES.txt"
 	;;
 darwin)
 	app="$stage/Opal Terminal.app"

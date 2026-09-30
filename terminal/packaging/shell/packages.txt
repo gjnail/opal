@@ -1,0 +1,16 @@
+# The MSYS2 packages Opal Bash is made of. `go run ./tools/fetchshell -update`
+# adds what they depend on and writes packages.lock.
+
+msys2-runtime   # msys-2.0.dll, which every program here runs on; also ps, kill, cygpath
+bash
+coreutils       # ls, cp, mv, rm, cat, mkdir, sort, uniq, wc, head, tail and the rest
+grep
+sed
+gawk
+findutils       # find, xargs
+diffutils       # diff, cmp
+less
+tar
+gzip
+which
+ncurses         # clear, tput, reset, and the terminal descriptions less needs

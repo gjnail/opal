@@ -10,7 +10,7 @@ import (
 	"opal/internal/platform"
 )
 
-// cmdTerminal starts Opal Terminal, the terminal emulator built from
+// cmdTerminal starts Opal Terminal, opal's own terminal app, built from
 // terminal/ in this repository. It's a separate program with its own
 // dependencies, so this only finds and runs it.
 func cmdTerminal(args []string) int {

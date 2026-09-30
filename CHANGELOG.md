@@ -8,12 +8,18 @@ Notable changes to opal. The format follows
 
 ### Added
 
-- Opal Terminal, the terminal emulator that goes with opal
+- Opal Terminal, opal's own terminal app
   ([terminal/](terminal/README.md)): tabs and split panes, inline images,
   quick select, a command palette over the shared history, desktop
   notifications, session restore and a settings page. Release archives for
   Windows, macOS and Linux on x86_64 and ARM64. So far it has only been used
   on Windows.
+- Opal Bash: on Windows, Opal Terminal comes with its own bash, the way Git
+  for Windows comes with Git Bash. It's MSYS2's bash with coreutils, grep,
+  sed, gawk, findutils, diffutils, less, tar, gzip and which. It starts with
+  its own startup file and history instead of `~/.bashrc`, so it's separate
+  from Git Bash and your other shells, and new tabs open it unless `shell`
+  names another. Each release carries the source of its packages.
 - The install scripts install Opal Terminal too: with a Start menu shortcut
   on Windows, in `~/Applications` on macOS, and with a menu entry on Linux
   desktops. `OPAL_NO_TERMINAL=1` leaves it out.

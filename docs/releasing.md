@@ -33,7 +33,9 @@ Terminal.
    The Terminal release workflow builds Opal Terminal on Windows, macOS and
    Linux runners at the same time, waits for that draft, uploads its archives
    and `opal-terminal_SHA256SUMS.txt` (with attestations), and adds an Opal
-   Terminal section to the notes.
+   Terminal section to the notes. It also uploads
+   `opal-terminal_shell-sources.tar`, the MSYS2 source packages of Opal Bash,
+   which the Windows archives include.
 4. Wait for both workflows. Look over the draft on the Releases page, try the
    archives for your platform, then click **Publish release**.
 
@@ -49,13 +51,27 @@ download `releases/latest/download/<name>`. Don't rename them, and keep
 Opal Terminal's follow the same rule: `opal-terminal_<os>_<arch>.tar.gz` (or
 `.zip`), checked against `opal-terminal_SHA256SUMS.txt`.
 
+## Updating Opal Bash
+
+Opal Bash's MSYS2 packages are pinned in
+`terminal/packaging/shell/packages.lock`, so releases don't pick up new
+versions by themselves. To update them, run
+`go run ./tools/fetchshell -update` in `terminal/`, then
+`go run ./tools/fetchshell` and try the result in Opal Terminal, and commit
+the lock file. If a package's license changes, add the new license text to
+`terminal/packaging/shell/licenses`.
+
 ## Licenses
 
 Every archive includes `THIRD-PARTY-LICENSES.txt`, the licenses of the Go
 modules opal is built with. The workflow collects them from the module cache
 and fails if a module has no license file. Opal Terminal's archives get
 theirs from `terminal/scripts/package.sh`, which adds the bundled font's
-license, and the Windows ones also carry ConPTY's. To see the file locally:
+license, and the Windows ones also carry ConPTY's. Opal Bash, in the Windows
+archives, is GPL software from MSYS2: its `shell/PACKAGES.txt` lists each
+package's license and source, `shell/LICENSES` has the license texts, and the
+release's `opal-terminal_shell-sources.tar` is the source. To see the file
+locally:
 
 ```
 go list -deps -f '{{with .Module}}{{if not .Main}}{{.Path}} {{.Dir}}{{end}}{{end}}' . | sort -u

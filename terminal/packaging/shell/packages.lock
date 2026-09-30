@@ -1,0 +1,24 @@
+# Opal Bash's packages, pinned. Written by go run ./tools/fetchshell -update
+# from packages.txt; edit that and run it again rather than editing this.
+# name	version	file	sha256	base	license
+bash	5.3.020-1	bash-5.3.020-1-x86_64.pkg.tar.zst	dd601817a00a48024a58ed087e1aec786301d929f3d373ec5c1861dd76fe3029	bash	GPL-3.0-or-later
+coreutils	8.32-5	coreutils-8.32-5-x86_64.pkg.tar.zst	62dfee1c39fd15f99c39802b35e82643bc14fffc16d6c76d4001caa385ec77e3	coreutils	GPL3
+diffutils	3.12-1	diffutils-3.12-1-x86_64.pkg.tar.zst	7902c8ce3d4dd69a0f5e98dc9d5c83c17b23314ba486169db57ef6e2835ce3b6	diffutils	GPL-3.0-or-later
+findutils	4.11.0-2	findutils-4.11.0-2-x86_64.pkg.tar.zst	f19d3c6b1b073d4c5759ae83f5639d11a5f0227b772f7d86d600db573d9d5d32	findutils	GPL-3.0-or-later
+gawk	5.4.1-1	gawk-5.4.1-1-x86_64.pkg.tar.zst	4b1322cb6c83d61fde5100e229e3cabc5b7d01fc0d0d8bc311edc08df91916be	gawk	GPL-3.0-or-later
+gcc-libs	15.3.0-1	gcc-libs-15.3.0-1-x86_64.pkg.tar.zst	0d99a122c453c05ae21ba3dcea910f2e0d93d38ae067c677a112a315b0f3cec5	gcc	GPL-3.0-or-later AND GPL-2.0-or-later AND LGPL-2.1-or-later AND LGPL-3.0-or-later AND GCC-exception-3.1 AND GFDL-1.3-or-later
+gmp	6.3.0-2	gmp-6.3.0-2-x86_64.pkg.tar.zst	f84536138e618d47a1df2da83916cfebbd449f159ffad52f994a71060a41cf34	gmp	LGPL3
+grep	1~3.0-7	grep-1~3.0-7-x86_64.pkg.tar.zst	2909b3bbef8d33d66980339fb7bd2d3d9145bae0f04191e6671df39868aea427	grep	GPL3
+gzip	1.15-1	gzip-1.15-1-x86_64.pkg.tar.zst	3f967c87cf041391d0d43819c91174742917ccc2d1bb9419050df29ef22f4bfd	gzip	GPL-3.0-or-later
+less	710-1	less-710-1-x86_64.pkg.tar.zst	894a643ecd01861490e5767873d67b55cd5a2faf2c77b0b24a62dbba7bd038fd	less	GPL-3.0-or-later
+libiconv	1.19-1	libiconv-1.19-1-x86_64.pkg.tar.zst	0fa55ea2a6ccf97cf8c58b24b2615815e15e16e6e4e888091c263c2c83c5313d	libiconv	LGPL
+libintl	0.22.5-1	libintl-0.22.5-1-x86_64.pkg.tar.zst	336d66b9d95cf9c1804958f8e260762a3e83bf158ed5981f783bc772a31073cf	gettext	GPL
+libpcre	8.45-5	libpcre-8.45-5-x86_64.pkg.tar.zst	b4dc2eb7795cbacaa683101d720fa67f536262497a1d89934a58f5dab8d17d17	pcre	BSD
+libpcre2_8	10.49-1	libpcre2_8-10.49-1-x86_64.pkg.tar.zst	2de42bf4656e3952a72809663e85899be76c7020e016687055ac0acd05145a3b	pcre2	BSD-3-Clause WITH PCRE2-exception
+libreadline	8.3.006-1	libreadline-8.3.006-1-x86_64.pkg.tar.zst	29e25c50bf6cd7a5e6f2253af76f54fe3c1a915313c7c18e98bedaa665c6adea	readline	GPL-3.0-or-later
+mpfr	4.2.2-1	mpfr-4.2.2-1-x86_64.pkg.tar.zst	8f1b6c17c53e00494a488e03dfdf8fc742027ed03a5bd7b1b3a6a33f595a7498	mpfr	LGPL-3.0-or-later
+msys2-runtime	3.6.10-6	msys2-runtime-3.6.10-6-x86_64.pkg.tar.zst	b2db5bae3826f15cacb536f4c7c6c7e31d3fabec00aac8f127473aba7e994d22	msys2-runtime	GPL-3.0-or-later
+ncurses	6.6-2	ncurses-6.6-2-x86_64.pkg.tar.zst	828c92f09b17f00d3b49362fcfa4affa58e5e50e238f290ea36eb7a690da3acb	ncurses	MIT
+sed	4.9-1	sed-4.9-1-x86_64.pkg.tar.zst	3748af28f69e946ec5a42e6670c9bbf6da7352dc93baaa537f69e99c5483b9fc	sed	GPL3
+tar	1.35-3	tar-1.35-3-x86_64.pkg.tar.zst	71983bed200c4026cdec157837d989728d3de65e8cf644e03876df41a0f1b7c4	tar	GPL3
+which	2.25-1	which-2.25-1-x86_64.pkg.tar.zst	a299e7b9076e5d9381e59fd67538aa39346eb36bb16a93834fb99cccc3f2055b	which	GPL3

@@ -2,7 +2,7 @@
 Type=Application
 Name=Opal Terminal
 GenericName=Terminal
-Comment=A terminal emulator that pairs with the opal shell framework
+Comment=opal's own terminal app
 Exec=opal-terminal
 Icon=opal-terminal
 Terminal=false

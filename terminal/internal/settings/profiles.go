@@ -59,8 +59,29 @@ func DetectProfiles() []Profile {
 	return unixProfiles()
 }
 
+// OpalBashName names the bash that comes with Opal Terminal on Windows.
+const OpalBashName = "Opal Bash"
+
+// bundledBash is the bash in the shell folder next to opal-terminal.exe
+// (see tools/fetchshell). It starts with Opal's own startup file instead of
+// ~/.bash_profile and ~/.bashrc, so it stays separate from Git Bash and any
+// other bash on the machine.
+func bundledBash(exeDir string) (Profile, bool) {
+	bash := filepath.Join(exeDir, "shell", "usr", "bin", "bash.exe")
+	if !fileExists(bash) {
+		return Profile{}, false
+	}
+	return Profile{Name: OpalBashName, Command: bash, Args: []string{"--noprofile", "--rcfile", "/etc/opal/bashrc", "-i"}}, true
+}
+
 func windowsProfiles() []Profile {
 	var out []Profile
+	// First, so new tabs open it unless the config names another shell.
+	if exe, err := os.Executable(); err == nil {
+		if p, ok := bundledBash(filepath.Dir(exe)); ok {
+			out = append(out, p)
+		}
+	}
 	add := func(name, path string, args ...string) {
 		if path == "" {
 			return

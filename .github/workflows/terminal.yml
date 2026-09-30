@@ -76,7 +76,12 @@ jobs:
           ./install/install.ps1 -NoSetup
           & "$env:LOCALAPPDATA\opal\bin\opal.exe" terminal -version
           if ($LASTEXITCODE -ne 0) { exit 1 }
-          foreach ($f in 'opal-terminal.exe', 'conpty.dll', 'OpenConsole.exe') {
+          foreach ($f in 'opal-terminal.exe', 'conpty.dll', 'OpenConsole.exe', 'shell\usr\bin\bash.exe') {
             if (-not (Test-Path "$env:LOCALAPPDATA\opal\terminal\$f")) { throw "$f wasn't installed" }
           }
+          # Opal Bash starts the way Opal Terminal starts it, finds its own
+          # tools, and loads opal.
+          $out = & "$env:LOCALAPPDATA\opal\terminal\shell\usr\bin\bash.exe" --noprofile --rcfile /etc/opal/bashrc -i -c 'command -v sed awk grep find less; type -t _opal_precmd' 2>$null
+          $out
+          if (($out -join "`n") -notmatch '/usr/bin/sed[\s\S]*/usr/bin/less[\s\S]*function') { throw 'Opal Bash did not start as expected' }
           if (-not (Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Opal Terminal.lnk")) { throw 'no Start menu shortcut' }

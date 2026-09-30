@@ -1,0 +1,5 @@
+# Opal Bash's mount table. Drives show up as /c, /d and so on, as in Git
+# Bash, and /tmp is the Windows temp folder. noacl stops MSYS2 from writing
+# POSIX permissions into the Windows ACLs of files it creates.
+none / cygdrive binary,posix=0,noacl,user 0 0
+none /tmp usertemp binary,posix=0,noacl 0 0

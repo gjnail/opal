@@ -4,17 +4,19 @@
 [![Terminal](https://github.com/gjnail/opal/actions/workflows/terminal.yml/badge.svg)](https://github.com/gjnail/opal/actions/workflows/terminal.yml)
 [![Support opal on Ko-fi](https://img.shields.io/badge/Ko--fi-support%20opal-FF5E5B?logo=ko-fi&logoColor=white)](https://ko-fi.com/gnail)
 
-opal is a shell setup and a terminal emulator that share one config file.
+opal is a shell setup and a terminal of its own, sharing one config file.
 
 The `opal` program sets up zsh, bash, fish and PowerShell on Windows, macOS
 and Linux. Every shell gets the same prompt, aliases, tab completion,
 suggestions and command history, written in that shell's own syntax.
 
-[Opal Terminal](#opal-terminal) is a terminal emulator made to go with it:
-tabs and split panes, inline images, quick select, and a command palette that
-searches the history every shell writes. It runs on Windows today. The macOS
-and Linux builds pass their tests in CI but haven't been used on real
-machines yet.
+[Opal Terminal](#opal-terminal) is opal's own terminal app. On Windows it
+comes with its own bash, the way Git Bash does: [Opal Bash](#opal-bash) is
+MSYS2's bash and Unix tools, set up with opal and kept apart from your other
+shells. It also has tabs and split panes, inline images, quick select, and a
+command palette that searches the history every shell writes. It runs on
+Windows today. The macOS and Linux builds pass their tests in CI but haven't
+been used on real machines yet.
 
 **[Website](https://gjnail.github.io/opal/)** ·
 **[Getting started](https://gjnail.github.io/opal/getting-started.html)** ·
@@ -36,7 +38,8 @@ machines yet.
 | [Shared history](#shared-history) | One history for every shell, fuzzy-searched with Ctrl+R | all shells (bash 4+) |
 | [Directory jumping](#directory-jumping) | `j proj` goes to the most used directory matching "proj" | all shells |
 | [Tools](#commands) | `open`, clipboard, `extract`, `ports`, and `pkg install` for whichever package manager you have | all shells |
-| [Opal Terminal](#opal-terminal) | Tabs, splits, inline images, quick select, a palette over the shared history, session restore | Windows; macOS and Linux build but are untested |
+| [Opal Terminal](#opal-terminal) | A terminal app with tabs, splits, inline images, quick select, a palette over the shared history, session restore | Windows; macOS and Linux build but are untested |
+| [Opal Bash](#opal-bash) | Opal Terminal's own bash, with `ls`, `grep`, `sed`, `awk`, `find`, `less`, `tar` and the other Unix tools, separate from your other shells | Windows |
 
 See [Platform support](#platform-support) for what has been tested where.
 
@@ -71,11 +74,12 @@ on.
 The scripts also install [Opal Terminal](#opal-terminal): on Windows to
 `%LOCALAPPDATA%\opal\terminal` with a Start menu shortcut, on macOS to
 `~/Applications/Opal Terminal.app`, and on Linux to `~/.local/bin` with a
-menu entry. On Linux they skip it when no graphical session is running, and
-on WSL and Termux. Set `OPAL_NO_TERMINAL=1` (or pass `-NoTerminal` to
-`install.ps1`) to leave it out. From a clone they build it when Go 1.26 is
-there; otherwise they download it, which works with releases after 0.1.0.
-If that part fails, opal itself stays installed.
+menu entry. On Windows that includes Opal Bash. On Linux they skip it when
+no graphical session is running, and on WSL and Termux. Set
+`OPAL_NO_TERMINAL=1` (or pass `-NoTerminal` to `install.ps1`) to leave it
+out. From a clone they build it when Go 1.26 is there; otherwise they
+download it, which works with releases after 0.1.0. If that part fails, opal
+itself stays installed.
 
 ### Checking a download
 
@@ -97,7 +101,7 @@ the [terminal release workflow](.github/workflows/terminal-release.yml).
 
 `opal update` installs the latest release, or pulls and rebuilds if you built
 opal from a clone. It updates the `opal` program only; running the install
-script again updates Opal Terminal.
+script again updates Opal Terminal, including Opal Bash.
 
 To remove it, run `opal setup --remove`, which takes the marked blocks out of
 your startup files. Then delete the program and its folders:
@@ -248,11 +252,12 @@ More on the website: [Commands](https://gjnail.github.io/opal/commands.html).
 
 ## Opal Terminal
 
-Opal Terminal is a terminal emulator in [terminal/](terminal/), written in Go
-on [Gio](https://gioui.org) with its own escape sequence parser and screen
-model. It reads the same `config.toml` as the prompt, takes its colors from
-the same theme, and uses the command marks the prompt emits, so the two work
-as one tool. It also runs any other shell or program; the shell integration
+Opal Terminal is opal's own terminal app, in [terminal/](terminal/). It's
+written in Go on [Gio](https://gioui.org) with its own escape sequence parser
+and screen model, and on Windows it comes with [Opal Bash](#opal-bash). It
+reads the same `config.toml` as the prompt, takes its colors from the same
+theme, and uses the command marks the prompt emits, so the two work as one
+tool. It also runs any other shell or program; the shell integration
 features need a prompt that emits OSC 133 marks, as opal's does.
 
 It's developed and used on Windows. The macOS and Linux code builds and passes
@@ -262,6 +267,40 @@ desktop yet.
 The keys below are the Windows and Linux defaults. macOS uses Cmd where they
 use Ctrl+Shift, and every key can be changed.
 
+### Opal Bash
+
+On Windows, Opal Terminal comes with its own bash, the way Git for Windows
+comes with Git Bash. It's the same MSYS2 bash and runtime that Git Bash is
+built on, with the Unix tools you'd expect: coreutils (`ls`, `cp`, `mv`,
+`cat`, `sort`, `wc` and the rest), `grep`, `sed`, `awk`, `find` and `xargs`,
+`diff`, `less`, `tar`, `gzip` and `which`. New tabs open it unless `shell` in
+`config.toml` names another shell.
+
+It's kept apart from the rest of the machine:
+
+- It starts with its own startup file, `shell/etc/opal/bashrc` in Opal
+  Terminal's folder, instead of `~/.bash_profile` and `~/.bashrc`. That file
+  loads opal, so the prompt, aliases, completion and Ctrl+R history are there
+  without `opal setup` editing any startup file. Your own additions go in
+  `~/.config/opal/bashrc`.
+- Its up-arrow history is its own, in opal's data folder
+  (`%LOCALAPPDATA%\opal\bash_history`). Ctrl+R still searches the commands of
+  every shell.
+- Nothing is added to your PATH, and PowerShell, Command Prompt, Git Bash and
+  WSL stay as they were. Inside Opal Bash the bundled tools come first, then
+  your Windows PATH, so `git`, `node`, `python` and other Windows programs
+  work as usual.
+- Drives are `/c`, `/d` and so on, `/tmp` is your Windows temp folder, and
+  `~` is your Windows profile folder (or `HOME`, if you've set it), as in Git
+  Bash.
+
+The tools are MSYS2 packages, pinned by version and checksum in
+[packages.lock](terminal/packaging/shell/packages.lock). MSYS2 builds them
+for x64 only, so the ARM64 download has the x64 build, which Windows 11 on
+ARM runs under emulation; that hasn't been tried yet. Their licenses (mostly
+the GPL) are listed in the `shell/PACKAGES.txt` file that comes with them, and
+each release has their source as `opal-terminal_shell-sources.tar`.
+
 ### Tabs and panes
 
 - Tabs can be dragged to reorder, closed with a middle click, renamed, and
@@ -269,11 +308,11 @@ use Ctrl+Shift, and every key can be changed.
 - Panes split right, down, or along the longer side, with dividers you can
   drag or move from the keyboard. A pane can be zoomed to fill the tab.
 - Broadcast mode sends what you type to every pane in the tab.
-- New tabs can run any detected shell: PowerShell 7, Windows PowerShell,
-  Command Prompt, Git Bash and each WSL distribution on Windows, and the
-  shells in `/etc/shells` elsewhere. Your own profiles (an ssh command, a
-  shell with extra arguments, a working directory, environment variables) go
-  in `config.toml`.
+- New tabs can run any detected shell: Opal Bash, PowerShell 7, Windows
+  PowerShell, Command Prompt, Git Bash and each WSL distribution on Windows,
+  and the shells in `/etc/shells` elsewhere. Your own profiles (an ssh
+  command, a shell with extra arguments, a working directory, environment
+  variables) go in `config.toml`.
 
 ### Shell integration
 
@@ -385,7 +424,9 @@ go build -o opal-terminal .                               # macOS and Linux
 ```
 
 On Windows, run `scripts/fetch-conpty.ps1` in the same folder for image
-support. `opal-terminal -list-profiles` shows the shells it found,
+support, and `go run ./tools/fetchshell` for Opal Bash, which downloads its
+packages from MSYS2 and writes them to the `shell` folder the program looks
+for next to itself. `opal-terminal -list-profiles` shows the shells it found,
 `-profile NAME` starts one, and anything after the flags runs instead of a
 shell (`opal-terminal htop`).
 
@@ -395,6 +436,7 @@ shell (`opal-terminal htop`).
 |---|---|---|---|
 | opal | Windows PowerShell 5.1 and Git Bash by hand; those and PowerShell 7 in CI | bash 3.2, zsh and PowerShell 7 in CI | bash 5, zsh, fish and PowerShell 7 in CI |
 | Opal Terminal | Yes | Builds and passes tests in CI; not run on a Mac yet | Builds and passes tests in CI; not run on a desktop yet |
+| Opal Bash | Yes (x64; the x64 build under emulation on ARM64, untested) | Not included; the system's shells are used | Not included; the system's shells are used |
 | Inline images | Yes, with the newer ConPTY | Untested | Untested |
 | Desktop notifications | Yes (toasts) | Untested (Notification Center) | Untested (freedesktop service or `notify-send`) |
 
@@ -409,16 +451,17 @@ opal and Opal Terminal run locally. There are no accounts, no analytics, and
 nothing is sent anywhere. opal only goes online when you run `opal update`,
 `opal plugin install` or `opal plugin update`, and on Windows when
 `opal setup` offers to upgrade PSReadLine and you accept. Opal Terminal has no
-network code.
+network code. Building it from a clone downloads Opal Bash's packages from
+MSYS2 (repo.msys2.org).
 
 What they store:
 
 - `~/.config/opal/`: `config.toml`, and your own themes and plugins.
 - `%LOCALAPPDATA%\opal` on Windows, `~/.local/share/opal` elsewhere:
   `history.tsv` (the shared history), `jump.tsv` (remembered folders),
-  caches for git status and tool completions, and Opal Terminal's
-  `terminal-session.json`, which holds the recent output of each pane for
-  session restore.
+  caches for git status and tool completions, Opal Bash's `bash_history`,
+  and Opal Terminal's `terminal-session.json`, which holds the recent output
+  of each pane for session restore.
 
 ## How it works
 
@@ -469,6 +512,21 @@ go test -run '^$' -bench . ./internal/vt ./internal/render
 
 See the [terminal README](terminal/README.md#layout) for the source layout.
 
+### Opal Bash
+
+Opal Bash is an MSYS2 root next to `opal-terminal.exe`, laid out the way Git
+for Windows lays out Git Bash: `usr/bin` holds bash, the tools and
+`msys-2.0.dll`, and `etc` holds the mount table, the account lookup settings
+and Opal's startup file. Opal Terminal starts it as
+`bash --noprofile --rcfile /etc/opal/bashrc -i`.
+
+[tools/fetchshell](terminal/tools/fetchshell) builds it. `-update` resolves
+the packages in `packages.txt`, and everything they depend on, against MSYS2's
+package database and writes `packages.lock`. A build then downloads exactly
+the files in the lock, checks each one's SHA-256 against it, and unpacks
+them, leaving out manuals, translations, headers, and all but the common
+terminal descriptions.
+
 ## Contributing
 
 See [CONTRIBUTING.md](CONTRIBUTING.md). Please report security problems, such
@@ -490,3 +548,5 @@ Opal Terminal bundles Symbols Nerd Font Mono from the
 [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) project, and a copy of
 Gio v0.10.3 with a few input fixes; see the
 [terminal README](terminal/README.md#third-party-files) for their licenses.
+Opal Bash is made of [MSYS2](https://www.msys2.org) packages under their own
+licenses, mostly the GPL, as described [above](#opal-bash).

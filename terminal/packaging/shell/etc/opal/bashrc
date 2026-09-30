@@ -1,0 +1,47 @@
+# Opal Bash's startup file. Opal Terminal starts it as
+#
+#   bash --noprofile --rcfile /etc/opal/bashrc -i
+#
+# so this is read instead of ~/.bash_profile and ~/.bashrc, and the shell
+# stays separate from Git Bash or any other bash on the machine. Your own
+# additions go in ~/.config/opal/bashrc.
+
+# The MSYS runtime has turned the Windows PATH into /c/... form already;
+# the bundled tools go in front of it.
+case ":$PATH:" in
+*:/usr/bin:*) ;;
+*) PATH="/usr/bin:$PATH" ;;
+esac
+
+# opal writes paths for this shell in /c/... form when MSYSTEM is set.
+export MSYSTEM=MSYS
+
+# Up-arrow history of its own, kept with opal's data. Ctrl+R searches opal's
+# history of every shell.
+if [ -n "$OPAL_DATA_DIR" ]; then
+	HISTFILE="$(cygpath -u "$OPAL_DATA_DIR")/bash_history"
+elif [ -n "$LOCALAPPDATA" ]; then
+	HISTFILE="$(cygpath -u "$LOCALAPPDATA")/opal/bash_history"
+fi
+if [ -n "$HISTFILE" ] && [ ! -d "${HISTFILE%/*}" ]; then
+	mkdir -p "${HISTFILE%/*}"
+fi
+
+# The prompt, aliases, completion and shared history. The install scripts
+# put opal on PATH; the second case covers a window that was opened before
+# PATH picked it up.
+if command -v opal >/dev/null 2>&1; then
+	eval "$(opal init bash)"
+elif [ -n "$LOCALAPPDATA" ] && [ -x "$(cygpath -u "$LOCALAPPDATA")/opal/bin/opal.exe" ]; then
+	eval "$("$(cygpath -u "$LOCALAPPDATA")/opal/bin/opal.exe" init bash)"
+else
+	PS1='\[\e[32m\]\u@\h \[\e[33m\]\w\[\e[0m\]\n\$ '
+fi
+
+if [ -n "$OPAL_CONFIG_DIR" ]; then
+	__opal_rc="$(cygpath -u "$OPAL_CONFIG_DIR")/bashrc"
+else
+	__opal_rc=~/.config/opal/bashrc
+fi
+[ -f "$__opal_rc" ] && . "$__opal_rc"
+unset __opal_rc

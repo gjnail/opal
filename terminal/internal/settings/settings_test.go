@@ -3,6 +3,7 @@ package settings
 import (
 	"os"
 	"path/filepath"
+	"strings"
 	"testing"
 )
 
@@ -82,5 +83,27 @@ func TestDetectProfiles(t *testing.T) {
 	}
 	for _, p := range ps {
 		t.Logf("%s: %s %v", p.Name, p.Command, p.Args)
+	}
+}
+
+func TestBundledBash(t *testing.T) {
+	dir := t.TempDir()
+	if _, ok := bundledBash(dir); ok {
+		t.Fatal("found a bundled bash in an empty folder")
+	}
+	bin := filepath.Join(dir, "shell", "usr", "bin")
+	if err := os.MkdirAll(bin, 0o755); err != nil {
+		t.Fatal(err)
+	}
+	if err := os.WriteFile(filepath.Join(bin, "bash.exe"), nil, 0o644); err != nil {
+		t.Fatal(err)
+	}
+	p, ok := bundledBash(dir)
+	if !ok || p.Name != OpalBashName || p.Command != filepath.Join(bin, "bash.exe") {
+		t.Fatalf("got %+v, %v", p, ok)
+	}
+	// Its own startup file, never the user's ~/.bashrc.
+	if got := strings.Join(p.Args, " "); got != "--noprofile --rcfile /etc/opal/bashrc -i" {
+		t.Fatalf("args: %s", got)
 	}
 }

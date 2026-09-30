@@ -6,6 +6,7 @@ require (
 	github.com/BurntSushi/toml v1.6.0
 	github.com/creack/pty v1.1.24
 	github.com/go-text/typesetting v0.3.5
+	github.com/klauspost/compress v1.20.1
 	github.com/rivo/uniseg v0.4.7
 	golang.org/x/image v0.26.0
 	golang.org/x/sys v0.48.0

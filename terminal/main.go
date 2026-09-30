@@ -1,5 +1,5 @@
-// Opal Terminal: a terminal emulator that pairs with the opal shell
-// framework.
+// Opal Terminal: opal's own terminal app. On Windows it comes with Opal
+// Bash (see tools/fetchshell).
 package main
 
 import (

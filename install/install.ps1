@@ -105,6 +105,14 @@ function Build-OpalTerminal([string]$out) {
     $conptyArch = if ($arch -eq 'arm64') { 'arm64' } else { 'x64' }
     try { & (Join-Path $src 'scripts\fetch-conpty.ps1') -Dest $out -Arch $conptyArch | Out-Host }
     catch { Write-Warning "Couldn't fetch Microsoft's ConPTY ($($_.Exception.Message)); Opal Terminal will use the one built into Windows." }
+    # Opal Bash, the bash Opal Terminal comes with: MSYS2 packages pinned in
+    # packaging/shell/packages.lock. Without it the terminal opens the other
+    # shells it finds.
+    Push-Location $src
+    try {
+        go run ./tools/fetchshell -out (Join-Path $out 'shell') | Out-Host
+        if ($LASTEXITCODE -ne 0) { Write-Warning "Couldn't set up Opal Bash; Opal Terminal will open your other shells instead." }
+    } finally { Pop-Location }
     return $true
 }
 
@@ -186,14 +194,16 @@ namespace OpalInstall {
 }
 '@
     }
-    [OpalInstall.Shortcut]::Create($lnk, $target, $env:USERPROFILE, 'A terminal emulator that pairs with the opal shell framework', $appId)
+    [OpalInstall.Shortcut]::Create($lnk, $target, $env:USERPROFILE, 'A terminal with its own bash, set up with opal', $appId)
 }
 
 function Install-OpalTerminal {
     $termDir = Join-Path $env:LOCALAPPDATA 'opal\terminal'
     $termExe = Join-Path $termDir 'opal-terminal.exe'
-    $running = Get-Process -Name opal-terminal -ErrorAction SilentlyContinue | Where-Object { $_.Path -eq $termExe }
-    if ($running) { throw 'Opal Terminal is running. Close it and run the installer again to update it.' }
+    # Opal Terminal, or a program started from Opal Bash, holds files the
+    # copy below has to replace.
+    $running = Get-Process -ErrorAction SilentlyContinue | Where-Object { $_.Path -and $_.Path.StartsWith("$termDir\", [StringComparison]::OrdinalIgnoreCase) }
+    if ($running) { throw 'Opal Terminal or its bash is running. Close it and run the installer again to update it.' }
 
     $stage = Join-Path ([IO.Path]::GetTempPath()) ("opal-terminal-" + [guid]::NewGuid())
     New-Item -ItemType Directory -Force $stage | Out-Null
@@ -207,6 +217,9 @@ function Install-OpalTerminal {
             $src = Join-Path $stage "opal-terminal_windows_$arch"
         }
         New-Item -ItemType Directory -Force $termDir | Out-Null
+        # A fresh Opal Bash, so files a newer one no longer has don't linger.
+        $shellDir = Join-Path $termDir 'shell'
+        if ((Test-Path (Join-Path $src 'shell')) -and (Test-Path $shellDir)) { Remove-Item $shellDir -Recurse -Force }
         Copy-Item (Join-Path $src '*') $termDir -Recurse -Force
     } finally {
         Remove-Item $stage, "$stage.zip" -Recurse -Force -ErrorAction SilentlyContinue

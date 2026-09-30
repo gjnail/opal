@@ -1,8 +1,9 @@
 # Opal Terminal
 
-A terminal emulator for opal, written in Go on [Gio](https://gioui.org). It
-reads opal's `config.toml`, takes its colors from the opal theme, and uses the
-command marks opal's prompt emits. The main [README](../README.md#opal-terminal)
+opal's own terminal app, written in Go on [Gio](https://gioui.org). It reads
+opal's `config.toml`, takes its colors from the opal theme, and uses the
+command marks opal's prompt emits. On Windows it comes with its own bash,
+[Opal Bash](#opal-bash). The main [README](../README.md#opal-terminal)
 describes what it does; this file covers building, configuration and the
 source.
 
@@ -18,7 +19,8 @@ opal's install scripts install Opal Terminal along with opal (see the main
 [README](../README.md#install)), and `opal terminal` opens it in the current
 folder. It goes in:
 
-- Windows: `%LOCALAPPDATA%\opal\terminal`, with a Start menu shortcut.
+- Windows: `%LOCALAPPDATA%\opal\terminal`, with a Start menu shortcut and
+  Opal Bash in its `shell` folder.
 - macOS: `~/Applications/Opal Terminal.app`.
 - Linux: `~/.local/bin/opal-terminal`, with a menu entry in
   `~/.local/share/applications`. It needs the Wayland or X11, xkbcommon and
@@ -54,10 +56,46 @@ off).
 `scripts/package.sh GOOS GOARCH VERSION` builds a release archive the way
 the [release workflow](../.github/workflows/terminal-release.yml) does. On
 Windows it embeds the icon, manifest and version info from `winres/` (with
-[go-winres](https://github.com/tc-hib/go-winres)) and adds the ConPTY files;
-on macOS it makes the app bundle from `packaging/Info.plist` and signs it
-ad hoc; on Linux it adds the desktop entry and icon. `go run ./tools/mkicon`
-redraws the icons in `assets/`.
+[go-winres](https://github.com/tc-hib/go-winres)) and adds the ConPTY files
+and Opal Bash; on macOS it makes the app bundle from `packaging/Info.plist`
+and signs it ad hoc; on Linux it adds the desktop entry and icon.
+`go run ./tools/mkicon` redraws the icons in `assets/`.
+
+## Opal Bash
+
+On Windows, Opal Terminal comes with Opal Bash: MSYS2's bash and Unix tools
+in a `shell` folder next to `opal-terminal.exe`, the way Git for Windows ships
+Git Bash. When the folder is there, Opal Bash is the first profile and what
+new tabs open. For a build of your own, run this in `terminal/`:
+
+```sh
+go run ./tools/fetchshell
+```
+
+It writes `shell/` next to where `go build` puts `opal-terminal.exe`, and
+caches the downloads in `build/msys2`. The files it works from are in
+`packaging/shell`:
+
+- `packages.txt` lists the packages Opal Bash is made of.
+  `go run ./tools/fetchshell -update` resolves them, and what they depend on,
+  against MSYS2's current package database and rewrites `packages.lock`,
+  which pins every file by SHA-256. Builds only unpack what the lock names,
+  so updating is running `-update`, trying the result, and committing both
+  files.
+- `etc/` is copied into the root. `fstab` mounts drives as `/c`, `/d` and so
+  on and `/tmp` on the Windows temp folder, `nsswitch.conf` makes the
+  Windows profile folder the home folder, and `opal/bashrc` is the startup
+  file Opal Terminal starts bash with
+  (`bash --noprofile --rcfile /etc/opal/bashrc -i`): it puts the bundled tools
+  first on PATH, loads opal, keeps its own history file, and reads
+  `~/.config/opal/bashrc`.
+- `licenses/` has the license texts the packages name; they're copied into
+  the root's `LICENSES` folder, next to `PACKAGES.txt`, which lists every
+  package with its license and source.
+
+`go run ./tools/fetchshell -sources DIR` downloads the source package of
+everything in the lock. The release workflow attaches them to each release
+as `opal-terminal_shell-sources.tar`, since most of the packages are GPL.
 
 ## Configuration
 
@@ -142,6 +180,7 @@ Default keys (macOS uses Cmd in place of Ctrl+Shift):
 - `internal/settings`: the `[terminal]` config, theme colors and shell
   detection.
 - `internal/ui`: windows, tabs, panes, input and the chrome, on Gio.
+- `tools/fetchshell`: builds Opal Bash (see above).
 
 ## Testing
 
@@ -164,7 +203,9 @@ events.
 licenses of the bundled icon sets.
 
 The Windows archives include Microsoft's `conpty.dll` and `OpenConsole.exe`,
-which are MIT licensed (`packaging/ConPTY-LICENSE.txt`).
+which are MIT licensed (`packaging/ConPTY-LICENSE.txt`), and Opal Bash, made
+of [MSYS2](https://www.msys2.org) packages under the GPL and other licenses
+(see [Opal Bash](#opal-bash)).
 
 `third_party/gio` is Gio v0.10.3 with a few input fixes (the Insert key, and
 emoji typed on Windows); `third_party/gio/PATCHES.md` lists them.
