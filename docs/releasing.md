@@ -1,13 +1,17 @@
 # Releasing opal
 
-Releases are built by [`.github/workflows/release.yml`](../.github/workflows/release.yml).
-Nothing is published until you publish the draft release it creates.
+Releases are built by [`.github/workflows/release.yml`](../.github/workflows/release.yml),
+and Opal Terminal's archives by
+[`.github/workflows/terminal-release.yml`](../.github/workflows/terminal-release.yml),
+which adds them to the same draft. Nothing is published until you publish the
+draft release.
 
 ## Try the build first
 
 Actions > Release > Run workflow builds all the archives without making a
 release. Use it after changing the workflow. The archives are attached to the
-run.
+run. Actions > Terminal release > Run workflow does the same for Opal
+Terminal.
 
 ## Make a release
 
@@ -26,8 +30,12 @@ run.
    tests the Linux build, and opens a draft release with the archives,
    `SHA256SUMS.txt` and a build provenance attestation for each file. The
    version comes from the tag; there is no version number in the source.
-4. Look over the draft on the Releases page, try the archive for your
-   platform, then click **Publish release**.
+   The Terminal release workflow builds Opal Terminal on Windows, macOS and
+   Linux runners at the same time, waits for that draft, uploads its archives
+   and `opal-terminal_SHA256SUMS.txt` (with attestations), and adds an Opal
+   Terminal section to the notes.
+4. Wait for both workflows. Look over the draft on the Releases page, try the
+   archives for your platform, then click **Publish release**.
 
 If something is wrong before publishing, delete the draft and the tag
 (`git push origin :vx.y.z`), fix it, and tag again.
@@ -38,12 +46,16 @@ The archives are always named `opal_<os>_<arch>.tar.gz` (or `.zip` on
 Windows), without the version, because the install scripts and `opal update`
 download `releases/latest/download/<name>`. Don't rename them, and keep
 `SHA256SUMS.txt`: `opal update` refuses a download that doesn't match it.
+Opal Terminal's follow the same rule: `opal-terminal_<os>_<arch>.tar.gz` (or
+`.zip`), checked against `opal-terminal_SHA256SUMS.txt`.
 
 ## Licenses
 
 Every archive includes `THIRD-PARTY-LICENSES.txt`, the licenses of the Go
 modules opal is built with. The workflow collects them from the module cache
-and fails if a module has no license file. To see the file locally:
+and fails if a module has no license file. Opal Terminal's archives get
+theirs from `terminal/scripts/package.sh`, which adds the bundled font's
+license, and the Windows ones also carry ConPTY's. To see the file locally:
 
 ```
 go list -deps -f '{{with .Module}}{{if not .Main}}{{.Path}} {{.Dir}}{{end}}{{end}}' . | sort -u

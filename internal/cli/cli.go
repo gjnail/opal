@@ -32,6 +32,7 @@ func init() {
 		{"plugin", "list | enable | disable | install <user/repo> | update | remove", "Manage plugins, including community ones from git", cmdPlugin},
 		{"config", "[path | edit]", "Show or edit ~/.config/opal/config.toml", cmdConfig},
 		{"greet", "", "Show the banner new terminals open with", cmdGreet},
+		{"terminal", "[-profile <name>] [-dir <path>] [command...]", "Open Opal Terminal, the terminal app, in this folder", cmdTerminal},
 		{"update", "[--release] [--from <checkout>]", "Upgrade opal (from its source checkout or the latest release)", cmdUpdate},
 		{"history", "search | import | list [n]", "One history for every shell (Ctrl+R opens the picker)", cmdHistory},
 		{"jump", "query <words> | list | add <dir> | remove <dir>", "Folders you visit often (used by j and ji)", cmdJump},
@@ -80,7 +81,7 @@ func help() int {
 		names []string
 	}{
 		{"Setup", []string{"setup", "init", "doctor", "update"}},
-		{"Look & feel", []string{"theme", "plugin", "config", "greet"}},
+		{"Look & feel", []string{"theme", "plugin", "config", "greet", "terminal"}},
 		{"Tools that work the same on every OS", []string{"history", "jump", "open", "clip", "extract", "ports", "path", "pkg", "js", "venv"}},
 	}
 	for _, g := range groups {

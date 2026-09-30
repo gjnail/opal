@@ -6,6 +6,19 @@ Notable changes to opal. The format follows
 
 ## [Unreleased]
 
+### Added
+
+- Opal Terminal, the terminal emulator that goes with opal
+  ([terminal/](terminal/README.md)): tabs and split panes, inline images,
+  quick select, a command palette over the shared history, desktop
+  notifications, session restore and a settings page. Release archives for
+  Windows, macOS and Linux on x86_64 and ARM64. So far it has only been used
+  on Windows.
+- The install scripts install Opal Terminal too: with a Start menu shortcut
+  on Windows, in `~/Applications` on macOS, and with a menu entry on Linux
+  desktops. `OPAL_NO_TERMINAL=1` leaves it out.
+- `opal terminal` opens Opal Terminal in the current folder.
+
 ## [0.1.0] - 2026-09-29
 
 First public version.

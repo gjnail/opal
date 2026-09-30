@@ -7,11 +7,30 @@ describes what it does; this file covers building, configuration and the
 source.
 
 It's developed and used on Windows. The macOS and Linux code builds and passes
-its tests in CI, but hasn't been run on those systems yet, and there are no
-release builds.
+its tests in CI, but hasn't been run on those systems yet.
 
 This is a separate Go module so the `opal` CLI keeps building with Go 1.22;
 this one needs Go 1.26.
+
+## Installing
+
+opal's install scripts install Opal Terminal along with opal (see the main
+[README](../README.md#install)), and `opal terminal` opens it in the current
+folder. It goes in:
+
+- Windows: `%LOCALAPPDATA%\opal\terminal`, with a Start menu shortcut.
+- macOS: `~/Applications/Opal Terminal.app`.
+- Linux: `~/.local/bin/opal-terminal`, with a menu entry in
+  `~/.local/share/applications`. It needs the Wayland or X11, xkbcommon and
+  EGL libraries, which desktop systems already have.
+
+The scripts build it from a clone when Go 1.26 (and cgo, on macOS and Linux)
+is there, and otherwise download the release archive for the system,
+`opal-terminal_<os>_<arch>.zip` or `.tar.gz`, checked against
+`opal-terminal_SHA256SUMS.txt`. Releases after 0.1.0 have these archives.
+The macOS app has an ad-hoc signature rather than a Developer ID one, so a
+copy downloaded with a browser needs
+`xattr -dr com.apple.quarantine "Opal Terminal.app"` before macOS opens it.
 
 ## Building
 
@@ -31,6 +50,14 @@ package) next to the executable. The ConPTY built into Windows drops the
 escape sequences for sixel and kitty images; with the newer one present,
 Opal Terminal uses it automatically (`OPAL_TERMINAL_CONPTY=system` turns that
 off).
+
+`scripts/package.sh GOOS GOARCH VERSION` builds a release archive the way
+the [release workflow](../.github/workflows/terminal-release.yml) does. On
+Windows it embeds the icon, manifest and version info from `winres/` (with
+[go-winres](https://github.com/tc-hib/go-winres)) and adds the ConPTY files;
+on macOS it makes the app bundle from `packaging/Info.plist` and signs it
+ad hoc; on Linux it adds the desktop entry and icon. `go run ./tools/mkicon`
+redraws the icons in `assets/`.
 
 ## Configuration
 
@@ -135,6 +162,9 @@ events.
 [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) project. See
 `SymbolsNerdFont-LICENSE.txt` and `SymbolsNerdFont-README.md` there for the
 licenses of the bundled icon sets.
+
+The Windows archives include Microsoft's `conpty.dll` and `OpenConsole.exe`,
+which are MIT licensed (`packaging/ConPTY-LICENSE.txt`).
 
 `third_party/gio` is Gio v0.10.3 with a few input fixes (the Insert key, and
 emoji typed on Windows); `third_party/gio/PATCHES.md` lists them.

@@ -56,7 +56,8 @@
       <li>imports your existing PowerShell, bash, zsh and fish history into the shared history;</li>
       <li>on Windows, offers to upgrade PSReadLine if it's too old for suggestions.</li>
     </ul>
-    <p>To build from source instead, clone the repository and run <code>./install/install.sh</code> or <code>.\install\install.ps1</code>. You need Go 1.22 or newer, or 1.24 or newer on macOS.</p>
+    <p>The script also installs Opal Terminal, the terminal app that goes with opal: with a Start menu shortcut on Windows, in <code>~/Applications</code> on macOS, and with a menu entry on Linux desktops. Set <code>OPAL_NO_TERMINAL=1</code> before running it to leave the terminal out. <code>opal terminal</code> opens it in the current folder.</p>
+    <p>To build from source instead, clone the repository and run <code>./install/install.sh</code> or <code>.\install\install.ps1</code>. You need Go 1.22 or newer, or 1.24 or newer on macOS; Opal Terminal needs Go 1.26, and is downloaded instead when your Go is older.</p>
 
     <h2 id="first-look">2. Open a new terminal</h2>
     <p>Terminals that were already open don't see the change. In a new one you'll get a short banner and the prompt:</p>

@@ -1,0 +1,171 @@
+name: Terminal release
+
+# Builds Opal Terminal's archives for Windows, macOS and Linux. On a v* tag
+# they're added to the draft release that release.yml creates for the same
+# tag; run by hand (Actions > Terminal release > Run workflow) it only builds
+# them. The packaging itself is terminal/scripts/package.sh.
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build (${{ matrix.goos }}/${{ matrix.goarch }})
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Gio needs cgo on macOS and Linux, so those build on their own
+          # system. Windows needs no cgo; the runner's arch only matters for
+          # the smoke test.
+          - { runner: windows-latest, goos: windows, goarch: amd64 }
+          - { runner: windows-latest, goos: windows, goarch: arm64 }
+          - { runner: macos-latest, goos: darwin, goarch: arm64 }
+          - { runner: macos-latest, goos: darwin, goarch: amd64 }
+          - { runner: ubuntu-latest, goos: linux, goarch: amd64 }
+          - { runner: ubuntu-24.04-arm, goos: linux, goarch: arm64 }
+    runs-on: ${{ matrix.runner }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: terminal
+    env:
+      # Not GOOS/GOARCH: package.sh runs go-winres with go run, which has to
+      # build for the runner.
+      TARGET_OS: ${{ matrix.goos }}
+      TARGET_ARCH: ${{ matrix.goarch }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-go@v7
+        with:
+          go-version: stable
+          cache-dependency-path: terminal/go.sum
+
+      - name: Install Gio's Linux dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwayland-dev libx11-dev libx11-xcb-dev libxkbcommon-x11-dev \
+            libgles2-mesa-dev libegl1-mesa-dev libffi-dev libxcursor-dev libvulkan-dev desktop-file-utils
+
+      - name: Version
+        id: version
+        run: |
+          if [ "$GITHUB_REF_TYPE" = tag ]; then
+            version=${GITHUB_REF_NAME#v}
+          else
+            version=0.0.0-dev+${GITHUB_SHA::7}
+          fi
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Package
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: sh scripts/package.sh "$TARGET_OS" "$TARGET_ARCH" "$VERSION" dist
+
+      - name: Smoke test
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          name="opal-terminal_${TARGET_OS}_${TARGET_ARCH}"
+          dir="$RUNNER_TEMP/smoke"
+          mkdir -p "$dir"
+          case $TARGET_OS in
+          windows)
+            7z x -bso0 "dist/$name.zip" -o"$dir"
+            bin="$dir/$name/opal-terminal.exe"
+            ls "$dir/$name/conpty.dll" "$dir/$name/OpenConsole.exe"
+            ;;
+          darwin)
+            tar -xzf "dist/$name.tar.gz" -C "$dir"
+            app="$dir/$name/Opal Terminal.app"
+            bin="$app/Contents/MacOS/opal-terminal"
+            codesign --verify --strict "$app"
+            plutil -lint "$app/Contents/Info.plist"
+            ;;
+          linux)
+            tar -xzf "dist/$name.tar.gz" -C "$dir"
+            bin="$dir/$name/opal-terminal"
+            desktop-file-validate "$dir/$name/opal-terminal.desktop"
+            ;;
+          esac
+          # Only a binary for the runner's own arch can run here.
+          if [ "$TARGET_ARCH" = "$(go env GOHOSTARCH)" ]; then
+            "$bin" -version | grep -F "$VERSION"
+          fi
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: opal-terminal_${{ matrix.goos }}_${{ matrix.goarch }}
+          path: terminal/dist/*
+          if-no-files-found: error
+
+  publish:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          pattern: opal-terminal_*
+          merge-multiple: true
+          path: dist
+
+      - name: Checksums
+        run: |
+          (cd dist && sha256sum * > opal-terminal_SHA256SUMS.txt)
+          cat dist/opal-terminal_SHA256SUMS.txt
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: opal-terminal-all
+          path: dist/*
+
+      - uses: actions/attest-build-provenance@v4
+        if: github.ref_type == 'tag'
+        with:
+          subject-path: dist/*
+
+      # release.yml creates the draft; this usually finishes later, but wait
+      # for it in case it doesn't.
+      - name: Add to the draft release
+        if: github.ref_type == 'tag'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          for i in $(seq 1 40); do
+            gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" > /dev/null 2>&1 && break
+            if [ "$i" = 40 ]; then
+              echo "::error::no release for $GITHUB_REF_NAME; did the Release workflow fail?"
+              exit 1
+            fi
+            sleep 15
+          done
+          gh release upload "$GITHUB_REF_NAME" dist/* --repo "$GITHUB_REPOSITORY" --clobber
+
+          gh release view "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --json body -q .body > notes.md
+          if ! grep -q 'opal-terminal_' notes.md; then
+            cat >> notes.md <<'EOF'
+
+          ## Opal Terminal
+
+          The install scripts install it next to `opal` unless you pass `-NoTerminal` (PowerShell) or set `OPAL_NO_TERMINAL=1` (sh).
+
+          | System | File |
+          |---|---|
+          | Windows (x64 / ARM64) | `opal-terminal_windows_amd64.zip` / `opal-terminal_windows_arm64.zip` |
+          | macOS (Intel / Apple Silicon) | `opal-terminal_darwin_amd64.tar.gz` / `opal-terminal_darwin_arm64.tar.gz` |
+          | Linux (x86_64 / ARM64) | `opal-terminal_linux_amd64.tar.gz` / `opal-terminal_linux_arm64.tar.gz` |
+
+          Checksums are in `opal-terminal_SHA256SUMS.txt`. The macOS app has an ad-hoc signature rather than a Developer ID one, so a copy downloaded with a browser needs `xattr -dr com.apple.quarantine "Opal Terminal.app"` (or Open Anyway under System Settings > Privacy & Security) before it opens. The Linux build needs the Wayland or X11, xkbcommon and EGL libraries that desktop systems already have.
+          EOF
+            gh release edit "$GITHUB_REF_NAME" --repo "$GITHUB_REPOSITORY" --notes-file notes.md
+          fi

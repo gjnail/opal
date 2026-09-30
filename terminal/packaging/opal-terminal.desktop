@@ -1,0 +1,12 @@
+[Desktop Entry]
+Type=Application
+Name=Opal Terminal
+GenericName=Terminal
+Comment=A terminal emulator that pairs with the opal shell framework
+Exec=opal-terminal
+Icon=opal-terminal
+Terminal=false
+Categories=System;TerminalEmulator;
+Keywords=shell;prompt;command;commandline;terminal;
+StartupNotify=true
+StartupWMClass=opal-terminal

@@ -2,13 +2,14 @@ name: Terminal
 
 # Opal Terminal is a nested module (terminal/), so the root CI doesn't build
 # it. It imports the CLI's theme, config and platform packages, so changes
-# there run this too.
+# there run this too, and so do changes to the install scripts, which build
+# it from a checkout.
 on:
   push:
     branches: [main]
-    paths: ["terminal/**", "internal/**", "go.mod", "go.sum", ".github/workflows/terminal.yml"]
+    paths: ["terminal/**", "internal/**", "install/**", "go.mod", "go.sum", ".github/workflows/terminal.yml"]
   pull_request:
-    paths: ["terminal/**", "internal/**", "go.mod", "go.sum", ".github/workflows/terminal.yml"]
+    paths: ["terminal/**", "internal/**", "install/**", "go.mod", "go.sum", ".github/workflows/terminal.yml"]
   workflow_dispatch:
 
 permissions:
@@ -49,3 +50,33 @@ jobs:
             go build -o opal-terminal .
           fi
           ls -l opal-terminal*
+
+      # The install scripts build and install both programs from the
+      # checkout, the terminal the same way a release packages it
+      # (scripts/package.sh on macOS and Linux).
+      - name: Install from the checkout
+        if: runner.os != 'Windows'
+        working-directory: .
+        env:
+          OPAL_NO_SETUP: "1"
+          OPAL_WITH_TERMINAL: "1"
+        run: |
+          ./install/install.sh
+          if [ "$RUNNER_OS" = macOS ]; then
+            codesign --verify --strict "$HOME/Applications/Opal Terminal.app"
+          else
+            test -f "$HOME/.local/share/applications/opal-terminal.desktop"
+          fi
+          "$HOME/.local/bin/opal" terminal -version
+      - name: Install from the checkout (Windows)
+        if: runner.os == 'Windows'
+        working-directory: .
+        shell: pwsh
+        run: |
+          ./install/install.ps1 -NoSetup
+          & "$env:LOCALAPPDATA\opal\bin\opal.exe" terminal -version
+          if ($LASTEXITCODE -ne 0) { exit 1 }
+          foreach ($f in 'opal-terminal.exe', 'conpty.dll', 'OpenConsole.exe') {
+            if (-not (Test-Path "$env:LOCALAPPDATA\opal\terminal\$f")) { throw "$f wasn't installed" }
+          }
+          if (-not (Test-Path "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\Opal Terminal.lnk")) { throw 'no Start menu shortcut' }

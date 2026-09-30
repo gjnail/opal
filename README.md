@@ -68,8 +68,14 @@ PSReadLine when yours is too old for suggestions. Open a new terminal
 afterwards; `opal doctor` shows what opal detected and which features are
 on.
 
-The scripts install the `opal` program only. Opal Terminal has no release
-builds yet; see [Building Opal Terminal](#building-opal-terminal).
+The scripts also install [Opal Terminal](#opal-terminal): on Windows to
+`%LOCALAPPDATA%\opal\terminal` with a Start menu shortcut, on macOS to
+`~/Applications/Opal Terminal.app`, and on Linux to `~/.local/bin` with a
+menu entry. On Linux they skip it when no graphical session is running, and
+on WSL and Termux. Set `OPAL_NO_TERMINAL=1` (or pass `-NoTerminal` to
+`install.ps1`) to leave it out. From a clone they build it when Go 1.26 is
+there; otherwise they download it, which works with releases after 0.1.0.
+If that part fails, opal itself stays installed.
 
 ### Checking a download
 
@@ -83,10 +89,15 @@ signed record that each archive was built from this repository by the
 gh attestation verify opal_windows_amd64.zip --repo gjnail/opal
 ```
 
+Opal Terminal's archives (`opal-terminal_windows_amd64.zip` and so on) have
+their own `opal-terminal_SHA256SUMS.txt` and are attested the same way, by
+the [terminal release workflow](.github/workflows/terminal-release.yml).
+
 ### Updating and removing
 
 `opal update` installs the latest release, or pulls and rebuilds if you built
-opal from a clone.
+opal from a clone. It updates the `opal` program only; running the install
+script again updates Opal Terminal.
 
 To remove it, run `opal setup --remove`, which takes the marked blocks out of
 your startup files. Then delete the program and its folders:
@@ -97,6 +108,11 @@ your startup files. Then delete the program and its folders:
   on Windows).
 - the data: `%LOCALAPPDATA%\opal` on Windows, `~/.local/share/opal`
   elsewhere.
+- Opal Terminal: `%LOCALAPPDATA%\opal\terminal` and the Start menu's
+  Opal Terminal shortcut on Windows, `~/Applications/Opal Terminal.app` on
+  macOS, and on Linux `~/.local/bin/opal-terminal`,
+  `~/.local/share/applications/opal-terminal.desktop` and
+  `~/.local/share/icons/hicolor/256x256/apps/opal-terminal.png`.
 
 ## Prompt and themes
 
@@ -218,6 +234,7 @@ over plugins. See the
 | `opal doctor` | Shows what opal detected (OS, shell, terminal, colors) and which features are active |
 | `opal setup` | Adds opal to every shell's startup file; `--remove` takes it out |
 | `opal update` | Installs the latest release, or rebuilds from the checkout it was built from |
+| `opal terminal` | Opens Opal Terminal in the current folder; `-profile NAME` picks the shell |
 | `opal theme preview` / `set` | Shows every theme in every shell, or switches theme |
 | `opal plugin list` / `install` / `update` | Manages plugins |
 | `opal history` | The Ctrl+R picker; `opal history list 20`, `opal history import` |
@@ -355,7 +372,9 @@ default key.
 
 ### Building Opal Terminal
 
-It needs Go 1.26 or newer, and cgo on macOS and Linux (see
+The [install scripts](#install) install it from the release archives, or
+build it when run from a clone. To build it by hand, it needs Go 1.26 or
+newer, and cgo on macOS and Linux (see
 [Gio's install notes](https://gioui.org/doc/install/linux) for the Linux packages).
 
 ```

@@ -173,7 +173,11 @@ func isDir(p string) bool {
 func childEnv(prof settings.Profile, version string, id int, restored bool) []string {
 	drop := []string{"TERM_PROGRAM", "TERM_PROGRAM_VERSION", "WT_SESSION", "WT_PROFILE_ID", "TERM_SESSION_ID",
 		"VTE_VERSION", "TERMINAL_EMULATOR", "TMUX", "TMUX_PANE", "STY", "COLUMNS", "LINES", "COLORTERM", "TERM",
-		"OPAL_TERMINAL", "OPAL_TERMINAL_PANE"}
+		"OPAL_TERMINAL", "OPAL_TERMINAL_PANE",
+		// Set by opal's shell hooks for the shell they run in; started from
+		// such a shell (opal terminal), we'd otherwise hand them to a
+		// different one.
+		"OPAL_SHELL", "OPAL_SHELL_VERSION", "OPAL_BIN", "OPAL_GREETED", "OPAL_ADMIN", "OPAL_PSRL"}
 	dropPrefix := []string{"KITTY_", "ALACRITTY_", "WEZTERM_", "KONSOLE_", "ITERM_", "VSCODE_", "GHOSTTY_"}
 	var env []string
 outer:
