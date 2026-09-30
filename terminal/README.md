@@ -56,9 +56,13 @@ off).
   graphics protocol (including chunked, compressed and file transfers,
   placements and deletion) and iTerm2's `File=` sequence. Images scroll and
   reflow with the text they sit on.
+- Desktop notifications for OSC 9/777/99 and for long commands that finish
+  while you're elsewhere: toasts on Windows, Notification Center on macOS,
+  the freedesktop service on Linux.
+- Session restore: the tabs, splits, shells, working directories and recent
+  output of the last window you closed come back on the next launch.
 
-Not done yet: kitty's Unicode placeholders and animation, OS notifications,
-session restore, and release packaging.
+Not done yet: kitty's Unicode placeholders and animation.
 
 ## Configuration
 
@@ -80,6 +84,8 @@ min_contrast = 1.0        # e.g. 4.5 lifts low-contrast text
 padding = 8
 bell = "visual"           # visual, sound, none
 notify_after = 10         # seconds; background commands longer than this get a note
+notifications = "unfocused"  # desktop notifications: unfocused, always, never
+restore_session = true    # reopen the last window's tabs on launch
 
 [terminal.clipboard]
 write = true              # programs may set the clipboard (OSC 52)
@@ -151,3 +157,6 @@ events.
 [Nerd Fonts](https://github.com/ryanoasis/nerd-fonts) project. See
 `SymbolsNerdFont-LICENSE.txt` and `SymbolsNerdFont-README.md` there for the
 licenses of the bundled icon sets.
+
+`third_party/gio` is Gio v0.10.3 with a few input fixes (the Insert key, and
+emoji typed on Windows); `third_party/gio/PATCHES.md` lists them.

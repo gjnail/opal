@@ -18,7 +18,8 @@ var keyNames = map[key.Name]string{
 	key.NameReturn: "enter", key.NameEnter: "enter", key.NameEscape: "escape",
 	key.NameHome: "home", key.NameEnd: "end", key.NameDeleteBackward: "backspace", key.NameDeleteForward: "delete",
 	key.NamePageUp: "pageup", key.NamePageDown: "pagedown", key.NameTab: "tab", key.NameSpace: "space",
-	"+": "plus", "=": "plus", "-": "minus", ",": "comma", ".": "period", "/": "slash", "\\": "backslash",
+	key.NameInsert: "insert",
+	"+":            "plus", "=": "plus", "-": "minus", ",": "comma", ".": "period", "/": "slash", "\\": "backslash",
 	"`": "backtick", ";": "semicolon", "'": "quote", "[": "bracketleft", "]": "bracketright", "*": "asterisk",
 }
 
@@ -32,6 +33,8 @@ func normalizeKeyName(s string) string {
 		return "escape"
 	case "del":
 		return "delete"
+	case "ins":
+		return "insert"
 	case "pgup":
 		return "pageup"
 	case "pgdn", "pgdown":
@@ -164,6 +167,7 @@ func defaultKeys() map[string]string {
 		"ctrl+shift+k": "clear_scrollback", "f11": "toggle_fullscreen",
 		"ctrl+comma": "open_config", "ctrl+shift+i": "toggle_broadcast", "ctrl+shift+r": "rename_tab",
 		"ctrl+shift+e": "select_last_output",
+		"shift+insert": "paste", "ctrl+insert": "copy",
 	}
 	if runtime.GOOS == "windows" {
 		// Windows Terminal's habits: Alt+Enter for full screen, Ctrl+V
@@ -210,7 +214,7 @@ var namedKeys = map[key.Name]vt.Key{
 	key.NameDeleteBackward: vt.KeyBackspace, key.NameEscape: vt.KeyEscape,
 	key.NameUpArrow: vt.KeyUp, key.NameDownArrow: vt.KeyDown, key.NameLeftArrow: vt.KeyLeft, key.NameRightArrow: vt.KeyRight,
 	key.NameHome: vt.KeyHome, key.NameEnd: vt.KeyEnd, key.NameDeleteForward: vt.KeyDelete,
-	key.NamePageUp: vt.KeyPageUp, key.NamePageDown: vt.KeyPageDown,
+	key.NamePageUp: vt.KeyPageUp, key.NamePageDown: vt.KeyPageDown, key.NameInsert: vt.KeyInsert,
 	key.NameF1: vt.KeyF1, key.NameF2: vt.KeyF2, key.NameF3: vt.KeyF3, key.NameF4: vt.KeyF4,
 	key.NameF5: vt.KeyF5, key.NameF6: vt.KeyF6, key.NameF7: vt.KeyF7, key.NameF8: vt.KeyF8,
 	key.NameF9: vt.KeyF9, key.NameF10: vt.KeyF10, key.NameF11: vt.KeyF11, key.NameF12: vt.KeyF12,

@@ -8,6 +8,7 @@ import (
 	"os"
 	"strings"
 
+	"opal/terminal/internal/notify"
 	"opal/terminal/internal/settings"
 	"opal/terminal/internal/ui"
 )
@@ -26,6 +27,7 @@ func main() {
 		fmt.Println("opal-terminal", version)
 		return
 	}
+	notify.SetProcessAppID()
 	cfg := settings.Load()
 	if *listProfiles {
 		for _, p := range cfg.ProfilesWithDetected() {

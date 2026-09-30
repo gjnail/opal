@@ -80,7 +80,9 @@ type rowImage struct {
 var paneIDs atomic.Int64
 
 // newPane starts profile's program in a new terminal of the given size.
-func newPane(w *Window, prof settings.Profile, cwd string, cols, rows int) (*Pane, error) {
+// replay, if set, is output from a previous session shown before the
+// program starts.
+func newPane(w *Window, prof settings.Profile, cwd string, cols, rows int, replay string) (*Pane, error) {
 	cfg := w.app.cfg
 	p := &Pane{
 		win:     w,
@@ -101,6 +103,12 @@ func newPane(w *Window, prof settings.Profile, cwd string, cols, rows int) (*Pan
 	})
 	m := w.rend.Metrics()
 	p.term.SetCellSize(m.CellW, m.CellH)
+	if replay != "" {
+		p.term.WriteString(replay)
+		p.term.WriteString("\x1b[m\x1b[2m[restored from the last session]\x1b[m\r\n")
+		p.term.TakeReplies()
+		p.term.TakeEvents()
+	}
 
 	path, err := resolveCommand(prof.Command)
 	if err != nil {
@@ -122,7 +130,7 @@ func newPane(w *Window, prof settings.Profile, cwd string, cols, rows int) (*Pan
 		Path: path,
 		Args: append([]string{argv0}, prof.Args...),
 		Dir:  dir,
-		Env:  childEnv(prof, w.app.version, p.id),
+		Env:  childEnv(prof, w.app.version, p.id, replay != ""),
 		Cols: cols, Rows: rows,
 		Graphemes: cfg.Graphemes,
 	})
@@ -162,7 +170,7 @@ func isDir(p string) bool {
 // childEnv is our environment minus variables that describe some other
 // terminal, plus the ones that tell programs (and Opal's prompt) where
 // they're running.
-func childEnv(prof settings.Profile, version string, id int) []string {
+func childEnv(prof settings.Profile, version string, id int, restored bool) []string {
 	drop := []string{"TERM_PROGRAM", "TERM_PROGRAM_VERSION", "WT_SESSION", "WT_PROFILE_ID", "TERM_SESSION_ID",
 		"VTE_VERSION", "TERMINAL_EMULATOR", "TMUX", "TMUX_PANE", "STY", "COLUMNS", "LINES", "COLORTERM", "TERM",
 		"OPAL_TERMINAL", "OPAL_TERMINAL_PANE"}
@@ -192,6 +200,11 @@ outer:
 		"OPAL_TERMINAL=1",
 		fmt.Sprintf("TERM_SESSION_ID=opal-%d-%d", os.Getpid(), id),
 	)
+	if restored {
+		// The shell is continuing an earlier session, so Opal's greeting
+		// for a new terminal would be out of place.
+		env = append(env, "OPAL_GREETING=0")
+	}
 	for k, v := range prof.Env {
 		env = append(env, k+"="+v)
 	}

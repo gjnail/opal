@@ -24,6 +24,7 @@ import (
 	"gioui.org/unit"
 
 	"opal/terminal/internal/fonts"
+	"opal/terminal/internal/notify"
 	"opal/terminal/internal/render"
 	"opal/terminal/internal/settings"
 	"opal/terminal/internal/vt"
@@ -72,8 +73,12 @@ type Window struct {
 	pendingCopy string
 	// rowsRendered counts row cache misses in the current frame.
 	rowsRendered int
-	hwnd         uintptr // native window, where the platform has one
-	wantPaste    bool
+	// restore holds a saved window to rebuild on the first frame.
+	restore *sessionWindow
+	// closing is set once the last tab closed and the window is going away.
+	closing   bool
+	hwnd      uintptr // native window, where the platform has one
+	wantPaste bool
 }
 
 type toast struct {
@@ -154,7 +159,9 @@ func (w *Window) ensureFonts(metric unit.Metric) {
 	}
 }
 
-func (w *Window) run() {
+// run drives the window until it closes, and returns its tabs for the
+// session file (nil when there were none).
+func (w *Window) run() *sessionWindow {
 	w.gw = new(app.Window)
 	w.gw.Option(
 		app.Title("Opal Terminal"),
@@ -165,8 +172,12 @@ func (w *Window) run() {
 	for {
 		switch e := w.gw.Event().(type) {
 		case app.DestroyEvent:
+			var snap *sessionWindow
+			if !w.closing && len(w.tabs) > 0 {
+				snap = w.snapshot()
+			}
 			w.shutdown()
-			return
+			return snap
 		case app.ConfigEvent:
 			w.mode = e.Config.Mode
 		case app.ViewEvent:
@@ -259,8 +270,13 @@ func (w *Window) contentRect(size image.Point) image.Rectangle {
 // startPane launches a profile in a pane sized for r, or a pane that
 // shows why it couldn't.
 func (w *Window) startPane(prof settings.Profile, dir string, r image.Rectangle) *Pane {
+	return w.startPaneReplay(prof, dir, r, "")
+}
+
+// startPaneReplay is startPane with output from a previous session.
+func (w *Window) startPaneReplay(prof settings.Profile, dir string, r image.Rectangle, replay string) *Pane {
 	cols, rows := w.gridFor(r)
-	p, err := newPane(w, prof, dir, cols, rows)
+	p, err := newPane(w, prof, dir, cols, rows, replay)
 	if err != nil {
 		return w.errorPane(err, cols, rows)
 	}
@@ -336,6 +352,7 @@ func (w *Window) removeTab(i int) {
 		w.active--
 	}
 	if len(w.tabs) == 0 {
+		w.closing = true
 		w.gw.Perform(system.ActionClose)
 	}
 }
@@ -402,12 +419,18 @@ func (w *Window) frame(gtx layout.Context) {
 		gtx.Execute(key.FocusCmd{Tag: w})
 	}
 
-	if len(w.tabs) == 0 {
-		prof := w.app.cfg.DefaultProfile()
-		if w.startProf != nil {
-			prof = *w.startProf
+	if len(w.tabs) == 0 && !w.closing {
+		if w.restore != nil {
+			w.restoreTabs(w.restore, w.contentRect(size))
+			w.restore = nil
 		}
-		w.newTab(prof, w.startDir, size)
+		if len(w.tabs) == 0 {
+			prof := w.app.cfg.DefaultProfile()
+			if w.startProf != nil {
+				prof = *w.startProf
+			}
+			w.newTab(prof, w.startDir, size)
+		}
 	}
 
 	w.handleInput(gtx, size)
@@ -823,6 +846,9 @@ func (w *Window) processTermEvents(gtx layout.Context) {
 					}
 					w.addToast("%s", msg)
 					w.requestAttention()
+					if w.shouldNotify(ti) {
+						notify.Send(e.Title, e.Body)
+					}
 				case vt.EvProgress:
 					p.progress = e
 				case vt.EvCommandFinished:
@@ -833,6 +859,13 @@ func (w *Window) processTermEvents(gtx layout.Context) {
 						}
 						w.addToast("Command %s after %s", status, d.Round(time.Second))
 						w.requestAttention()
+						if w.shouldNotify(ti) {
+							what := e.Mark.Command
+							if what == "" {
+								what = p.title()
+							}
+							notify.Send(fmt.Sprintf("Command %s", status), fmt.Sprintf("%s (%s)", what, d.Round(time.Second)))
+						}
 					}
 				case vt.EvAttention:
 					p.bellAt = time.Now()
@@ -845,6 +878,19 @@ func (w *Window) processTermEvents(gtx layout.Context) {
 			p.lastSeq = p.term.Seq()
 		}
 	}
+}
+
+// shouldNotify applies the notifications setting to an event from tab ti:
+// by default only when the window isn't focused or the tab is in the
+// background.
+func (w *Window) shouldNotify(ti int) bool {
+	switch w.app.cfg.Notify {
+	case "never":
+		return false
+	case "always":
+		return true
+	}
+	return !w.focused || ti != w.active
 }
 
 func (w *Window) restartPane(p *Pane) {

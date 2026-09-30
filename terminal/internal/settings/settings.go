@@ -33,6 +33,8 @@ type Config struct {
 	Graphemes    bool              `toml:"grapheme_clustering"`
 	Bell         string            `toml:"bell"` // visual, sound, none
 	NotifyAfter  float64           `toml:"notify_after"`
+	Notify       string            `toml:"notifications"` // unfocused, always, never
+	Restore      bool              `toml:"restore_session"`
 	WordChars    string            `toml:"word_chars"`
 	Theme        string            `toml:"theme"` // overrides the prompt's theme
 	Background   string            `toml:"background"`
@@ -95,6 +97,8 @@ func Defaults() *Config {
 		Graphemes:    true,
 		Bell:         "visual",
 		NotifyAfter:  10,
+		Notify:       "unfocused",
+		Restore:      true,
 		WordChars:    "-_./~:@+%#?&=",
 		Clipboard:    ClipboardPolicy{Write: true},
 	}
@@ -157,6 +161,8 @@ type rawConfig struct {
 	Graphemes    *bool             `toml:"grapheme_clustering"`
 	Bell         *string           `toml:"bell"`
 	NotifyAfter  *float64          `toml:"notify_after"`
+	Notify       *string           `toml:"notifications"`
+	Restore      *bool             `toml:"restore_session"`
 	WordChars    *string           `toml:"word_chars"`
 	Theme        *string           `toml:"theme"`
 	Background   *string           `toml:"background"`
@@ -205,6 +211,8 @@ func (r *rawConfig) apply(c *Config) {
 	setB(&c.Graphemes, r.Graphemes)
 	setS(&c.Bell, r.Bell)
 	setF(&c.NotifyAfter, r.NotifyAfter)
+	setS(&c.Notify, r.Notify)
+	setB(&c.Restore, r.Restore)
 	setS(&c.WordChars, r.WordChars)
 	setS(&c.Theme, r.Theme)
 	setS(&c.Background, r.Background)
@@ -254,6 +262,12 @@ func (c *Config) normalize() {
 	case "visual", "sound", "none":
 	default:
 		c.Bell = "visual"
+	}
+	switch c.Notify {
+	case "unfocused", "always", "never":
+	default:
+		c.warnf("notifications %q: use unfocused, always or never", c.Notify)
+		c.Notify = "unfocused"
 	}
 	c.Background = strings.ToLower(c.Background)
 }

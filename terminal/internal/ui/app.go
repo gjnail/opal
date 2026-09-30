@@ -26,28 +26,67 @@ type Options struct {
 	Dir     string
 }
 
-// Run opens the first window and runs until the last one closes.
+// Run opens the first window (or the windows saved from the last session)
+// and runs until the last one closes.
 func Run(cfg *settings.Config, o Options) {
 	a := &App{cfg: cfg, version: o.Version, windows: map[*Window]bool{}}
-	a.openWindow(o.Profile, o.Dir)
+	restored := false
+	// A profile or directory on the command line asks for something
+	// specific, so it doesn't bring back the old session.
+	if cfg.Restore && o.Profile == nil && o.Dir == "" {
+		if s := loadSession(); s != nil {
+			for i := range s.Windows {
+				if len(s.Windows[i].Tabs) > 0 {
+					a.openWindowFrom(&s.Windows[i])
+					restored = true
+				}
+			}
+		}
+	}
+	if !restored {
+		a.openWindow(o.Profile, o.Dir)
+	}
 	app.Main()
 }
 
 func (a *App) openWindow(prof *settings.Profile, dir string) {
-	w := newWindow(a, prof, dir)
+	a.start(newWindow(a, prof, dir))
+}
+
+func (a *App) openWindowFrom(sw *sessionWindow) {
+	w := newWindow(a, nil, "")
+	w.restore = sw
+	a.start(w)
+}
+
+func (a *App) start(w *Window) {
 	a.mu.Lock()
 	a.windows[w] = true
 	a.mu.Unlock()
 	go func() {
-		w.run()
-		a.mu.Lock()
-		delete(a.windows, w)
-		n := len(a.windows)
-		a.mu.Unlock()
-		if n == 0 {
-			os.Exit(0)
-		}
+		snap := w.run()
+		a.windowClosed(w, snap)
 	}()
+}
+
+// windowClosed exits when the last window goes. Its tabs become the
+// session to restore next time; closing its last tab instead means there
+// is nothing to restore.
+func (a *App) windowClosed(w *Window, snap *sessionWindow) {
+	a.mu.Lock()
+	delete(a.windows, w)
+	last := len(a.windows) == 0
+	restore := a.cfg.Restore
+	a.mu.Unlock()
+	if !last {
+		return
+	}
+	if restore && snap != nil && len(snap.Tabs) > 0 {
+		saveSession([]sessionWindow{*snap})
+	} else {
+		removeSession()
+	}
+	os.Exit(0)
 }
 
 // reload re-reads config.toml and applies what can change live: colors,

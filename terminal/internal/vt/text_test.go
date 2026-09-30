@@ -2,6 +2,7 @@ package vt
 
 import (
 	"regexp"
+	"strings"
 	"testing"
 )
 
@@ -71,6 +72,32 @@ func TestURLDetection(t *testing.T) {
 	term.WriteString("\r\n\x1b]8;;https://opal.dev\x1b\\docs\x1b]8;;\x1b\\")
 	if u, _, _, ok := term.URLAt(Pos{row + 1, 2}); !ok || u != "https://opal.dev" {
 		t.Fatalf("osc 8 link %q", u)
+	}
+}
+
+func TestDumpRoundTrip(t *testing.T) {
+	src := newTerm(20, 10)
+	src.WriteString("\x1b]133;A\x07$ \x1b]133;B\x07ls\r\n\x1b]133;C\x07\x1b[31;1mred\x1b[0m 中文 0123456789abcdefghij\r\n\x1b]133;D;2\x07\x1b]133;A\x07$ ")
+	dump := src.Dump(100)
+	dst := newTerm(20, 10)
+	dst.WriteString(dump)
+	// "red 中文 " is 9 cells, so the 20-column line wraps after "a".
+	want := []string{"$ ls", "red 中文 0123456789a", "bcdefghij"}
+	for i, w := range want {
+		if got := dst.ScreenLine(i).String(); got != w {
+			t.Fatalf("line %d = %q, want %q (dump %q)", i, got, w, dump)
+		}
+	}
+	if c := dst.ScreenLine(1).Cells[0]; c.Fg != Indexed(1) || c.A&AttrBold == 0 {
+		t.Fatalf("colors lost: %+v", c)
+	}
+	m := dst.ScreenLine(0).Prompt
+	if m == nil || m.Exit != 2 {
+		t.Fatalf("prompt mark not restored: %+v", m)
+	}
+	// The line with the live prompt isn't part of the dump.
+	if strings.Contains(dump, "$ \r\n\x1b]133;A") || strings.Count(dump, "133;A") != 1 {
+		t.Fatalf("dump should hold one prompt: %q", dump)
 	}
 }
 
