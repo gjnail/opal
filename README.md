@@ -323,9 +323,10 @@ scrollback with their text. kitty's Unicode placeholders and animation aren't
 done yet.
 
 On Windows, the ConPTY built into the system drops the escape sequences
-images use. `terminal/scripts/fetch-conpty.ps1` puts Microsoft's newer
-`conpty.dll` and `OpenConsole.exe` next to the program, and Opal Terminal
-uses them when they're there.
+images use. The Windows release archives include Microsoft's newer
+`conpty.dll` and `OpenConsole.exe`, and Opal Terminal uses them when they sit
+next to the program. For a build of your own,
+`terminal/scripts/fetch-conpty.ps1` puts them there.
 
 ### Text and colors
 
