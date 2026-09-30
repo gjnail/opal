@@ -65,6 +65,7 @@ type Window struct {
 	startProf   *settings.Profile
 	firstErr    string
 	lastSize    image.Point
+	lastCaret   f32.Point
 	pendingCopy string
 	wantPaste   bool
 }
@@ -374,6 +375,7 @@ func (w *Window) frame(gtx layout.Context) {
 		return
 	}
 	size := gtx.Constraints.Max
+	w.lastSize = size
 
 	// Whole-window key input.
 	area := clip.Rect{Max: size}.Push(gtx.Ops)
@@ -438,6 +440,7 @@ func (w *Window) frame(gtx layout.Context) {
 	if t.zoom == nil {
 		w.drawDividers(gtx, t)
 	}
+	w.placeIME(gtx, t.focus)
 	w.drawOverlay(gtx, size)
 	w.drawToasts(gtx, size)
 
@@ -460,6 +463,27 @@ func (w *Window) frame(gtx layout.Context) {
 			}
 		}
 	}
+}
+
+// placeIME tells the input method where the cursor is, so its candidate
+// window opens next to what's being typed.
+func (w *Window) placeIME(gtx layout.Context, p *Pane) {
+	if p == nil || !w.focused {
+		return
+	}
+	m := w.rend.Metrics()
+	p.term.Lock()
+	cx, cy := p.term.CursorPos()
+	p.term.Unlock()
+	pos := f32.Pt(float32(p.grid.X+cx*m.CellW), float32(p.grid.Y+cy*m.CellH+m.Baseline))
+	if pos == w.lastCaret {
+		return
+	}
+	w.lastCaret = pos
+	gtx.Execute(key.SelectionCmd{
+		Tag:   w,
+		Caret: key.Caret{Pos: pos, Ascent: float32(m.Baseline), Descent: float32(m.CellH - m.Baseline)},
+	})
 }
 
 // handleExit closes panes whose program ended cleanly and leaves a note

@@ -68,6 +68,7 @@ type Pane struct {
 	exitHandled    bool
 	clipboardReply bool
 	lastSeq        uint64
+	images         map[uint64]*imgEntry
 }
 
 type rowImage struct {
@@ -123,6 +124,7 @@ func newPane(w *Window, prof settings.Profile, cwd string, cols, rows int) (*Pan
 		Dir:  dir,
 		Env:  childEnv(prof, w.app.version, p.id),
 		Cols: cols, Rows: rows,
+		Graphemes: cfg.Graphemes,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("starting %s: %w", prof.Command, err)

@@ -14,6 +14,9 @@ type Cmd struct {
 	Env  []string
 	Cols int
 	Rows int
+	// Graphemes tells a ConPTY that supports it to measure text by grapheme
+	// cluster, matching the terminal (mode 2027).
+	Graphemes bool
 }
 
 // PTY is a running child process and its terminal.

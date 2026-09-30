@@ -29,6 +29,7 @@ func (w *Window) actionList() []actionDef {
 		{"split_down", "Split pane down"},
 		{"split_auto", "Split pane (longest side)"},
 		{"find", "Find in scrollback"},
+		{"quick_select", "Quick select (copy a URL, path or hash by label)"},
 		{"copy", "Copy selection"},
 		{"paste", "Paste"},
 		{"select_all", "Select all"},
@@ -211,6 +212,10 @@ func (w *Window) runActionSized(id string, size image.Point) {
 	case "find":
 		if p != nil {
 			w.openSearch(p)
+		}
+	case "quick_select":
+		if p != nil {
+			w.openQuickSelect(p)
 		}
 	case "command_palette":
 		w.openPalette("")

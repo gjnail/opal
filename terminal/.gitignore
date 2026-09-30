@@ -1,3 +1,5 @@
 /opal-terminal
 /opal-terminal.exe
+/conpty.dll
+/OpenConsole.exe
 *.png

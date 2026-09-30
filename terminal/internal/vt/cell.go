@@ -117,6 +117,8 @@ type Line struct {
 	Attr    LineAttr
 	// Prompt is set on the line where a shell prompt starts (OSC 133;A).
 	Prompt *PromptMark
+	// Images are the inline images whose top row is this line.
+	Images []*Placement
 	ext    map[int]*cellExt
 }
 
@@ -162,6 +164,7 @@ func (l *Line) reset(cols int, fill Cell) {
 	l.Wrapped = false
 	l.Attr = LineNormal
 	l.Prompt = nil
+	l.Images = nil
 	l.ext = nil
 }
 
@@ -298,7 +301,7 @@ func (l *Line) contentEnd() int {
 
 // isBlank reports whether the line holds nothing worth keeping.
 func (l *Line) isBlank() bool {
-	if l.Wrapped || l.Prompt != nil {
+	if l.Wrapped || l.Prompt != nil || len(l.Images) > 0 {
 		return false
 	}
 	for _, c := range l.Cells {
@@ -318,7 +321,7 @@ func (l *Line) Clone() *Line { return l.clone() }
 func (c Cell) HasExt() bool { return c.A&attrExt != 0 }
 
 func (l *Line) clone() *Line {
-	n := &Line{Cells: append([]Cell(nil), l.Cells...), Wrapped: l.Wrapped, Attr: l.Attr, Prompt: l.Prompt}
+	n := &Line{Cells: append([]Cell(nil), l.Cells...), Wrapped: l.Wrapped, Attr: l.Attr, Prompt: l.Prompt, Images: l.Images}
 	if len(l.ext) > 0 {
 		n.ext = make(map[int]*cellExt, len(l.ext))
 		for k, v := range l.ext {

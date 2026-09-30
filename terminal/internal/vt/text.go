@@ -160,9 +160,21 @@ type Match struct{ Start, End Pos }
 // are searched as one, so matches can span rows. At most limit matches are
 // returned (0 = no limit).
 func (t *Terminal) Search(re *regexp.Regexp, limit int) []Match {
+	return t.SearchRange(re, t.buf.evicted, t.LastAbs(), limit)
+}
+
+// SearchRange is Search limited to the absolute rows [first, last].
+func (t *Terminal) SearchRange(re *regexp.Regexp, first, last int64, limit int) []Match {
 	var out []Match
-	first := t.buf.evicted
-	last := t.LastAbs()
+	first = max(first, t.buf.evicted)
+	last = min(last, t.LastAbs())
+	// Start at the beginning of a wrapped line that runs into the range.
+	for first > t.buf.evicted {
+		if prev := t.AbsLine(first - 1); prev == nil || !prev.Wrapped {
+			break
+		}
+		first--
+	}
 	for row := first; row <= last; {
 		start, end := row, row
 		for end < last {

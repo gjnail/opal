@@ -314,6 +314,14 @@ func (t *Terminal) eraseDisplay(mode int, selective bool) {
 	case 3:
 		t.clearHistory()
 	}
+	// Images go with the lines that were cleared entirely.
+	if !selective && mode <= 2 {
+		for i := 0; i < t.rows; i++ {
+			if mode == 2 || (mode == 0 && i > y) || (mode == 1 && i < y) {
+				t.line(i).Images = nil
+			}
+		}
+	}
 	t.cur.pendingWrap = false
 }
 

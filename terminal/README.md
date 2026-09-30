@@ -20,12 +20,22 @@ go build -ldflags=-H=windowsgui -o opal-terminal.exe .   # Windows, without a co
 starts one; anything after the flags runs instead of a shell
 (`opal-terminal htop`).
 
+On Windows, run `scripts/fetch-conpty.ps1` to put Microsoft's newer ConPTY
+(`conpty.dll` and `OpenConsole.exe`, from the Microsoft.Windows.Console.ConPTY
+package) next to the executable. The ConPTY built into Windows drops the
+escape sequences for sixel and kitty images; with the newer one present,
+Opal Terminal uses it automatically (`OPAL_TERMINAL_CONPTY=system` turns that
+off).
+
 ## What works
 
 - Tabs (drag to reorder, middle-click to close) and split panes with
   draggable dividers, zoom, and keyboard focus and resize.
 - A command palette listing every action with its keybinding.
 - Find in scrollback, with case and regex toggles.
+- Quick select: every URL, path, git hash, IP address and UUID on screen gets
+  a one- or two-letter label; typing it copies the match (uppercase also
+  pastes it at the prompt).
 - Selection by character, word (double-click), line (triple-click) and block
   (Alt+drag); copy on select is optional. Ctrl+click opens links, both
   OSC 8 hyperlinks and plain URLs in the text.
@@ -42,8 +52,13 @@ starts one; anything after the flags runs instead of a shell
   OSC 52 clipboard (writing allowed, reading off by default), notifications
   and progress reports.
 
-Not done yet: inline images (sixel, kitty, iTerm2), OS notifications, session
-restore, and release packaging.
+- Inline images through all three protocols programs use: sixel, the kitty
+  graphics protocol (including chunked, compressed and file transfers,
+  placements and deletion) and iTerm2's `File=` sequence. Images scroll and
+  reflow with the text they sit on.
+
+Not done yet: kitty's Unicode placeholders and animation, OS notifications,
+session restore, and release packaging.
 
 ## Configuration
 
@@ -96,6 +111,7 @@ Default keys (macOS uses Cmd in place of Ctrl+Shift):
 | Ctrl+Shift+Z | zoom the pane |
 | Ctrl+Shift+C / V, Ctrl+V on Windows | copy / paste (Ctrl+C copies when text is selected) |
 | Ctrl+Shift+F | find |
+| Ctrl+Shift+Space | quick select |
 | Ctrl+Shift+P | command palette |
 | Ctrl+Up / Down | previous / next prompt |
 | Ctrl+Shift+E | select the last command's output |

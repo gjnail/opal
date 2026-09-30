@@ -189,45 +189,37 @@ func (t *Tab) splits() []*node {
 func (t *Tab) neighbor(p *Pane, dx, dy int) *Pane {
 	r := p.rect
 	var best *Pane
-	bestScore := -1
+	bestGap, bestOverlap := 0, 0
 	for _, q := range t.panes() {
 		if q == p {
 			continue
 		}
 		o := q.rect
-		var adjacent bool
-		var overlap int
+		var gap, overlap int
 		switch {
 		case dx > 0:
-			adjacent = o.Min.X >= r.Max.X
+			gap = o.Min.X - r.Max.X
 			overlap = min(r.Max.Y, o.Max.Y) - max(r.Min.Y, o.Min.Y)
 		case dx < 0:
-			adjacent = o.Max.X <= r.Min.X
+			gap = r.Min.X - o.Max.X
 			overlap = min(r.Max.Y, o.Max.Y) - max(r.Min.Y, o.Min.Y)
 		case dy > 0:
-			adjacent = o.Min.Y >= r.Max.Y
+			gap = o.Min.Y - r.Max.Y
 			overlap = min(r.Max.X, o.Max.X) - max(r.Min.X, o.Min.X)
 		case dy < 0:
-			adjacent = o.Max.Y <= r.Min.Y
+			gap = r.Min.Y - o.Max.Y
 			overlap = min(r.Max.X, o.Max.X) - max(r.Min.X, o.Min.X)
 		}
-		if !adjacent || overlap <= 0 {
+		if gap < 0 || overlap <= 0 {
 			continue
 		}
-		dist := abs(o.Min.X-r.Max.X) + abs(r.Min.X-o.Max.X) + abs(o.Min.Y-r.Max.Y) + abs(r.Min.Y-o.Max.Y)
-		score := overlap*4 - dist
-		if score > bestScore {
-			best, bestScore = q, score
+		// Nearest first; among equally near panes, the one that lines up
+		// best with this one.
+		if best == nil || gap < bestGap || (gap == bestGap && overlap > bestOverlap) {
+			best, bestGap, bestOverlap = q, gap, overlap
 		}
 	}
 	return best
-}
-
-func abs(v int) int {
-	if v < 0 {
-		return -v
-	}
-	return v
 }
 
 // resize grows or shrinks p toward a direction by moving the nearest

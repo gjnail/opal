@@ -53,12 +53,13 @@ type Row struct {
 
 // Renderer draws rows with one font set and palette.
 type Renderer struct {
-	fonts *fonts.Set
-	m     fonts.Metrics
-	opts  Options
-	pal   vt.Palette
-	boxes map[boxKey]*image.Alpha
-	seed  maphash.Seed
+	fonts   *fonts.Set
+	m       fonts.Metrics
+	opts    Options
+	pal     vt.Palette
+	palHash uint64
+	boxes   map[boxKey]*image.Alpha
+	seed    maphash.Seed
 
 	fg, bg []vt.RGB // per-cell scratch
 }
@@ -68,14 +69,26 @@ func New(f *fonts.Set, pal vt.Palette, opts Options) *Renderer {
 	if opts.MinContrast < 1 {
 		opts.MinContrast = 1
 	}
-	return &Renderer{fonts: f, m: f.Metrics(), opts: opts, pal: pal, boxes: map[boxKey]*image.Alpha{}, seed: maphash.MakeSeed()}
+	r := &Renderer{fonts: f, m: f.Metrics(), opts: opts, boxes: map[boxKey]*image.Alpha{}, seed: maphash.MakeSeed()}
+	r.SetPalette(pal)
+	return r
 }
 
 // Metrics returns the cell metrics.
 func (r *Renderer) Metrics() fonts.Metrics { return r.m }
 
 // SetPalette changes colors. Cached rows keyed with the old palette miss.
-func (r *Renderer) SetPalette(p vt.Palette) { r.pal = p }
+// The palette is hashed here once rather than for every row key.
+func (r *Renderer) SetPalette(p vt.Palette) {
+	if p == r.pal && r.palHash != 0 {
+		return
+	}
+	r.pal = p
+	var h maphash.Hash
+	h.SetSeed(r.seed)
+	h.Write(unsafe.Slice((*byte)(unsafe.Pointer(&r.pal)), unsafe.Sizeof(r.pal)))
+	r.palHash = h.Sum64()
+}
 
 // Key identifies a row's appearance, for caching rendered rows.
 func (r *Renderer) Key(row *Row) uint64 {
@@ -102,9 +115,8 @@ func (r *Renderer) Key(row *Row) uint64 {
 	buf[13] = boolByte(row.BlinkOff)
 	buf[14] = boolByte(row.Reverse)
 	buf[15] = byte(l.Attr)
-	h.Write(buf[:16])
-	pb := unsafe.Slice((*byte)(unsafe.Pointer(&r.pal)), unsafe.Sizeof(r.pal))
-	h.Write(pb)
+	binary.LittleEndian.PutUint64(buf[16:], r.palHash)
+	h.Write(buf[:24])
 	return h.Sum64()
 }
 

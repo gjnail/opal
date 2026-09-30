@@ -192,6 +192,10 @@ func rewrap(lines []*Line, oldCols, cols int, idx, xs []int) []*Line {
 			off  int
 			mark *PromptMark
 		}
+		var imgs []struct {
+			off  int
+			imgs []*Placement
+		}
 		for k := i; k <= j; k++ {
 			l := lines[k]
 			n := len(l.Cells)
@@ -203,6 +207,12 @@ func rewrap(lines []*Line, oldCols, cols int, idx, xs []int) []*Line {
 					off  int
 					mark *PromptMark
 				}{len(buf), l.Prompt})
+			}
+			if len(l.Images) > 0 {
+				imgs = append(imgs, struct {
+					off  int
+					imgs []*Placement
+				}{len(buf), l.Images})
 			}
 			start := len(buf)
 			for x := 0; x < n; x++ {
@@ -275,6 +285,11 @@ func rewrap(lines []*Line, oldCols, cols int, idx, xs []int) []*Line {
 			if out[li].Prompt == nil {
 				out[li].Prompt = m.mark
 			}
+		}
+		// Images keep their column; they move down with the text above them.
+		for _, im := range imgs {
+			li := lineOf[min(im.off, len(buf))]
+			out[li].Images = append(out[li].Images, im.imgs...)
 		}
 		for _, a := range anchors {
 			li, cx := lineOf[a.off], colOf[a.off]

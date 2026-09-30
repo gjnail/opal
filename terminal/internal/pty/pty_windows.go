@@ -21,6 +21,88 @@ var (
 	procUpdateProcThreadAttribute = kernel32.NewProc("UpdateProcThreadAttribute")
 )
 
+// A newer ConPTY (Microsoft's conpty.dll and OpenConsole.exe, from the
+// Microsoft.Windows.Console.ConPTY package) can sit next to the executable.
+// It passes through sequences the built-in one drops (sixel, kitty
+// graphics) and measures text by grapheme cluster. OPAL_TERMINAL_CONPTY=
+// system forces the built-in one.
+var bundled struct {
+	once                  sync.Once
+	ok                    bool
+	create, resize, close *windows.LazyProc
+}
+
+const pseudoconsoleGlyphWidthGraphemes = 0x08
+
+func loadBundled() bool {
+	bundled.once.Do(func() {
+		if os.Getenv("OPAL_TERMINAL_CONPTY") == "system" {
+			return
+		}
+		exe, err := os.Executable()
+		if err != nil {
+			return
+		}
+		dir := filepath.Dir(exe)
+		dll := filepath.Join(dir, "conpty.dll")
+		if _, err := os.Stat(dll); err != nil {
+			return
+		}
+		if _, err := os.Stat(filepath.Join(dir, "OpenConsole.exe")); err != nil {
+			return
+		}
+		d := windows.NewLazyDLL(dll)
+		if d.Load() != nil {
+			return
+		}
+		bundled.create = d.NewProc("ConptyCreatePseudoConsole")
+		bundled.resize = d.NewProc("ConptyResizePseudoConsole")
+		bundled.close = d.NewProc("ConptyClosePseudoConsole")
+		bundled.ok = bundled.create.Find() == nil && bundled.resize.Find() == nil && bundled.close.Find() == nil
+	})
+	return bundled.ok
+}
+
+// UsingBundledConPTY reports whether the newer ConPTY is in use.
+func UsingBundledConPTY() bool { return loadBundled() }
+
+func coordArg(c windows.Coord) uintptr {
+	return uintptr(uint32(uint16(c.X)) | uint32(uint16(c.Y))<<16)
+}
+
+func createPseudoConsole(size windows.Coord, in, out windows.Handle, graphemes bool, hpc *windows.Handle) error {
+	if !loadBundled() {
+		return windows.CreatePseudoConsole(size, in, out, 0, hpc)
+	}
+	var flags uintptr
+	if graphemes {
+		flags = pseudoconsoleGlyphWidthGraphemes
+	}
+	r, _, _ := bundled.create.Call(coordArg(size), uintptr(in), uintptr(out), flags, uintptr(unsafe.Pointer(hpc)))
+	if r != 0 {
+		return syscall.Errno(r)
+	}
+	return nil
+}
+
+func resizePseudoConsole(hpc windows.Handle, size windows.Coord) error {
+	if !loadBundled() {
+		return windows.ResizePseudoConsole(hpc, size)
+	}
+	if r, _, _ := bundled.resize.Call(uintptr(hpc), coordArg(size)); r != 0 {
+		return syscall.Errno(r)
+	}
+	return nil
+}
+
+func closePseudoConsole(hpc windows.Handle) {
+	if !loadBundled() {
+		windows.ClosePseudoConsole(hpc)
+		return
+	}
+	bundled.close.Call(uintptr(hpc))
+}
+
 type conPTY struct {
 	hpc     windows.Handle
 	in      *os.File
@@ -47,7 +129,7 @@ func Start(c Cmd) (PTY, error) {
 	}
 	var hpc windows.Handle
 	size := windows.Coord{X: int16(max(c.Cols, 1)), Y: int16(max(c.Rows, 1))}
-	if err := windows.CreatePseudoConsole(size, inR, outW, 0, &hpc); err != nil {
+	if err := createPseudoConsole(size, inR, outW, c.Graphemes, &hpc); err != nil {
 		for _, h := range []windows.Handle{inR, inW, outR, outW} {
 			windows.CloseHandle(h)
 		}
@@ -64,7 +146,7 @@ func Start(c Cmd) (PTY, error) {
 		done: make(chan struct{}),
 	}
 	if err := p.spawn(c); err != nil {
-		windows.ClosePseudoConsole(hpc)
+		closePseudoConsole(hpc)
 		p.in.Close()
 		p.out.Close()
 		return nil, err
@@ -177,7 +259,7 @@ func (p *conPTY) closeConsole() {
 	p.hpc = 0
 	p.closeMu.Unlock()
 	if hpc != 0 {
-		windows.ClosePseudoConsole(hpc)
+		closePseudoConsole(hpc)
 	}
 }
 
@@ -197,7 +279,7 @@ func (p *conPTY) Resize(cols, rows, pxW, pxH int) error {
 	if p.hpc == 0 {
 		return nil
 	}
-	return windows.ResizePseudoConsole(p.hpc, windows.Coord{X: int16(max(cols, 1)), Y: int16(max(rows, 1))})
+	return resizePseudoConsole(p.hpc, windows.Coord{X: int16(max(cols, 1)), Y: int16(max(rows, 1))})
 }
 
 func (p *conPTY) Wait() (int, error) {

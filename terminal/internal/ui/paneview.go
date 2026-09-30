@@ -5,6 +5,7 @@ import (
 	"image/color"
 	"time"
 
+	"gioui.org/f32"
 	"gioui.org/layout"
 	"gioui.org/op"
 	"gioui.org/op/clip"
@@ -75,6 +76,10 @@ func (p *Pane) draw(gtx layout.Context, focused bool) {
 		}
 	}
 	allMarks := p.scrollbarMarks(hist)
+	var imgs []imgDraw
+	p.term.VisibleImages(top, p.rows, func(line int, pl *vt.Placement) {
+		imgs = append(imgs, imgDraw{row: line - top, pl: pl})
+	})
 	p.term.Unlock()
 
 	for _, j := range jobs {
@@ -98,6 +103,7 @@ func (p *Pane) draw(gtx layout.Context, focused bool) {
 		off.Pop()
 	}
 	p.evict()
+	p.drawImages(gtx, imgs)
 
 	p.drawGutter(gtx, marks, firstAbs, top)
 	p.drawSearchHits(gtx, firstAbs, top)
@@ -107,6 +113,71 @@ func (p *Pane) draw(gtx layout.Context, focused bool) {
 		fillRect(gtx, p.rect, color.NRGBA{R: 255, G: 255, B: 255, A: uint8(40 * (1 - float64(since)/float64(150*time.Millisecond)))})
 		gtx.Execute(op.InvalidateCmd{})
 	}
+}
+
+type imgDraw struct {
+	row int // view row of the image's top line (may be negative)
+	pl  *vt.Placement
+}
+
+type imgEntry struct {
+	op   paint.ImageOp
+	used uint64
+}
+
+// drawImages paints inline images over the text, clipped to the grid.
+func (p *Pane) drawImages(gtx layout.Context, imgs []imgDraw) {
+	if len(imgs) == 0 {
+		return
+	}
+	m := p.win.rend.Metrics()
+	grid := image.Rectangle{Min: p.grid, Max: p.grid.Add(image.Pt(p.cols*m.CellW, p.rows*m.CellH))}
+	cl := clip.Rect(grid).Push(gtx.Ops)
+	defer cl.Pop()
+	for _, d := range imgs {
+		pl := d.pl
+		src := pl.Src
+		if src.Empty() {
+			continue
+		}
+		w := float32(pl.Cols * m.CellW)
+		h := float32(pl.Rows * m.CellH)
+		if pl.W > 0 && pl.H > 0 {
+			w, h = pl.W*float32(m.CellW), pl.H*float32(m.CellH)
+		}
+		x := float32(p.grid.X + pl.Col*m.CellW + pl.OffX)
+		y := float32(p.grid.Y + d.row*m.CellH + pl.OffY)
+		tr := f32.Affine2D{}.
+			Offset(f32.Pt(-float32(src.Min.X), -float32(src.Min.Y))).
+			Scale(f32.Point{}, f32.Pt(w/float32(src.Dx()), h/float32(src.Dy()))).
+			Offset(f32.Pt(x, y))
+		st := op.Affine(tr).Push(gtx.Ops)
+		ic := clip.Rect(src).Push(gtx.Ops)
+		p.imageOp(pl.Image).Add(gtx.Ops)
+		paint.PaintOp{}.Add(gtx.Ops)
+		ic.Pop()
+		st.Pop()
+	}
+}
+
+// imageOp returns the GPU image for img, uploading it the first time.
+func (p *Pane) imageOp(img *vt.Image) paint.ImageOp {
+	if p.images == nil {
+		p.images = map[uint64]*imgEntry{}
+	}
+	if e := p.images[img.Version]; e != nil {
+		e.used = p.frame
+		return e.op
+	}
+	o := paint.NewImageOp(img.Pix)
+	o.Filter = paint.FilterLinear
+	p.images[img.Version] = &imgEntry{op: o, used: p.frame}
+	for v, e := range p.images {
+		if e.used+120 < p.frame {
+			delete(p.images, v)
+		}
+	}
+	return o
 }
 
 func hasBlink(l *vt.Line) bool {
