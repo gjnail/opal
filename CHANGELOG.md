@@ -24,6 +24,11 @@ Notable changes to opal. The format follows
   on Windows, in `~/Applications` on macOS, and with a menu entry on Linux
   desktops. `OPAL_NO_TERMINAL=1` leaves it out.
 - `opal terminal` opens Opal Terminal in the current folder.
+- On macOS, Opal Terminal gives shells a UTF-8 locale when it's opened from
+  Finder or the Dock, which start apps without one. It finds a shell's
+  working directory without opal's prompt, plays the alert sound for
+  `bell = "sound"`, and bounces the Dock icon when a background window wants
+  attention.
 
 ## [0.1.0] - 2026-09-29
 

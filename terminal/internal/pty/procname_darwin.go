@@ -17,8 +17,3 @@ func processName(pid int) string {
 	}
 	return string(name)
 }
-
-// ProcessCWD returns a process's working directory. macOS only exposes
-// this through libproc, which needs cgo; shell integration (OSC 7) covers
-// the common case instead.
-func ProcessCWD(pid int) string { return "" }

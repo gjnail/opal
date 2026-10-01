@@ -3,6 +3,7 @@ package ui
 import (
 	"image"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"testing"
 	"time"
@@ -314,5 +315,59 @@ func TestLineEdit(t *testing.T) {
 	e.insert("> ")
 	if e.String() != "> git " || e.cur != 2 {
 		t.Fatalf("home+insert = %q cur=%d", e.String(), e.cur)
+	}
+}
+
+func TestUTF8Locale(t *testing.T) {
+	installed := func(l string) bool {
+		return l == "en_US.UTF-8" || l == "en_GB.UTF-8" || l == "zh_CN.UTF-8" || l == "sr_RS.UTF-8"
+	}
+	for id, want := range map[string]string{
+		"en_US":           "en_US.UTF-8",
+		"en_GB@rg=uszzzz": "en_GB.UTF-8",
+		"zh-Hans_CN":      "zh_CN.UTF-8",
+		"sr_Latn_RS":      "sr_RS.UTF-8",
+		"en_DE":           "en_US.UTF-8", // no such locale
+		"en":              "en_US.UTF-8",
+		"":                "en_US.UTF-8",
+		"../../etc_US":    "en_US.UTF-8",
+	} {
+		if got := utf8Locale(id, installed); got != want {
+			t.Errorf("utf8Locale(%q) = %q, want %q", id, got, want)
+		}
+	}
+	if got := utf8Locale("en_US", func(string) bool { return false }); got != "" {
+		t.Errorf("with no locales installed: %q", got)
+	}
+}
+
+func TestChildEnvLocale(t *testing.T) {
+	// The last one counts, as it does when the shell is started.
+	lang := func(env []string) (val string, found bool) {
+		for _, kv := range env {
+			if v, ok := strings.CutPrefix(kv, "LANG="); ok {
+				val, found = v, true
+			}
+		}
+		return val, found
+	}
+	for _, k := range []string{"LANG", "LC_ALL", "LC_CTYPE"} {
+		t.Setenv(k, "")
+	}
+	// Only macOS starts apps without a locale.
+	got, ok := lang(childEnv(settings.Profile{}, "test", 1, false))
+	if want := defaultLocale(); want != "" && got != want {
+		t.Errorf("LANG = %q, want %q", got, want)
+	} else if want == "" && ok && got != "" {
+		t.Errorf("LANG = %q, want none", got)
+	}
+	if runtime.GOOS == "darwin" && !strings.HasSuffix(got, ".UTF-8") {
+		t.Errorf("LANG = %q on macOS, want a UTF-8 locale", got)
+	}
+
+	// One we were given stays.
+	t.Setenv("LC_CTYPE", "ja_JP.UTF-8")
+	if got, _ := lang(childEnv(settings.Profile{}, "test", 1, false)); got != "" {
+		t.Errorf("LANG = %q with LC_CTYPE set, want it left alone", got)
 	}
 }

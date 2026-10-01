@@ -325,7 +325,8 @@ With opal's prompt, the terminal knows where each command starts and ends:
 - clicking inside the command you're typing moves the shell's cursor there;
 - when a command that ran longer than 10 seconds (configurable) finishes in a
   background tab or an unfocused window, the tab gets a note and you get a
-  desktop notification. On Windows the taskbar button also flashes.
+  desktop notification. On Windows the taskbar button also flashes, and on
+  macOS the Dock icon bounces.
 
 Since the terminal bundles the Nerd Font symbols, opal's prompt uses Nerd Font
 icons inside it without any setup.

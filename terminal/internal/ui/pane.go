@@ -196,6 +196,11 @@ outer:
 		}
 		env = append(env, kv)
 	}
+	if !hasLocale(env) {
+		if l := defaultLocale(); l != "" {
+			env = append(env, "LANG="+l)
+		}
+	}
 	env = append(env,
 		"TERM=xterm-256color",
 		"COLORTERM=truecolor",

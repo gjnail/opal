@@ -5,6 +5,7 @@ import (
 	"io"
 	"os"
 	"os/exec"
+	"path/filepath"
 	"runtime"
 	"strings"
 	"testing"
@@ -94,5 +95,35 @@ func TestSizeReachesChild(t *testing.T) {
 	p.Close()
 	if !strings.Contains(out, "97") {
 		t.Fatalf("child didn't see 97 columns: %q", out)
+	}
+}
+
+func TestProcessCWD(t *testing.T) {
+	if runtime.GOOS != "linux" && runtime.GOOS != "darwin" {
+		t.Skip("not readable on this system")
+	}
+	// A temp dir is behind a symlink on macOS (/var is /private/var).
+	dir, err := filepath.EvalSymlinks(t.TempDir())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := exec.Command("/bin/sh", "-c", "read line")
+	c.Dir = dir
+	in, err := c.StdinPipe()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if err := c.Start(); err != nil {
+		t.Fatal(err)
+	}
+	defer func() {
+		in.Close()
+		c.Wait()
+	}()
+	if got := ProcessCWD(c.Process.Pid); got != dir {
+		t.Fatalf("ProcessCWD = %q, want %q", got, dir)
+	}
+	if got := ProcessCWD(1 << 30); got != "" {
+		t.Fatalf("ProcessCWD of no process = %q", got)
 	}
 }
