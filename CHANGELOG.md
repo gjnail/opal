@@ -6,6 +6,8 @@ Notable changes to opal. The format follows
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-01
+
 ### Added
 
 - Opal Terminal, opal's own terminal app
@@ -92,5 +94,6 @@ First public version.
 - `opal update` rebuilds from a source checkout or downloads the latest
   release after checking it against `SHA256SUMS.txt`.
 
-[Unreleased]: https://github.com/gjnail/opal/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/gjnail/opal/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/gjnail/opal/compare/v0.1.0...v1.0.0
 [0.1.0]: https://github.com/gjnail/opal/releases/tag/v0.1.0
