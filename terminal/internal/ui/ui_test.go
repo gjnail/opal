@@ -27,6 +27,8 @@ func TestChords(t *testing.T) {
 		{key.ModCtrl, key.NameUpArrow, "ctrl+up"},
 		{key.ModShift | key.ModCtrl, key.NameTab, "ctrl+shift+tab"},
 		{key.ModCommand, ",", "super+comma"},
+		{key.ModCommand | key.ModShift, "P", "shift+super+p"},
+		{key.ModCommand | key.ModShift, "}", "shift+super+bracketright"},
 	}
 	for _, c := range cases {
 		if got := chord(c.mods, c.name); got != c.want {
@@ -44,6 +46,27 @@ func TestChords(t *testing.T) {
 		if got := normalizeChord(in); got != want {
 			t.Errorf("normalizeChord(%q) = %q, want %q", in, got, want)
 		}
+	}
+}
+
+// A default written in another modifier order than chord's would never
+// match a key press.
+func TestDefaultKeysMatchChords(t *testing.T) {
+	km := keymap(nil)
+	if len(km) != len(defaultKeys()) {
+		t.Errorf("keymap has %d defaults, want %d", len(km), len(defaultKeys()))
+	}
+	for c, a := range km {
+		if n := normalizeChord(c); n != c {
+			t.Errorf("default %q (%s) should be stored as %q", c, a, n)
+		}
+	}
+	mods := key.ModCtrl | key.ModShift
+	if runtime.GOOS == "darwin" {
+		mods = key.ModCommand | key.ModShift
+	}
+	if got := km[chord(mods, "P")]; got != "command_palette" {
+		t.Errorf("the command palette's shortcut runs %q", got)
 	}
 }
 

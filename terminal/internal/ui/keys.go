@@ -21,6 +21,8 @@ var keyNames = map[key.Name]string{
 	key.NameInsert: "insert",
 	"+":            "plus", "=": "plus", "-": "minus", ",": "comma", ".": "period", "/": "slash", "\\": "backslash",
 	"`": "backtick", ";": "semicolon", "'": "quote", "[": "bracketleft", "]": "bracketright", "*": "asterisk",
+	// macOS reports the shifted character: Cmd+Shift+] arrives as "}".
+	"{": "bracketleft", "}": "bracketright",
 }
 
 // normalizeKeyName maps a key name from a config file to our form.
@@ -185,7 +187,12 @@ func defaultKeys() map[string]string {
 // keymap merges user bindings over the defaults. A binding to "none"
 // (or "") removes a default.
 func keymap(user map[string]string) map[string]string {
-	k := defaultKeys()
+	// The defaults are written the way they're said ("super+shift+p");
+	// lookups use the order chord produces.
+	k := map[string]string{}
+	for c, a := range defaultKeys() {
+		k[normalizeChord(c)] = a
+	}
 	for c, a := range user {
 		c = normalizeChord(c)
 		if a == "" || a == "none" || a == "unbind" {
