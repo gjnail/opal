@@ -2,6 +2,7 @@ package ui
 
 import (
 	"image"
+	"os"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -233,6 +234,92 @@ func TestPaletteHistoryAndDirs(t *testing.T) {
 	po.filter()
 	if len(po.items) != 1 {
 		t.Fatalf("dir items = %+v", po.items)
+	}
+}
+
+func TestPaletteShellCommands(t *testing.T) {
+	dir := t.TempDir()
+	t.Setenv("OPAL_CONFIG_DIR", dir)
+	t.Setenv("OPAL_DATA_DIR", dir)
+	conf := `plugins = ["core"]
+
+[aliases]
+dep = "make deploy"
+
+[functions.greet]
+desc = "Say hello"
+sh = 'echo hello "$1"'
+`
+	if err := os.WriteFile(filepath.Join(dir, "config.toml"), []byte(conf), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	rec := &recordPTY{}
+	p := &Pane{term: vt.New(vt.Options{Cols: 40, Rows: 3}), pty: rec, profile: settings.Profile{Command: "/bin/zsh"}}
+	a := &App{cfg: settings.Load(), windows: map[*Window]bool{}}
+	w := &Window{app: a, keys: keymap(nil), tabs: []*Tab{newTab(p)}}
+
+	// The plain palette has the actions and the shell's commands.
+	w.openPalette("")
+	po := w.overlay.(*paletteOverlay)
+	titles := map[string]string{}
+	for _, it := range po.items {
+		titles[it.title] = it.keys
+	}
+	for title, keys := range map[string]string{
+		"dep  make deploy": "config alias",
+		"greet  Say hello": "config function",
+		"mkcd  Make a directory (with parents) and cd into it": "core function",
+	} {
+		if got, ok := titles[title]; !ok || got != keys {
+			t.Errorf("palette entry %q = %q, %v; want %q", title, got, ok, keys)
+		}
+	}
+	if _, ok := titles["New tab"]; !ok {
+		t.Error("the actions are gone")
+	}
+
+	// "$" leaves only the shell's commands. An alias is typed as what it
+	// stands for; Shift+Enter also runs it.
+	po.edit.set("$")
+	po.filter()
+	if len(po.items) != len(po.cmds) || len(po.cmds) == 0 {
+		t.Fatalf("$ lists %d of %d commands", len(po.items), len(po.cmds))
+	}
+	po.edit.set("$dep")
+	po.filter()
+	if len(po.items) == 0 || po.items[0].title != "dep  make deploy" {
+		t.Fatalf("$dep = %+v", po.items)
+	}
+	po.key(w, key.Event{Name: key.NameReturn, Modifiers: key.ModShift})
+	if got := string(rec.sent); got != "make deploy \r" || w.overlay != nil {
+		t.Fatalf("sent %q", got)
+	}
+
+	// A function is typed by name.
+	rec.sent = nil
+	w.openPalette("greet")
+	w.overlay.key(w, key.Event{Name: key.NameReturn})
+	if got := string(rec.sent); got != "greet " {
+		t.Fatalf("sent %q", got)
+	}
+
+	// A pane that isn't at a shell opal sets up has none of them.
+	p.profile.Command = "ssh"
+	w.openPalette("$")
+	if n := len(w.overlay.(*paletteOverlay).items); n != 0 {
+		t.Fatalf("ssh pane lists %d shell commands", n)
+	}
+}
+
+func TestShellName(t *testing.T) {
+	for in, want := range map[string]string{
+		"/bin/zsh": "zsh", "-zsh": "zsh", "bash": "bash", "/opt/homebrew/bin/fish": "fish",
+		`C:\Program Files\PowerShell\7\pwsh.exe`: "pwsh", "powershell.exe": "pwsh", `C:\opal\shell\usr\bin\bash.exe`: "bash",
+		"ssh": "", "ps": "", "cmd.exe": "", "": "",
+	} {
+		if got := shellName(in); got != want {
+			t.Errorf("shellName(%q) = %q, want %q", in, got, want)
+		}
 	}
 }
 

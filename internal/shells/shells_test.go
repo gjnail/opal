@@ -163,3 +163,44 @@ func TestWrapBase64OnlyWhenNeeded(t *testing.T) {
 		t.Error("only PowerShell needs wrapping")
 	}
 }
+
+func TestCommands(t *testing.T) {
+	cfg := config.Defaults()
+	cfg.File = "x"
+	cfg.Aliases = map[string]config.Variants{"dep": {Values: map[string]string{"default": "make deploy"}}}
+	has := func(c string) bool { return c == "git" }
+	names := func(shell string) map[string]bool {
+		m := map[string]bool{}
+		for _, d := range Commands(shell, cfg, platform.Info{OS: "linux"}, has) {
+			m[d.Name] = true
+		}
+		return m
+	}
+	zsh := names("zsh")
+	for _, n := range []string{"gst", "gp", "gcm", "mkcd", "dep", "-"} {
+		if !zsh[n] {
+			t.Errorf("zsh should list %s", n)
+		}
+	}
+	if zsh["dps"] {
+		t.Error("docker isn't installed, so its aliases shouldn't be listed")
+	}
+	// PowerShell's own gp and gcm win over opal's, so they aren't opal's
+	// to list; "-" isn't a name PowerShell can define.
+	pwsh := names("powershell")
+	for _, n := range []string{"gp", "gcm", "-"} {
+		if pwsh[n] {
+			t.Errorf("pwsh shouldn't list %s", n)
+		}
+	}
+	if !pwsh["gst"] || !pwsh["dep"] {
+		t.Error("pwsh should list gst and dep")
+	}
+	cfg.Shell.Pwsh.ClobberBuiltinAliases = true
+	if !names("pwsh")["gp"] {
+		t.Error("with clobber_builtin_aliases, gp is opal's")
+	}
+	if Commands("cmd", cfg, platform.Info{OS: "windows"}, has) != nil {
+		t.Error("cmd isn't a shell opal sets up")
+	}
+}

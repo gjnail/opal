@@ -334,6 +334,11 @@ icons inside it without any setup.
 ### Command palette, history and directories
 
 Ctrl+Shift+P lists every action with its key, fuzzy-matched as you type.
+After the actions come the aliases and functions opal defines in the pane's
+shell, from the enabled plugins and from your config: Enter types one at the
+prompt, Shift+Enter runs it. An alias is typed as the command it stands for.
+Start the query with `$` to list only those.
+
 Start the query with `!` to search opal's shared history from every shell
 instead: Enter types the command at the prompt, Shift+Enter runs it.
 Start it with `@` to list the directories `j` knows, most used first, and

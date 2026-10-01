@@ -163,11 +163,13 @@ type paletteItem struct {
 	run func(w *Window, shift bool)
 }
 
-// The palette searches actions by default; "!" searches Opal's shared
-// command history and "@" its frecent directories.
+// The palette searches actions and the shell's aliases and functions by
+// default; "$" searches only the latter, "!" Opal's shared command history
+// and "@" its frecent directories.
 type paletteOverlay struct {
 	edit    lineEdit
 	all     []paletteItem
+	cmds    []paletteItem // the shell's part of all
 	items   []paletteItem
 	sel     int
 	tags    [16]int
@@ -185,6 +187,8 @@ func (w *Window) openPalette(query string) {
 	}
 	if p := w.activePane(); p != nil {
 		po.cwd = p.currentDir()
+		po.cmds = shellItems(p.shellKind())
+		po.all = append(po.all, po.cmds...)
 	}
 	po.edit.set(query)
 	po.filter()
@@ -320,8 +324,12 @@ func (po *paletteOverlay) filter() {
 		po.items = po.dirItems(strings.TrimSpace(rest))
 		return
 	}
+	from := po.all
+	if rest, ok := strings.CutPrefix(q, "$"); ok {
+		from, q = po.cmds, strings.TrimSpace(rest)
+	}
 	po.items = po.items[:0]
-	for _, it := range po.all {
+	for _, it := range from {
 		s := fuzzyScore(q, it.title)
 		if s < 0 {
 			continue
@@ -387,7 +395,7 @@ func (po *paletteOverlay) draw(gtx layout.Context, w *Window, size image.Point) 
 	r := image.Rect(x0, y0, x0+width, y0+h)
 	w.panel(gtx, r)
 
-	w.drawField(gtx, &po.edit, image.Pt(x0+pad, y0+w.dp(6)), cells-2, "Type a command  (! history, @ directories)")
+	w.drawField(gtx, &po.edit, image.Pt(x0+pad, y0+w.dp(6)), cells-2, "Type a command  (! history, @ directories, $ aliases)")
 	fillRect(gtx, image.Rect(x0, y0+rowH+w.dp(3), x0+width, y0+rowH+w.dp(4)), c.panelBorder)
 
 	// Keep the selection in view.

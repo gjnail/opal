@@ -120,7 +120,8 @@ args = ["me@work"]</code></pre>
     <p>Opal Terminal bundles the Nerd Font symbols, so opal's prompt uses Nerd Font icons inside it without installing a font.</p>
 
     <h3 id="palette">Command palette, history and folders</h3>
-    <p>Ctrl+Shift+P lists every action with its key, fuzzy-matched as you type. Start the query with <code>!</code> to search opal's shared history from every shell instead: Enter types the command at the prompt, Shift+Enter runs it. Start it with <code>@</code> to list the folders <code>j</code> knows, most used first; Enter opens a new tab there. Ctrl+Shift+H and Ctrl+Shift+J open those two lists directly.</p>
+    <p>Ctrl+Shift+P lists every action with its key, fuzzy-matched as you type. After the actions come the aliases and functions opal defines in the pane's shell, from the enabled <a href="plugins.html">plugins</a> and from your config: Enter types one at the prompt, Shift+Enter runs it. An alias is typed as the command it stands for. Start the query with <code>$</code> to list only those.</p>
+    <p>Start the query with <code>!</code> to search opal's shared history from every shell instead: Enter types the command at the prompt, Shift+Enter runs it. Start it with <code>@</code> to list the folders <code>j</code> knows, most used first; Enter opens a new tab there. Ctrl+Shift+H and Ctrl+Shift+J open those two lists directly.</p>
 
     <h3 id="quick-select">Quick select</h3>
     <p>Ctrl+Shift+Space puts a one- or two-letter label on every URL, path, git hash, IP address, email address and UUID on screen. Typing a label copies that match; typing it in uppercase also pastes it at the prompt. The labels start on the home row.</p>

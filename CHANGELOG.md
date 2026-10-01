@@ -29,6 +29,10 @@ Notable changes to opal. The format follows
   working directory without opal's prompt, plays the alert sound for
   `bell = "sound"`, and bounces the Dock icon when a background window wants
   attention.
+- Opal Terminal's command palette lists the aliases and functions opal
+  defines in the pane's shell, from the enabled plugins and your config,
+  after its own actions. Enter types one at the prompt and Shift+Enter runs
+  it; starting the query with `$` lists only those.
 
 ## [0.1.0] - 2026-09-29
 
